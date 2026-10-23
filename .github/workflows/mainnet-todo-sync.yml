@@ -20,7 +20,7 @@ concurrency:
 
 jobs:
   sync:
-    if: github.repository == 'TetraGrids/The-Channel'
+    if: github.repository == 'TetraGrids/Humanity-Pro'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v5

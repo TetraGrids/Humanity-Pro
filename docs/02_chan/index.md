@@ -8,7 +8,7 @@ content_title: Chan
 
 ## Installation
 
-`chan` is distributed as part of the [Channel software suite](https://github.com/TetraGrids/The-Channel). To install `chan` just visit the [Channel Software Installation](../00_install/index.md) section.
+`chan` is distributed as part of the [Channel software suite](https://github.com/TetraGrids/Humanity-Pro). To install `chan` just visit the [Channel Software Installation](../00_install/index.md) section.
 
 ## Using Chan
 

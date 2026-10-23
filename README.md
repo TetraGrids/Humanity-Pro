@@ -22,7 +22,7 @@ The Channel is everything Spring 2.0 was meant to be, plus:
 9. [Contributing](./CONTRIBUTING.md)
 
 ## Branches
-The `main` branch is the development branch; do not use it for production. Refer to the [release page](https://github.com/TetraGrids/The-Channel/releases) for current information on releases, pre-releases, and obsolete releases, as well as the corresponding tags for those releases.
+The `main` branch is the development branch; do not use it for production. Refer to the [release page](https://github.com/TetraGrids/Humanity-Pro/releases) for current information on releases, pre-releases, and obsolete releases, as well as the corresponding tags for those releases.
 
 ## System Token
 The default system token is **RA** (4 decimals). RAM is sold at a governance-set fixed price of **0.0020 RA per byte** (10% fee), matching live XPR. New accounts receive **4444** gift bytes (WebAuthn / Anchor account creation will reuse this later). Users may **purchase** up to **4 MiB** in the first year, then **+2 MiB per year**, hard-capped at **22 MiB**. `ra` can raise a personal extra with `ramlimitset` and can buy or sell beyond that on the Bancor market via `buyramsys` / `sellramsys` (XPR’s permission-gated system path). Anyone may buy RAM; apps are expected to pay user-row RAM. Change price/fee/ceiling with `setramoption`. The core symbol can be changed at build time with `-DCORE_SYMBOL_NAME`.
@@ -80,7 +80,7 @@ cat /etc/upstream-release/lsb-release
 Your best bet is to follow the instructions for your Ubuntu base, but we make no guarantees.
 
 ## Binary Installation
-This is the fastest way to get started. From the [latest release](https://github.com/TetraGrids/The-Channel/releases/latest) page, download a binary for one of our [supported operating systems](#supported-operating-systems), or visit the [release tags](https://github.com/TetraGrids/The-Channel/releases) page to download a binary for a specific version of The Channel.
+This is the fastest way to get started. From the [latest release](https://github.com/TetraGrids/Humanity-Pro/releases/latest) page, download a binary for one of our [supported operating systems](#supported-operating-systems), or visit the [release tags](https://github.com/TetraGrids/Humanity-Pro/releases) page to download a binary for a specific version of The Channel.
 
 Once you have a `*.deb` file downloaded for your version of Ubuntu, you can install it as follows:
 ```bash
@@ -125,23 +125,23 @@ cd ~/Downloads
 ```
 Clone The Channel using either HTTPS...
 ```bash
-git clone --recursive https://github.com/TetraGrids/The-Channel.git
+git clone --recursive https://github.com/TetraGrids/Humanity-Pro.git
 ```
 ...or SSH:
 ```bash
-git clone --recursive git@github.com:TetraGrids/The-Channel.git
+git clone --recursive git@github.com:TetraGrids/Humanity-Pro.git
 ```
 
 > ℹ️ **HTTPS vs. SSH Clone** ℹ️
-> Both an HTTPS or SSH git clone will yield the same result - a folder named `The-Channel` containing our source code. It doesn't matter which type you use.
+> Both an HTTPS or SSH git clone will yield the same result - a folder named `Humanity-Pro` containing our source code. It doesn't matter which type you use.
 
 Navigate into that folder:
 ```bash
-cd The-Channel
+cd Humanity-Pro
 ```
 
 ### Step 2 - Checkout Release Tag or Branch
-Choose which [release](https://github.com/TetraGrids/The-Channel/releases) or [branch](#branches) you would like to build, then check it out. If you are not sure, use the [latest release](https://github.com/TetraGrids/The-Channel/releases/latest). In the example below, replace `v0.0.0` with your selected release tag accordingly:
+Choose which [release](https://github.com/TetraGrids/Humanity-Pro/releases) or [branch](#branches) you would like to build, then check it out. If you are not sure, use the [latest release](https://github.com/TetraGrids/Humanity-Pro/releases/latest). In the example below, replace `v0.0.0` with your selected release tag accordingly:
 ```bash
 git fetch --all --tags
 git checkout v0.0.0
@@ -166,7 +166,7 @@ Select build instructions below for a [pinned build](#pinned-reproducible-build)
 > If you are in an Ubuntu docker container, omit `sudo` from all commands because you run as `root` by default. Most other docker containers also exclude `sudo`, especially Debian-family containers. If your shell prompt is a hash tag (`#`), omit `sudo`.
 
 #### Pinned Reproducible Build
-The pinned reproducible build requires Docker. Make sure you are in the root of the `The-Channel` repo and then run
+The pinned reproducible build requires Docker. Make sure you are in the root of the `Humanity-Pro` repo and then run
 ```bash
 DOCKER_BUILDKIT=1 docker build -f tools/reproducible.Dockerfile -o . .
 ```
@@ -193,7 +193,7 @@ sudo apt-get install -y \
         zlib1g-dev
 ```
 
-To build, make sure you are in the root of the `The-Channel` repo, then run the following command:
+To build, make sure you are in the root of the `Humanity-Pro` repo, then run the following command:
 ```bash
 mkdir -p build
 cd build

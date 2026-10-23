@@ -8,7 +8,7 @@ content_title: Channeld
 
 ## Installation
 
-`channeld` is distributed as part of the [Channel software suite](https://github.com/TetraGrids/The-Channel). To install `channeld`, visit the [Channel Software Installation](../00_install/index.md) section.
+`channeld` is distributed as part of the [Channel software suite](https://github.com/TetraGrids/Humanity-Pro). To install `channeld`, visit the [Channel Software Installation](../00_install/index.md) section.
 
 ## Explore
 

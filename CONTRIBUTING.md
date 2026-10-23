@@ -28,18 +28,18 @@ Be respectful, patient, and constructive. Consensus-critical code is reviewed fo
 
 ## Getting started
 
-1. Fork [TetraGrids/The-Channel](https://github.com/TetraGrids/The-Channel).
+1. Fork [TetraGrids/Humanity-Pro](https://github.com/TetraGrids/Humanity-Pro).
 2. Clone with submodules:
 
    ```bash
-   git clone --recursive https://github.com/<your>/The-Channel.git
-   cd The-Channel
-   git remote add upstream https://github.com/TetraGrids/The-Channel.git
+   git clone --recursive https://github.com/<your>/Humanity-Pro.git
+   cd Humanity-Pro
+   git remote add upstream https://github.com/TetraGrids/Humanity-Pro.git
    ```
 
 3. Branch from current `main`: `git checkout -b feature/short-description`.
 
-`main` is the development branch; production should follow [releases](https://github.com/TetraGrids/The-Channel/releases).
+`main` is the development branch; production should follow [releases](https://github.com/TetraGrids/Humanity-Pro/releases).
 
 ## Development setup
 
@@ -142,11 +142,11 @@ Roundtable meetings (transcripts → Cursor prompts) live in [roundtables/](./ro
 
 Do **not** file public issues for vulnerabilities.
 
-Use [GitHub private vulnerability reporting](https://github.com/TetraGrids/The-Channel/security/advisories/new) when enabled, or contact Tetra Grids maintainers privately. Include impact, affected versions, and a reproduction.
+Use [GitHub private vulnerability reporting](https://github.com/TetraGrids/Humanity-Pro/security/advisories/new) when enabled, or contact Tetra Grids maintainers privately. Include impact, affected versions, and a reproduction.
 
 ## Releases
 
-Tags are `vMAJOR.MINOR.PATCH` (optional `-rc.N`). Notes go on [GitHub Releases](https://github.com/TetraGrids/The-Channel/releases). Ubuntu 22.04 is the supported release host; do not ship a Mac-only `channeld` as the official binary.
+Tags are `vMAJOR.MINOR.PATCH` (optional `-rc.N`). Notes go on [GitHub Releases](https://github.com/TetraGrids/Humanity-Pro/releases). Ubuntu 22.04 is the supported release host; do not ship a Mac-only `channeld` as the official binary.
 
 ## License
 
@@ -154,7 +154,7 @@ Contributions are under the project [LICENSE](./LICENSE) (MIT). Third-party libr
 
 ## Help
 
-- [GitHub Issues](https://github.com/TetraGrids/The-Channel/issues)
+- [GitHub Issues](https://github.com/TetraGrids/Humanity-Pro/issues)
 - [README.md](./README.md) for build and test
 - [docs/](./docs/) for `channeld` / `chan` / `keyd`
 - [WHITEPAPER.md](./WHITEPAPER.md) and [PURE-LIQUID.md](./PURE-LIQUID.md) for protocol intent

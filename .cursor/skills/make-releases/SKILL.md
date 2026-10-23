@@ -1,13 +1,13 @@
 ---
 name: make-releases
 description: >-
-  Cut GitHub releases for TetraGrids/The-Channel. Use when the user asks to
+  Cut GitHub releases for TetraGrids/Humanity-Pro. Use when the user asks to
   release, tag, publish, or ship The Channel (channeld, contracts wasm, notes).
 ---
 
 # Make releases
 
-Repo: `TetraGrids/The-Channel`. Default branch `main` is development; do not treat it as production.
+Repo: `TetraGrids/Humanity-Pro`. Default branch `main` is development; do not treat it as production.
 
 ## Preconditions
 

@@ -42,7 +42,7 @@ set(CPACK_PACKAGE_VENDOR "Tetra Grids")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The Channel: the human-first blockchain protocol, derived from Spring 2.0 with Savanna consensus")
 set(CPACK_COMPONENT_BASE_DESCRIPTION "daemon and CLI tools including ${NODE_EXECUTABLE_NAME}, ${CLI_CLIENT_EXECUTABLE_NAME}, and ${KEY_STORE_EXECUTABLE_NAME}")
 set(CPACK_COMPONENT_DEV_DESCRIPTION "headers and libraries for native contract unit testing")
-set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/TetraGrids/The-Channel")
+set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/TetraGrids/Humanity-Pro")
 
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 set(CPACK_DEBIAN_BASE_PACKAGE_SECTION "utils")

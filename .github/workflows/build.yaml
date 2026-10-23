@@ -1,0 +1,89 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+      - "release/*"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # Node binaries only. Contract wasm/ABI checks run in contract-interface.yml
+  # and do not need this compile. The old self-hosted "Build & Test" graph
+  # never ran on this org; hosted runners have no enf-x86-beefy label.
+  node:
+    name: Ubuntu 22.04 node
+    runs-on: ubuntu-22.04
+    timeout-minutes: 360
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          submodules: false
+
+      - name: Submodules
+        run: git submodule update --init --recursive --depth 1
+
+      - name: Install dependencies
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential \
+            cmake \
+            ninja-build \
+            git \
+            libcurl4-openssl-dev \
+            libgmp-dev \
+            llvm-11-dev \
+            python3-numpy \
+            file \
+            zlib1g-dev \
+            pkg-config \
+            zstd
+
+      - name: Configure
+        run: |
+          set -euo pipefail
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH=/usr/lib/llvm-11 \
+            -DENABLE_CHANNEL_DEV_DEB=ON
+
+      - name: Build node, CLI, wallet, util
+        # -j1: several translation units need ~4GB, and hosted runners have 7GB.
+        run: |
+          set -euo pipefail
+          cmake --build build --parallel 1 --target channeld chan keyd channel-util
+
+      - name: Version smoke
+        run: |
+          set -euo pipefail
+          ./build/bin/channeld --full-version
+          ./build/bin/chan version client
+          ./build/bin/keyd --full-version
+          ./build/bin/channel-util version client
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: channel-binaries-ubuntu22
+          path: |
+            build/bin/channeld
+            build/bin/chan
+            build/bin/keyd
+            build/bin/channel-util
+          if-no-files-found: error

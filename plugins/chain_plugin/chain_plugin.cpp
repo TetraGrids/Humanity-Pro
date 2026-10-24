@@ -28,6 +28,7 @@
 
 #include <fc/io/json.hpp>
 #include <fc/variant.hpp>
+#include <algorithm>
 #include <cstdlib>
 
 const std::string deep_mind_logger_name("deep-mind");
@@ -1005,7 +1006,7 @@ void chain_plugin_impl::plugin_initialize(const variables_map& options) {
       bool chain_api_plugin_configured = false;
       if (options.count("plugin")) {
          const auto& v = options.at("plugin").as<std::vector<std::string>>();
-         chain_api_plugin_configured = std::ranges::any_of(v, [](const std::string& p) { return p.find("eosio::chain_api_plugin") != std::string::npos; });
+         chain_api_plugin_configured = std::any_of(v.begin(), v.end(), [](const std::string& p) { return p.find("eosio::chain_api_plugin") != std::string::npos; });
       }
 
       // only enable _get_info_db if chain_api_plugin enabled.

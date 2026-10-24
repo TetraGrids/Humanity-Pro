@@ -521,22 +521,22 @@ struct implicit_production_pause_vote_tracker {
       assert(_chain);
       finalizer_policy_ptr fin_policy = _chain->head_active_finalizer_policy();
       assert(fin_policy);
-      bool finalizer_policy_contains_configured_producer = std::ranges::any_of(fin_policy->finalizers, [&](const auto& f) {
+      bool finalizer_policy_contains_configured_producer = std::any_of(fin_policy->finalizers.begin(), fin_policy->finalizers.end(), [&](const auto& f) {
          return _producers.contains(to_account_name_safe(f.description));
       });
-      bool finalizer_policy_contains_other_producer = std::ranges::any_of(fin_policy->finalizers, [&](const auto& f) {
+      bool finalizer_policy_contains_other_producer = std::any_of(fin_policy->finalizers.begin(), fin_policy->finalizers.end(), [&](const auto& f) {
          return !_producers.contains(to_account_name_safe(f.description));
       });
       // if not active, check pending finalizer policy
       if (!finalizer_policy_contains_configured_producer || !finalizer_policy_contains_other_producer) {
          if (fin_policy = _chain->head_pending_finalizer_policy(); fin_policy) {
             if (!finalizer_policy_contains_configured_producer) {
-               finalizer_policy_contains_configured_producer = std::ranges::any_of(fin_policy->finalizers, [&](const auto& f) {
+               finalizer_policy_contains_configured_producer = std::any_of(fin_policy->finalizers.begin(), fin_policy->finalizers.end(), [&](const auto& f) {
                   return _producers.contains(to_account_name_safe(f.description));
                });
             }
             if (!finalizer_policy_contains_other_producer) {
-               finalizer_policy_contains_other_producer = std::ranges::any_of(fin_policy->finalizers, [&](const auto& f) {
+               finalizer_policy_contains_other_producer = std::any_of(fin_policy->finalizers.begin(), fin_policy->finalizers.end(), [&](const auto& f) {
                   return !_producers.contains(to_account_name_safe(f.description));
                });
             }
@@ -1276,8 +1276,6 @@ void producer_plugin::set_program_options(
 {
    using namespace std::string_literals;
 
-   auto default_priv_key = private_key_type::regenerate<fc::ecc::private_key_shim>(fc::sha256::hash(std::string("nathan")));
-
    boost::program_options::options_description producer_options;
 
    producer_options.add_options()
@@ -1378,6 +1376,7 @@ void producer_plugin_impl::plugin_initialize(const boost::program_options::varia
       auto channel_providers = sig_mgr.query_providers(std::nullopt, fc::crypto::chain_kind_channel, std::nullopt);
       if (channel_providers.empty()) {
          // preserve the historical out-of-box behavior: a fresh node gets the well-known development key
+         auto default_priv_key = private_key_type::regenerate<fc::ecc::private_key_shim>(fc::sha256::hash(std::string("nathan")));
          auto spec = fc::crypto::to_signature_provider_spec(
             "default", fc::crypto::chain_kind_channel, fc::crypto::chain_key_type_channel,
             default_priv_key.get_public_key().to_string({}), "KEY:" + default_priv_key.to_string({}));

@@ -53,7 +53,7 @@ void restrict_file_to_owner(const std::filesystem::path& file_path) {
                                 std::filesystem::perms::owner_read | std::filesystem::perms::owner_write,
                                 std::filesystem::perm_options::replace, ec);
    if (ec) {
-      wlog("could not restrict permissions on {}: {}", file_path.string(), ec.message());
+      wlog("could not restrict permissions on ${file}: ${err}", ("file", file_path.string())("err", ec.message()));
    }
 }
 } // namespace
@@ -210,7 +210,7 @@ public:
          }
 
          FC_ASSERT(public_key == privkey.get_public_key(), "Private key does not match given public key for ${pub}",
-                   ("pub", fc::json::to_log_string(public_key)));
+                   ("pub", public_key.to_string({})));
          return {.signer = fc::crypto::make_local_sign_fn(privkey), .private_key = privkey};
       }
 
@@ -260,7 +260,7 @@ public:
                  !_signing_providers_by_name.contains(provider->key_name),
                  chain::plugin_config_exception,
                  "A signature provider with key_name \"${name}\" or public_key \"${pub}\" already exists",
-                 ("name", provider->key_name)("pub", fc::json::to_log_string(provider->public_key)));
+                 ("name", provider->key_name)("pub", provider->public_key.to_string({})));
 
       _signing_providers_by_pubkey.insert_or_assign(provider->public_key, provider);
 
@@ -307,7 +307,7 @@ public:
       auto& pub_key = std::get<chain::public_key_type>(key);
       EOS_ASSERT(_signing_providers_by_pubkey.contains(pub_key), chain::plugin_config_exception,
                  "No signature provider exists with public key \"${pub}\"",
-                 ("pub", fc::json::to_log_string(pub_key)));
+                 ("pub", pub_key.to_string({})));
 
       return _signing_providers_by_pubkey.at(pub_key);
    }
@@ -831,7 +831,8 @@ fc::crypto::signature_provider_ptr get_signature_provider(const fc::crypto::sign
    auto providers = plug.query_providers(id, target_chain);
 
    FC_ASSERT(providers.size() == 1, "Expected exactly one provider for query \"${q}\", found ${n}",
-             ("q", fc::json::to_log_string(id))("n", providers.size()));
+             ("q", std::holds_alternative<std::string>(id) ? std::get<std::string>(id)
+                                                        : std::get<fc::crypto::public_key>(id).to_string({}))("n", providers.size()));
    return providers[0];
 }
 

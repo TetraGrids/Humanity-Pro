@@ -1,0 +1,22 @@
+---
+description: Edit boundary - only files inside this repo; never touch outside files or dependencies this repo does not control.
+alwaysApply: true
+---
+
+# Only Edit Inside This Repo
+
+Only create, edit, or delete files inside this repository's tree. Everything outside the repo root is read-only for the agent.
+
+## Never modify
+
+- Files outside this repo: other checkouts (e.g. `The-Channel`), `$HOME`, `/tmp`, `/usr/local`, system headers, or any path not under this repo root.
+- Dependencies this repo does not control: system/Homebrew libraries (e.g. GMP, OpenSSL), global toolchains, SDKs, and installed packages.
+- Git submodules and other underlying library repos checked out under this tree (boost, appbase, eos-vm, softfloat, boringssl, etc.) - they are their own repositories; changes there will not show up here.
+
+## If a fix can only live outside this repo
+
+Stop. Do not work around it with throwaway stubs, shim libraries linked into test binaries, or scratch scripts under `/tmp`. Report the blocker and what would be needed (e.g. "no arm64 GMP on this machine") and let the user decide.
+
+## Builds
+
+Build only into in-repo build directories (`build*`). Do not install into system paths, and do not `sudo` anything.

@@ -11,7 +11,7 @@ from TestHarness.TestHelper import AppArgs
 #
 # Verify an infinite trx in a block is auto recovered when a new
 # best head is received.
-# 
+#
 ###############################################################
 
 # Parse command line arguments
@@ -38,7 +38,7 @@ try:
         totalNodes=3,
         loadSystemContract=False,
         activateIF=True,
-        extraChanneldArgs="--plugin eosio::test_control_api_plugin")
+        extraHumanitydArgs="--plugin eosio::test_control_api_plugin")
 
     prodNode = cluster.getNode(0)
     prodNode2 = cluster.getNode(1)

@@ -1,10 +1,10 @@
-# The Channel
+# Humanity Pro
 
 The human-first blockchain, built on p2p trust, mining attention, and Pure Liquid Finance.
 
-**The Channel** is a C++ implementation of the Channel protocol by **Tetra Grids**, derived from [Spring](https://github.com/AntelopeIO/spring) 2.0 (the [Antelope](https://github.com/AntelopeIO) protocol) with support for Savanna consensus. It contains blockchain node software, the core system contracts, and supporting tools for developers and node operators.
+**Humanity Pro** is a C++ implementation of Humanity Pro protocol by **Tetra Grids**, derived from [Spring](https://github.com/AntelopeIO/spring) 2.0 (the [Antelope](https://github.com/AntelopeIO) protocol) with support for Savanna consensus. It contains blockchain node software, the core system contracts, and supporting tools for developers and node operators.
 
-The Channel is everything Spring 2.0 was meant to be, plus:
+Humanity Pro is everything Spring 2.0 was meant to be, plus:
 
 - **Signing for many types** — K1, R1, WebAuthn, plus Wire **EM** (EIP-191) and **ED** (ed25519). Link an external key with `ra.authex` (`linksig`) and unlock a credited deposit with `ra.claim` (`claimsig`).
 - **A human-first resource model** — Tonomy-style app registry and `loginwithapp` (per-app `user@app` keys). Contracts pay user-row RAM with `payer=get_self()`. Users pay CPU/NET, or rent via `ra.resources` / powerup. Block producers produce blocks.
@@ -41,7 +41,7 @@ All core contracts ship in this repository under [`contracts/`](./contracts), re
 | `ra.bpay` / `ra.fees` | Block pay and fee routing |
 | `ra.resources` | Subscription CPU/NET rental. Prefund the stake pool by transferring RA with memo `fund`. |
 | `ra.authex` | External-key linking. Unsigned `createlink`, or `linksig` with an EM/ED `recover_key` over `"<pubkey>|<account>|<chain>|<nonce>|createlink auth"` |
-| `ra.claim` | Relayer `credit`, Channel-key `claim`, or `claimsig` with a linked EM/ED key ([details](./contracts/ra.claim/FUTURE.md)) |
+| `ra.claim` | Relayer `credit`, native-account `claim`, or `claimsig` with a linked EM/ED key ([details](./contracts/ra.claim/FUTURE.md)) |
 | `ra.org` | Org backpay: monthly role salaries in bucks, self/manager/peer review, trickle payout |
 | `flex.token` | Pure Liquid token (`contracts/ra.pure/flex.token.cpp`). Protocol vaults: `openpool` / `seedpool` / `collectpool` against an Alcor v2 swap. Permissions: [PERMISSIONS.md](./contracts/ra.pure/PERMISSIONS.md). |
 
@@ -65,7 +65,7 @@ Boot a single-producer chain with `ra.*` and **RA** (Spring 2.0 feature digests,
 python3 scripts/launch-devnet.py --reset
 ```
 
-Needs `channeld` / `chan` / `keyd` (PATH or `build/programs/...`) and contract wasm from `-DBUILD_CONTRACTS=ON` or the **Compile contracts** Action (`--contracts-dir`). HTTP is `127.0.0.1:8888`. `--no-forward-setcode` skips `FORWARD_SETCODE` and `SAVANNA`. Ctrl-C stops the node.
+Needs `humanityd` / `humanity` / `humanity-keyd` (PATH or `build/programs/...`) and contract wasm from `-DBUILD_CONTRACTS=ON` or the **Compile contracts** Action (`--contracts-dir`). HTTP is `127.0.0.1:8888`. `--no-forward-setcode` skips `FORWARD_SETCODE` and `SAVANNA`. Ctrl-C stops the node.
 
 ## Supported Operating Systems
 We currently support the following operating systems.
@@ -80,18 +80,18 @@ cat /etc/upstream-release/lsb-release
 Your best bet is to follow the instructions for your Ubuntu base, but we make no guarantees.
 
 ## Binary Installation
-This is the fastest way to get started. From the [latest release](https://github.com/TetraGrids/Humanity-Pro/releases/latest) page, download a binary for one of our [supported operating systems](#supported-operating-systems), or visit the [release tags](https://github.com/TetraGrids/Humanity-Pro/releases) page to download a binary for a specific version of The Channel.
+This is the fastest way to get started. From the [latest release](https://github.com/TetraGrids/Humanity-Pro/releases/latest) page, download a binary for one of our [supported operating systems](#supported-operating-systems), or visit the [release tags](https://github.com/TetraGrids/Humanity-Pro/releases) page to download a binary for a specific version of Humanity Pro.
 
 Once you have a `*.deb` file downloaded for your version of Ubuntu, you can install it as follows:
 ```bash
 sudo apt-get update
-sudo apt-get install -y ~/Downloads/the-channel*.deb
+sudo apt-get install -y ~/Downloads/humanity-pro*.deb
 ```
 Your download path may vary. If you are in an Ubuntu docker container, omit `sudo` because you run as `root` by default.
 
-Finally, verify The Channel was installed correctly:
+Finally, verify Humanity Pro was installed correctly:
 ```bash
-channeld --full-version
+humanityd --full-version
 ```
 You should see a [semantic version](https://semver.org) string followed by a `git` commit hash with no errors. For example:
 ```
@@ -99,7 +99,7 @@ v1.0.0-dev1-8a7415a70f2b9c0d1e2f3a4b5c6d7e8f9a0b1c2d
 ```
 
 ## Build and Install from Source
-You can also build and install The Channel from source.
+You can also build and install Humanity Pro from source.
 
 ### Prerequisites
 You will need to build on a [supported operating system](#supported-operating-systems).
@@ -119,11 +119,11 @@ Requirements to build:
 To also build the core contracts under `contracts/`, you will need [CDT](https://github.com/AntelopeIO/cdt) 3.x/4.x and to configure with `-DBUILD_CONTRACTS=ON`. On macOS you can skip a local CDT install: the **Compile contracts** GitHub Action (`ubuntu-22.04`, CDT 4.1.1) builds `contracts/` and uploads `.wasm` / `.abi` artifacts. Run it from the Actions tab or push to `main`.
 
 ### Step 1 - Clone
-If you don't have The Channel repo cloned to your computer yet, open a terminal and navigate to the folder where you want to clone The Channel repository:
+If you don't have Humanity Pro repo cloned to your computer yet, open a terminal and navigate to the folder where you want to clone Humanity Pro repository:
 ```bash
 cd ~/Downloads
 ```
-Clone The Channel using either HTTPS...
+Clone Humanity Pro using either HTTPS...
 ```bash
 git clone --recursive https://github.com/TetraGrids/Humanity-Pro.git
 ```
@@ -157,10 +157,10 @@ git submodule update --init --recursive
 Select build instructions below for a [pinned build](#pinned-reproducible-build) (preferred) or an [unpinned build](#unpinned-build).
 
 > ℹ️ **Pinned vs. Unpinned Build** ℹ️
-> We have two types of builds for The Channel: "pinned" and "unpinned." A pinned build is a reproducible build with the build environment and dependency versions fixed by the development team. In contrast, unpinned builds use the dependency versions provided by the build platform. Unpinned builds tend to be quicker because the pinned build environment must be built from scratch. Pinned builds, in addition to being reproducible, ensure the compiler remains the same between builds of different Channel major versions. The Channel requires the compiler version to remain the same, otherwise its state might need to be recovered from a portable snapshot or the chain needs to be replayed.
+> We have two types of builds for Humanity Pro: "pinned" and "unpinned." A pinned build is a reproducible build with the build environment and dependency versions fixed by the development team. In contrast, unpinned builds use the dependency versions provided by the build platform. Unpinned builds tend to be quicker because the pinned build environment must be built from scratch. Pinned builds, in addition to being reproducible, ensure the compiler remains the same between builds of different Humanity Pro major versions. Humanity Pro requires the compiler version to remain the same, otherwise its state might need to be recovered from a portable snapshot or the chain needs to be replayed.
 
 > ⚠️ **A Warning On Parallel Compilation Jobs (`-j` flag)** ⚠️
-> When building C/C++ software, often the build is performed in parallel via a command such as `make -j "$(nproc)"` which uses all available CPU threads. However, be aware that some compilation units (`*.cpp` files) in The Channel will consume nearly 4GB of memory. Failures due to memory exhaustion will typically, but not always, manifest as compiler crashes. Using all available CPU threads may also prevent you from doing other things on your computer during compilation. For these reasons, consider reducing this value.
+> When building C/C++ software, often the build is performed in parallel via a command such as `make -j "$(nproc)"` which uses all available CPU threads. However, be aware that some compilation units (`*.cpp` files) in Humanity Pro will consume nearly 4GB of memory. Failures due to memory exhaustion will typically, but not always, manifest as compiler crashes. Using all available CPU threads may also prevent you from doing other things on your computer during compilation. For these reasons, consider reducing this value.
 
 > 🐋 **Docker and `sudo`** 🐋
 > If you are in an Ubuntu docker container, omit `sudo` from all commands because you run as `root` by default. Most other docker containers also exclude `sudo`, especially Debian-family containers. If your shell prompt is a hash tag (`#`), omit `sudo`.
@@ -172,7 +172,7 @@ DOCKER_BUILDKIT=1 docker build -f tools/reproducible.Dockerfile -o . .
 ```
 This command will take a substantial amount of time because a toolchain is built from scratch. Upon completion, the current directory will contain a built `.deb` and `.tar.gz` (you can change the `-o .` argument to place the output in a different directory). If needing to reduce the number of parallel jobs as warned above, run the command as,
 ```bash
-DOCKER_BUILDKIT=1 docker build --build-arg CHANNEL_BUILD_JOBS=4 -f tools/reproducible.Dockerfile -o . .
+DOCKER_BUILDKIT=1 docker build --build-arg HUMANITY_PRO_BUILD_JOBS=4 -f tools/reproducible.Dockerfile -o . .
 ```
 
 #### Unpinned Build
@@ -206,7 +206,7 @@ make -j "$(nproc)" package
 Now you can optionally [test](#step-4---test) your build, or [install](#step-5---install) the `*.deb` binary packages, which will be in the root of your build directory.
 
 ### Step 4 - Test
-The Channel supports the following test suites:
+Humanity Pro supports the following test suites:
 
 Test Suite | Test Type | [Test Size](https://testing.googleblog.com/2010/12/test-sizes.html) | Notes
 ---|:---:|:---:|---
@@ -220,7 +220,7 @@ When building from source, we recommended running at least the [parallelizable t
 #### Parallelizable Tests
 This test suite consists of any test that does not require shared resources, such as file descriptors, specific folders, or ports, and can therefore be run concurrently in different threads without side effects (hence, easily parallelized). These are mostly unit tests and [small tests](https://testing.googleblog.com/2010/12/test-sizes.html) which complete in a short amount of time.
 
-You can invoke them by running `ctest` from a terminal in your Channel build directory and specifying the following arguments:
+You can invoke them by running `ctest` from a terminal in your Humanity Pro build directory and specifying the following arguments:
 ```bash
 ctest -j "$(nproc)" -LE _tests
 ```
@@ -228,7 +228,7 @@ ctest -j "$(nproc)" -LE _tests
 #### WASM Spec Tests
 The WASM spec tests verify that our WASM execution engine is compliant with the web assembly standard. These are very [small](https://testing.googleblog.com/2010/12/test-sizes.html), very fast unit tests. However, there are over a thousand of them so the suite can take a little time to run. These tests are extremely CPU-intensive.
 
-You can invoke them by running `ctest` from a terminal in your Channel build directory and specifying the following arguments:
+You can invoke them by running `ctest` from a terminal in your Humanity Pro build directory and specifying the following arguments:
 ```bash
 ctest -j "$(nproc)" -L wasm_spec_tests
 ```
@@ -236,9 +236,9 @@ ctest -j "$(nproc)" -L wasm_spec_tests
 We have observed severe performance issues when multiple virtual machines are running this test suite on the same physical host at the same time, for example in a CICD system. This can be resolved by disabling hyperthreading on the host.
 
 #### Serial Tests
-The serial test suite consists of [medium](https://testing.googleblog.com/2010/12/test-sizes.html) component or integration tests that use specific paths, ports, rely on process names, or similar, and cannot be run concurrently with other tests. Serial tests can be sensitive to other software running on the same host and they may `SIGKILL` other `channeld` processes. These tests take a moderate amount of time to complete, but we recommend running them.
+The serial test suite consists of [medium](https://testing.googleblog.com/2010/12/test-sizes.html) component or integration tests that use specific paths, ports, rely on process names, or similar, and cannot be run concurrently with other tests. Serial tests can be sensitive to other software running on the same host and they may `SIGKILL` other `humanityd` processes. These tests take a moderate amount of time to complete, but we recommend running them.
 
-You can invoke them by running `ctest` from a terminal in your Channel build directory and specifying the following arguments:
+You can invoke them by running `ctest` from a terminal in your Humanity Pro build directory and specifying the following arguments:
 ```bash
 ctest -L "nonparallelizable_tests"
 ```
@@ -246,18 +246,18 @@ ctest -L "nonparallelizable_tests"
 #### Long-Running Tests
 The long-running tests are [medium-to-large](https://testing.googleblog.com/2010/12/test-sizes.html) integration tests that rely on shared resources and take a very long time to run.
 
-You can invoke them by running `ctest` from a terminal in your Channel build directory and specifying the following arguments:
+You can invoke them by running `ctest` from a terminal in your Humanity Pro build directory and specifying the following arguments:
 ```bash
 ctest -L "long_running_tests"
 ```
 
 ### Step 5 - Install
-Once you have [built](#step-3---build) The Channel and [tested](#step-4---test) your build, you can install The Channel on your system. Don't forget to omit `sudo` if you are running in a docker container.
+Once you have [built](#step-3---build) Humanity Pro and [tested](#step-4---test) your build, you can install Humanity Pro on your system. Don't forget to omit `sudo` if you are running in a docker container.
 
-We recommend installing the binary package you just built. Navigate to your Channel build directory in a terminal and run this command:
+We recommend installing the binary package you just built. Navigate to your Humanity Pro build directory in a terminal and run this command:
 ```bash
 sudo apt-get update
-sudo apt-get install -y ./the-channel_*.deb
+sudo apt-get install -y ./humanity-pro_*.deb
 ```
 
 It is also possible to install using `make` instead:
@@ -266,18 +266,18 @@ sudo make install
 ```
 
 ## Bash Autocomplete
-`chan` and `channel-util` offer a substantial amount of functionality. Consider using bash's autocompletion support which makes it easier to discover all their various options.
+`humanity` and `humanity-util` offer a substantial amount of functionality. Consider using bash's autocompletion support which makes it easier to discover all their various options.
 
 For our provided `.deb` packages simply install Ubuntu's `bash-completion` package: `apt-get install bash-completion` (you may need to log out/in after installing).
 
-If building from source install the `build/programs/chan/bash-completion/completions/chan` and `build/programs/channel-util/bash-completion/completions/channel-util` files to your bash-completion directory. Refer to [bash-completion's documentation](https://github.com/scop/bash-completion#faq) on the possible install locations.
+If building from source install the `build/programs/humanity/bash-completion/completions/humanity` and `build/programs/humanity-util/bash-completion/completions/humanity-util` files to your bash-completion directory. Refer to [bash-completion's documentation](https://github.com/scop/bash-completion#faq) on the possible install locations.
 
 ## Roundtables
 
 Meeting notes and Cursor implementation prompts live in [`roundtables/`](./roundtables/). How to file and run them: [`roundtables/README.md`](./roundtables/README.md).
 
 ## Acknowledgements
-The Channel is built by [Tetra Grids](https://github.com/TetraGrids) standing on the shoulders of:
+Humanity Pro is built by [Tetra Grids](https://github.com/TetraGrids) standing on the shoulders of:
 
 - [Spring](https://github.com/AntelopeIO/spring) — the Antelope protocol node software (base: Spring 2.0.0-dev)
 - [Antelope reference contracts](https://github.com/AntelopeIO/reference-contracts) — the core system contracts, renamed `ra.*`
@@ -285,8 +285,8 @@ The Channel is built by [Tetra Grids](https://github.com/TetraGrids) standing on
 - [Tonomy](https://github.com/Tonomy-Foundation) — the human-first resource model
 - [XPR Network / Proton](https://github.com/ProtonProtocol) — the RAM market
 
-The Channel is MIT (see [LICENSE](./LICENSE)), matching current Spring. Third-party libraries keep their own licenses in-tree.
+Humanity Pro is MIT (see [LICENSE](./LICENSE)), matching current Spring. Third-party libraries keep their own licenses in-tree.
 
 ---
 
-<sub><sup>The Channel is the channel in which attention flows. The tetrahedron is the primary force carrier of the universe; the other geometric solids are higher versions of this base encoding.</sup></sub>
+<sub><sup>Humanity Pro is the channel in which attention flows. The tetrahedron is the primary force carrier of the universe; the other geometric solids are higher versions of this base encoding.</sup></sub>

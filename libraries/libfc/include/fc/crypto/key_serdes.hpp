@@ -63,7 +63,7 @@ inline bool is_legacy_public_key_str(std::string_view str) {
    return prefix_matches(legacy_prefix, str) && str.find('_') == std::string::npos;
 }
 
-// Parses a The Channel public key string (legacy "RA..." or "PUB_<TYPE>_...") into storage.
+// Parses a Humanity Pro public key string (legacy "RA..." or "PUB_<TYPE>_...") into storage.
 inline public_key::storage_type parse_unknown_public_key_str(std::string_view str) {
    if (is_legacy_public_key_str(str)) {
       auto sub_str = str.substr(const_strlen(config::public_key_legacy_prefix));
@@ -89,7 +89,7 @@ inline public_key::storage_type parse_unknown_public_key_str(std::string_view st
    return base58_str_parser<public_key::storage_type, config::public_key_prefix>::apply(std::string(data_str));
 }
 
-// Parses a The Channel private key string (WIF or "PVT_<TYPE>_...") into storage.
+// Parses a Humanity Pro private key string (WIF or "PVT_<TYPE>_...") into storage.
 inline private_key::storage_type parse_unknown_private_key_str(std::string_view str) {
    if (str.find('_') == std::string::npos) {
       // wif import
@@ -106,7 +106,7 @@ inline private_key::storage_type parse_unknown_private_key_str(std::string_view 
    return base58_str_parser<private_key::storage_type, config::private_key_prefix>::apply(std::string(data_str));
 }
 
-// Parses a The Channel signature string ("SIG_<TYPE>_...") into storage.
+// Parses a Humanity Pro signature string ("SIG_<TYPE>_...") into storage.
 inline signature::storage_type parse_unknown_signature_str(std::string_view str) {
    constexpr auto prefix = config::signature_base_prefix;
    const auto pivot = str.find('_');

@@ -470,7 +470,7 @@ namespace eosio {
          uint32_t      fork_db_head_num = 0;
       };
 
-      
+
       std::function<void()> increment_failed_p2p_connections;
       std::function<void()> increment_dropped_trxs;
 
@@ -983,7 +983,7 @@ namespace eosio {
        * is placed on the send queue, one during start session, one
        * when a sync block is queued and one each when data is
        * counted as received or sent.
-       * Calls the kernel time of day routine and converts to 
+       * Calls the kernel time of day routine and converts to
        * a (at least) 64 bit integer.
        */
       static std::chrono::nanoseconds get_time() {
@@ -4504,7 +4504,7 @@ namespace eosio {
            "   myprod,myhostname.com:9876,198.51.100.1\n"
            "   myprod,myhostname2.com:9876,[2001:0db8:85a3:0000:0000:8a2e:0370:7334]"
            )
-         ( "agent-name", bpo::value<string>()->default_value("The Channel {version}"),
+         ( "agent-name", bpo::value<string>()->default_value("Humanity Pro {version}"),
            "The name supplied to identify this node amongst the peers. Placeholder {version} can be specified to automatically insert the node's version.")
          ( "allowed-connection", bpo::value<vector<string>>()->multitoken()->default_value({"any"}, "any"), "Can be 'any' or 'producers' or 'specified' or 'none'. If 'specified', peer-key must be specified at least once. If only 'producers', peer-key is not required. 'producers' and 'specified' may be combined.")
          ( "peer-key", bpo::value<vector<string>>()->composing()->multitoken(), "Optional public key of peer allowed to connect.  May be used multiple times.")
@@ -4594,7 +4594,7 @@ namespace eosio {
                }
                for( const auto& addr : p2p_addresses ) {
                   EOS_ASSERT( addr.length() <= net_utils::max_p2p_address_length, chain::plugin_config_exception,
-                              "p2p-listen-endpoint ${a} too long, must be less than ${m}", 
+                              "p2p-listen-endpoint ${a} too long, must be less than ${m}",
                               ("a", addr)("m", net_utils::max_p2p_address_length) );
                   const auto& [host, port, type] = net_utils::split_host_port_type(addr);
                   EOS_ASSERT( !host.empty() && !port.empty(), chain::plugin_config_exception,
@@ -4608,7 +4608,7 @@ namespace eosio {
                         "p2p-server-address may not be specified more times than p2p-listen-endpoint" );
             for( const auto& addr: p2p_server_addresses ) {
                EOS_ASSERT( addr.length() <= net_utils::max_p2p_address_length, chain::plugin_config_exception,
-                           "p2p-server-address ${a} too long, must be less than ${m}", 
+                           "p2p-server-address ${a} too long, must be less than ${m}",
                            ("a", addr)("m", net_utils::max_p2p_address_length) );
                const auto& [host, port, type] = net_utils::split_host_port_type(addr);
                EOS_ASSERT( !host.empty() && !port.empty(), chain::plugin_config_exception,
@@ -4720,7 +4720,7 @@ namespace eosio {
       std::vector<string> listen_addresses = p2p_addresses;
 
       assert( p2p_addresses.size() == p2p_server_addresses.size() );
-      std::transform(p2p_addresses.begin(), p2p_addresses.end(), p2p_server_addresses.begin(), 
+      std::transform(p2p_addresses.begin(), p2p_addresses.end(), p2p_server_addresses.begin(),
                      p2p_addresses.begin(), [](const string& p2p_address, const string& p2p_server_address) {
          if( !p2p_server_address.empty() ) {
             return p2p_server_address;
@@ -4939,7 +4939,7 @@ namespace eosio {
          // it was syncing and had processed blocks into the fork database but not yet applied them.
          // If the node was shutdown via terminate-at-block, the current expectation is that the node can be restarted
          // to examine the state at which it was shutdown. For now, we will only process these blocks if there are
-         // peers configured. This is a bit of a hack for The Channel 1.0.0 until we can add a proper
+         // peers configured. This is a bit of a hack for Humanity Pro 1.0.0 until we can add a proper
          // pause-at-block (issue #570) which could be used to explicitly request a node to not process beyond
          // a specified block.
          my_impl->producer_plug->process_blocks();
@@ -4949,7 +4949,7 @@ namespace eosio {
    void connections_manager::add( connection_ptr c ) {
       std::lock_guard g( connections_mtx );
       connections.insert( connection_detail{
-         .host = c->peer_address(), 
+         .host = c->peer_address(),
          .c = std::move(c)} );
    }
 
@@ -5119,7 +5119,7 @@ namespace eosio {
    }
 
    // called from any thread
-   void connections_manager::start_conn_timer(boost::asio::steady_timer::duration du, 
+   void connections_manager::start_conn_timer(boost::asio::steady_timer::duration du,
                                               std::weak_ptr<connection> from_connection,
                                               timer_type which) {
       auto& mtx = which == timer_type::check ? connector_check_timer_mtx : connection_stats_timer_mtx;

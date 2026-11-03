@@ -17,7 +17,7 @@ namespace eosio {
 
    /**
     * Simple deposit-there / claim-here unlock. Relayer `credit` records a
-    * deposit; `claim` pays with Channel account auth; `claimsig` pays with a
+    * deposit; `claim` pays with Humanity Pro account auth; `claimsig` pays with a
     * linked EM/ED key (see FUTURE.md). This is not Wire OPP.
     */
    class [[eosio::contract("ra.claim")]] claimc : public contract {
@@ -40,7 +40,7 @@ namespace eosio {
             asset        quantity;
             bool         claimed = false;
             time_point   created;
-            std::string  pubkey;    // Channel string form; empty unless creditopen
+            std::string  pubkey;    // Humanity Pro string form; empty unless creditopen
             vector<char> packedkey; // fc-packed public key; empty unless creditopen
 
             uint64_t primary_key() const { return id; }
@@ -83,8 +83,8 @@ namespace eosio {
          [[eosio::action]]
          void claim( uint64_t id );
 
-         /// Credit a deposit for a Channel name that does not exist yet.
-         /// `pubkey` is the Channel string (`PUB_EM_…` / `PUB_ED_…`).
+         /// Credit a deposit for a Humanity Pro name that does not exist yet.
+         /// `pubkey` is Humanity Pro string (`PUB_EM_…` / `PUB_ED_…`).
          /// `packedkey` is `fc::raw::pack` of that same public key.
          [[eosio::action]]
          void creditopen( const name& chain, const checksum256& ext_txid, const name& recipient,
@@ -92,7 +92,7 @@ namespace eosio {
 
          /// Pay a credited deposit using recover_key of
          /// `"<ext_txid>|<recipient>|<quantity>|<chain>|<id>|claim auth"`.
-         /// No Channel account signature; first authorizer pays CPU.
+         /// No Humanity Pro account signature; first authorizer pays CPU.
          [[eosio::action]]
          void claimsig( uint64_t id, const vector<char>& sig );
 

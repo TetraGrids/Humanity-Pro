@@ -20,7 +20,7 @@ using namespace appbase;
  *
  *   - `signer`: the signing closure (required).
  *   - `private_key`: a local private key, if the scheme exposes one
- *     (e.g. `KEY:`); empty for remote signers (`KEYD:`, `KMS:`, ...).
+ *     (e.g. `KEY:`); empty for remote signers (`HUMANITY-KEYD:`, `KMS:`, ...).
  *   - `startup_probe`: an optional one-shot callback the plugin runs from
  *     `plugin_startup()` after the provider has been successfully inserted
  *     into the registry -- e.g. a KMS `GetPublicKey` credential check. The
@@ -42,7 +42,7 @@ struct provider_spec_result {
  * providers at its own init, gated on the plugin being enabled via `--plugin`. Host applications that do not use the
  * plugins may instead register directly on the manager instance via
  * `signature_provider_manager_plugin::register_spec_handler(scheme, handler)` (ungated). The built-in `KEY:` and
- * `KEYD:` schemes are not registrable -- they are handled directly by the plugin.
+ * `HUMANITY-KEYD:` schemes are not registrable -- they are handled directly by the plugin.
  */
 using spec_handler = std::function<provider_spec_result(
    fc::crypto::chain_key_type_t,
@@ -53,7 +53,7 @@ using spec_handler = std::function<provider_spec_result(
  * Redact any inline private key from a signature-provider spec so it can be safely logged.
  *
  * A spec has the form `<name>,<chain-kind>,<key-type>,<public-key>,<provider>`, where the final comma-separated field
- * is the provider. Only a `KEY:<private-key>` provider embeds secret key material; `KEYD:`/other providers reference
+ * is the provider. Only a `KEY:<private-key>` provider embeds secret key material; `HUMANITY-KEYD:`/other providers reference
  * external material and malformed specs carry no inline secret, so both are returned unchanged. When the provider field
  * is `KEY:...`, everything after the `KEY:` marker is replaced with `<redacted>`. Only the final field is inspected, so
  * a `KEY:`-prefixed name never triggers redaction.
@@ -103,7 +103,7 @@ public:
    /**
     * Plugin initialize hook. Creates every configured `--signature-provider` provider eagerly and synchronously:
     *
-    *   - `KEY:` / `KEYD:` are built in and handled directly.
+    *   - `KEY:` / `HUMANITY-KEYD:` are built in and handled directly.
     *   - An extension scheme (`SSM:` / `KMS:`) is resolved through a handler
     *     the providing plugin registered at CONSTRUCTION via
     *     `sigprov::register_scheme_handler` -- available here because appbase
@@ -145,8 +145,8 @@ public:
     * Create a signature provider with explicit parameters.
     *
     * @param key_name Name to identify the provider
-    * @param target_chain The target blockchain protocol (e.g., channel, ethereum)
-    * @param key_type The type of key (e.g., channel, ethereum, solana)
+    * @param target_chain The target blockchain protocol (e.g., humanity, ethereum)
+    * @param key_type The type of key (e.g., humanity, ethereum, solana)
     * @param public_key_text The public key in text format
     * @param private_key_provider_spec The private key or provider specification
     * @return A signature provider pointer that can be used for signing operations
@@ -251,7 +251,7 @@ public:
     * Register a handler for an unrecognised `<provider-type>:` scheme directly on this instance -- the explicit
     * host-application / test path.
     *
-    * Built-in schemes (`KEY:`, `KEYD:`) are not registrable -- attempting to register them throws. Each non-built-in
+    * Built-in schemes (`KEY:`, `HUMANITY-KEYD:`) are not registrable -- attempting to register them throws. Each non-built-in
     * scheme may be registered at most once. A handler registered here is ungated: matching specs create eagerly at
     * `plugin_initialize` with no `--plugin` check. Call it before `app().initialize(...)` so it is in place when the
     * manager parses the `--signature-provider` options:

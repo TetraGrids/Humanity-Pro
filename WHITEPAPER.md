@@ -1,14 +1,14 @@
-# The Channel
+# Humanity Pro
 
 **A Human-First Blockchain for Peer-to-Peer Trust, Attention, and Pure Liquid Finance**
 
-Douglas Butner, AKA Gudasol (🜛)  
-Tetra Grids, LLC (⟁)  
+Douglas Butner, AKA Gudasol (🜛)
+Tetra Grids, LLC (⟁)
 Maryland, United States
 
 v1.0.0
 
-This paper is living. As The Channel is built, this text will move with it. A companion, [Pure Liquid](./PURE-LIQUID.md), is the financial layer in full.
+This paper is living. As Humanity Pro is built, this text will move with it. A companion, [Pure Liquid](./PURE-LIQUID.md), is the financial layer in full.
 
 > The truth is, all systems have some level of trust, even if that is just trust in the system itself. If we try to get rid of trust because we are fearful, that is lame. We grow trust on purpose.
 
@@ -16,11 +16,11 @@ This paper is living. As The Channel is built, this text will move with it. A co
 
 ## Abstract
 
-Bitcoin named the original goal: **return power to the people**. It tried to do that by *removing* trust. **The Channel** keeps the goal and reverses the method. We create **networks of trust** through repeated attention to human effort and experience over time.
+Bitcoin named the original goal: **return power to the people**. It tried to do that by *removing* trust. **Humanity Pro** keeps the goal and reverses the method. We create **networks of trust** through repeated attention to human effort and experience over time.
 
 Bitcoin channels money to machines, to those who build the machines, to those who extract the rare earth minerals those machines require, and to those who generate the power. That power is burned as fossil fuel. It is also sourced from “renewables,” often requiring rare earth minerals. Earth is then organized around leaky mines, chip factories, loud data centers, and power plants. That organization is unnecessary and unnatural.
 
-The Channel organizes people. It is **time-based**: rewarding attention for the value we're offering the world in democratic competetions and daily income gleamed from system-wide opt-out taxes on movemment of assets every interval of life, not to whoever can waste the most energy this block. On that ground we add an evolutionary financial layer. We call a currency **Pure Liquid** when its whole supply is locked as ranged liquidity against a real or more trusted asset (so it can be redeemed instantly without any third party constraint) and **Flex**, when it pays **activity-based interest** (a share of real volume) to accounts, in the same token or in another token on the network, because the reward asset is flexible to the desire of the holder.
+Humanity Pro organizes people. It is **time-based**: rewarding attention for the value we're offering the world in democratic competetions and daily income gleamed from system-wide opt-out taxes on movemment of assets every interval of life, not to whoever can waste the most energy this block. On that ground we add an evolutionary financial layer. We call a currency **Pure Liquid** when its whole supply is locked as ranged liquidity against a real or more trusted asset (so it can be redeemed instantly without any third party constraint) and **Flex**, when it pays **activity-based interest** (a share of real volume) to accounts, in the same token or in another token on the network, because the reward asset is flexible to the desire of the holder.
 
 People come together and share ideas. That's the valuable societal change.
 
@@ -30,7 +30,7 @@ Assets come together to provide sane economies. That's the basis of economies ba
 
 ## Technical overview
 
-**The Channel** is a human-first layer-1: names you can say, permissions you can nest, resources you can understand. Tetra Grids implements it in C++ from Spring 2.0 (Antelope) with Savanna consensus. You can run the node. Others can run it too.
+**Humanity Pro** is a human-first layer-1: names you can say, permissions you can nest, resources you can understand. Tetra Grids implements it in C++ from Spring 2.0 (Antelope) with Savanna consensus. You can run the node. Others can run it too.
 
 We use **RA** for the system token. RA meters storage and compute. RA is redeemable for provable attention through human-verified interaction with content through the discovery network. RA is not Pure Liquid; it is liquid for attention in the discovery network.
 
@@ -55,7 +55,7 @@ Democracy and money were supposed to put the many over the few. Both now run slo
 
 Bitcoin proved digital scarcity. It also proved that if you pay machines to ignore people, Earth rearranges around extraction. Ethereum proved general contracts. It also proved that hex, surprise fees, and wrapped assets with pullable liquidity will not, by themselves, return power to anyone.
 
-In this paper I will show The Channel as a protocol: time-based claims, a chain people can log into, Pure Liquid as the money layer, identity that can recover without giving up keys, and (only at the end) the human application that makes attention worth settling.
+In this paper I will show Humanity Pro as a protocol: time-based claims, a chain people can log into, Pure Liquid as the money layer, identity that can recover without giving up keys, and (only at the end) the human application that makes attention worth settling.
 
 ---
 
@@ -63,7 +63,7 @@ In this paper I will show The Channel as a protocol: time-based claims, a chain 
 
 **Time-based** means a claim is stamped to a person and an interval. You cannot mint two days of influence in one second by spinning keys. Daily RA, seasons, and ties that fade without continued attention are that pattern. It is the same instinct as [Web 4](https://github.com/dougbutner/web-4) (2020): biomimetic, in resonance with the Sun’s continual gift of life, not a principal that must be repaid with money that was never issued.
 
-Abundant systems are not infinite print. They are foundations that match living systems. The Channel is built so the next game of Earth can unfold in public.
+Abundant systems are not infinite print. They are foundations that match living systems. Humanity Pro is built so the next game of Earth can unfold in public.
 
 ---
 
@@ -125,7 +125,7 @@ Tetra is the channel in which attention flows. The tetrahedron is the base encod
 
 ## Conclusion
 
-**The Channel** is a chain you can log into, that prices storage honestly, that finalizes under Savanna, and that treats **trust as something people grow**. Bitcoin paid machines. We attend to humans. Pure Liquid is how value stays redeemable and how activity becomes interest in the token you choose.
+**Humanity Pro** is a chain you can log into, that prices storage honestly, that finalizes under Savanna, and that treats **trust as something people grow**. Bitcoin paid machines. We attend to humans. Pure Liquid is how value stays redeemable and how activity becomes interest in the token you choose.
 
 The companion is [Pure Liquid](./PURE-LIQUID.md).
 
@@ -163,4 +163,4 @@ Tetra: [know.tetra.earth](https://know.tetra.earth).
 
 ---
 
-*© Tetra Grids, LLC. The Channel is intended for open implementation. RA, Pure Liquid, and locked liquidity carry market risk. A lock is only as strong as the chain that enforces it.*
+*© Tetra Grids, LLC. Humanity Pro is intended for open implementation. RA, Pure Liquid, and locked liquidity carry market risk. A lock is only as strong as the chain that enforces it.*

@@ -753,7 +753,7 @@ asset system_contract::update_rex_account( const name& owner, const asset& proce
  */
 void system_contract::channel_to_rex( const name& from, const asset& amount )
 {
-#if CHANNEL_RAM_AND_NAMEBID_FEES_TO_REX
+#if HUMANITY_PRO_RAM_AND_NAMEBID_FEES_TO_REX
    if ( rex_available() ) {
          _rexpool.modify( _rexpool.begin(), same_payer, [&]( auto& rp ) {
             rp.total_unlent.amount   += amount.amount;
@@ -773,7 +773,7 @@ void system_contract::channel_to_rex( const name& from, const asset& amount )
  */
 void system_contract::channel_namebid_to_rex( const int64_t highest_bid )
 {
-#if CHANNEL_RAM_AND_NAMEBID_FEES_TO_REX
+#if HUMANITY_PRO_RAM_AND_NAMEBID_FEES_TO_REX
    if ( rex_available() ) {
          _rexpool.modify( _rexpool.begin(), same_payer, [&]( auto& rp ) {
             rp.namebid_proceeds.amount += highest_bid;

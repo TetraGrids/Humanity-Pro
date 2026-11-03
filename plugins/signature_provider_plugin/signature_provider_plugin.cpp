@@ -9,7 +9,7 @@ namespace eosio {
 
 class signature_provider_plugin_impl {
    public:
-      fc::microseconds  _keyd_provider_timeout_us;
+      fc::microseconds  _humanity_keyd_provider_timeout_us;
 
       signature_provider_plugin::signature_provider_type
       make_key_signature_provider(const chain::private_key_type& key) const {
@@ -19,20 +19,20 @@ class signature_provider_plugin_impl {
       }
 
       signature_provider_plugin::signature_provider_type
-      make_keyd_signature_provider(const string& url_str, const chain::public_key_type pubkey) const {
-         fc::url keyd_url;
+      make_humanity_keyd_signature_provider(const string& url_str, const chain::public_key_type pubkey) const {
+         fc::url humanity_keyd_url;
          if(url_str.starts_with("unix://"))
             //send the entire string after unix:// to http_plugin. It'll auto-detect which part
             // is the unix socket path, and which part is the url to hit on the server
-            keyd_url = fc::url("unix", url_str.substr(7), fc::ostring(), fc::ostring(), fc::ostring(), fc::ostring(), fc::ovariant_object(), std::optional<uint16_t>());
+            humanity_keyd_url = fc::url("unix", url_str.substr(7), fc::ostring(), fc::ostring(), fc::ostring(), fc::ostring(), fc::ovariant_object(), std::optional<uint16_t>());
          else
-            keyd_url = fc::url(url_str);
+            humanity_keyd_url = fc::url(url_str);
 
-         return [to=_keyd_provider_timeout_us, keyd_url, pubkey](const chain::digest_type& digest, fc::require_canonical_t) {
+         return [to=_humanity_keyd_provider_timeout_us, humanity_keyd_url, pubkey](const chain::digest_type& digest, fc::require_canonical_t) {
             fc::variant params;
             fc::to_variant(std::make_pair(digest, pubkey), params);
             auto deadline = to.count() >= 0 ? fc::time_point::now() + to : fc::time_point::maximum();
-            return app().get_plugin<http_client_plugin>().get_client().post_sync(keyd_url, params, deadline).as<chain::signature_type>();
+            return app().get_plugin<http_client_plugin>().get_client().post_sync(humanity_keyd_url, params, deadline).as<chain::signature_type>();
          };
       }
 
@@ -49,8 +49,8 @@ class signature_provider_plugin_impl {
             EOS_ASSERT(pubkey == priv.get_public_key(), chain::plugin_config_exception, "Private key does not match given public key for ${pub}", ("pub", pubkey));
             return std::make_pair(pubkey, make_key_signature_provider(priv));
          }
-         else if(spec_type_str == "KEYD")
-            return std::make_pair(pubkey, make_keyd_signature_provider(spec_data, pubkey));
+         else if(spec_type_str == "HUMANITY-KEYD")
+            return std::make_pair(pubkey, make_humanity_keyd_signature_provider(spec_data, pubkey));
          EOS_THROW(chain::plugin_config_exception, "Unsupported key provider type \"${t}\"", ("t", spec_type_str));
       }
 };
@@ -60,8 +60,8 @@ signature_provider_plugin::~signature_provider_plugin(){}
 
 void signature_provider_plugin::set_program_options(options_description&, options_description& cfg) {
    cfg.add_options()
-         ("keyd-provider-timeout", boost::program_options::value<int32_t>()->default_value(5),
-          "Limits the maximum time (in milliseconds) that is allowed for sending requests to a keyd provider for signing")
+         ("humanity-keyd-provider-timeout", boost::program_options::value<int32_t>()->default_value(5),
+          "Limits the maximum time (in milliseconds) that is allowed for sending requests to a humanity-keyd provider for signing")
          ;
 }
 
@@ -70,15 +70,15 @@ const char* const signature_provider_plugin::signature_provider_help_text() cons
           "Where:\n"
           "   <public-key>    \tis a string form of a valid Antelope public key, including BLS finalizer key\n"
           "   <provider-spec> \tis a string in the form <provider-type>:<data>\n"
-          "   <provider-type> \tis KEY, KEYD, or SE\n"
+          "   <provider-type> \tis KEY, HUMANITY-KEYD, or SE\n"
           "   KEY:<data>      \tis a string form of a valid Antelope private key which maps to the provided public key\n"
-          "   KEYD:<data>    \tis the URL where keyd is available and the appropriate wallet(s) are unlocked\n\n"
+          "   HUMANITY-KEYD:<data>    \tis the URL where humanity-keyd is available and the appropriate wallet(s) are unlocked\n\n"
           ;
 
 }
 
 void signature_provider_plugin::plugin_initialize(const variables_map& options) {
-   my->_keyd_provider_timeout_us = fc::milliseconds( options.at("keyd-provider-timeout").as<int32_t>() );
+   my->_humanity_keyd_provider_timeout_us = fc::milliseconds( options.at("humanity-keyd-provider-timeout").as<int32_t>() );
 }
 
 

@@ -2,6 +2,6 @@
 
 namespace eosio { namespace chain {
 
-const string genesis_state::eosio_root_key = "${CHANNEL_ROOT_KEY}";
+const string genesis_state::eosio_root_key = "${HUMANITY_ROOT_KEY}";
 
 } } // namespace eosio::chain

@@ -60,15 +60,15 @@ class Utils:
 
     testBinPath = Path(__file__).resolve().parents[2] / 'bin'
 
-    EosClientPath=str(testBinPath / "chan")
-    MiscEosClientArgs="--no-auto-keyd"
+    EosClientPath=str(testBinPath / "humanity")
+    MiscEosClientArgs="--no-auto-humanity-keyd"
 
-    SpringClientPath=str(testBinPath / "channel-util")
+    SpringClientPath=str(testBinPath / "humanity-util")
 
-    EosWalletName="keyd"
+    EosWalletName="humanity-keyd"
     EosWalletPath=str(testBinPath / EosWalletName)
 
-    EosServerName="channeld"
+    EosServerName="humanityd"
     EosServerPath=str(testBinPath / EosServerName)
 
     ShuttingDown=False
@@ -609,5 +609,5 @@ class Utils:
         return data.decode(enc)
 
     @staticmethod
-    def getChanneldVersion():
+    def getHumanitydVersion():
         return os.popen(f"{Utils.EosServerPath} --full-version").read().replace("\n", "")

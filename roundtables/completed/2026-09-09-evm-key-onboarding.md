@@ -28,8 +28,8 @@ Enable users to sign with EVM keys (MetaMask / Phantom) for a full onboarding fl
 ### 1. Activating EM_ED_KEYS (prerequisite)
 
 ```
-@antelope-core-dev Enable the EM_ED_KEYS feature flag so the Channel runtime accepts EIP-191 (EVM)
-and ed25519 signatures in recover_key and account authorities. This is already in channeld,
+@antelope-core-dev Enable the EM_ED_KEYS feature flag so Humanity Pro runtime accepts EIP-191 (EVM)
+and ed25519 signatures in recover_key and account authorities. This is already in humanityd,
 just needs boot-time activation before ra.authex and ra.claim changes deploy.
 ```
 
@@ -38,7 +38,7 @@ just needs boot-time activation before ra.authex and ra.claim changes deploy.
 ```
 @antelope-dev-style Implement signature-verified createlink in ra.authex:
 Allow users to sign a message with their EVM key (MetaMask/Phantom) proving they control an external address,
-then link that key to their Channel account without requiring prior authorization.
+then link that key to their Humanity Pro account without requiring prior authorization.
 The signature format should be: "<pubkey>|<account>|<chain>|<nonce>|createlink auth"
 ```
 
@@ -54,7 +54,7 @@ with their linked EVM key instead of requiring a relayer. Keep the relayer model
 
 ```
 @antelope-dev-style Implement lazy account creation for cross-chain onboarding:
-When a user bridges funds from an EVM chain and wants to claim on Channel,
+When a user bridges funds from an EVM chain and wants to claim on Humanity Pro,
 allow them to sign a claim action with their external key.
 The system should create their account (using the bridged funds to pay RAM)
 only when they submit that signed claim, avoiding the chicken-and-egg problem.
@@ -83,7 +83,7 @@ If you want the meeting context in one session:
 ```
 @antelope-dev-style Based on the Sep 9 meeting discussion with Michael and Henrik,
 implement the roadmap from contracts/ra.claim/FUTURE.md step-by-step:
-1. Activate EM_ED_KEYS in Channel runtime
+1. Activate EM_ED_KEYS in Humanity Pro runtime
 2. Add signature-verified createlink to ra.authex supporting EIP-191
 3. Implement user-submitted claims in ra.claim with signature verification
 This enables users to sign with EVM keys (MetaMask/Phantom) for a full onboarding flow

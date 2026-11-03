@@ -23,8 +23,8 @@ COMPLETEPRODUCTIONWINDOWSIZE = 12
 
 @dataclass
 class ArtifactPaths:
-    channeldLogDir: Path = Path("")
-    channeldLogPath: Path = Path("")
+    humanitydLogDir: Path = Path("")
+    humanitydLogPath: Path = Path("")
     trxGenLogDirPath: Path = Path("")
     blockTrxDataPath: Path = Path("")
     blockDataPath: Path = Path("")
@@ -486,8 +486,8 @@ class JsonReportHandler:
             f.write(report)
 
 def analyzeLogResults(data: chainData, tpsTestConfig: TpsTestConfig, artifacts: ArtifactPaths) -> LogAnalysis:
-    scrapeLogBlockElapsedTime(data, artifacts.channeldLogPath)
-    scrapeLogDroppedForkedBlocks(data, artifacts.channeldLogDir)
+    scrapeLogBlockElapsedTime(data, artifacts.humanitydLogPath)
+    scrapeLogDroppedForkedBlocks(data, artifacts.humanitydLogDir)
 
     trxSent = {}
     scrapeTrxGenTrxSentDataLogs(trxSent, artifacts.trxGenLogDirPath, tpsTestConfig.quiet)

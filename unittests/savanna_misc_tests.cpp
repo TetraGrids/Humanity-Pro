@@ -46,7 +46,7 @@ BOOST_FIXTURE_TEST_CASE(snapshot_startup_with_fork_db, savanna_cluster::cluster_
 
 // -----------------------------------------------------------------------------------------------------
 // Test case demonstrating the weak masking issue (see https://github.com/AntelopeIO/spring/issues/534)
-// Because the issue is fixed in channel https://github.com/AntelopeIO/spring/pull/537, test must pass
+// Because the issue is fixed in Spring https://github.com/AntelopeIO/spring/pull/537, test must pass
 // on all versions past that commit.
 // -----------------------------------------------------------------------------------------------------
 /*
@@ -339,7 +339,7 @@ BOOST_FIXTURE_TEST_CASE(gh_534_liveness_issue, savanna_cluster::cluster_t) try {
 // Let's say a node operator decided to take a snapshot on B3. After their node receives B6, B4 becomes final and the
 // snapshot on B3 becomes available.
 //
-// Then the operator shuts down channeld and decides to restart from the snapshot on B3.
+// Then the operator shuts down humanityd and decides to restart from the snapshot on B3.
 //
 // After starting up from the snapshot, their node receives block B4 from the P2P network. Since B4 advances the QC
 // claim relative to its parent (from a strong QC claimed on B1 to a strong QC claimed on B2), it must include a QC
@@ -388,7 +388,7 @@ BOOST_FIXTURE_TEST_CASE(validate_qc_after_restart_from_snapshot, savanna_cluster
    BOOST_REQUIRE_EQUAL(qc_s(qc(b6)), strong_qc(b5));    // b6 claims a strong QC on b5. (b6 makes b4 final.)
    BOOST_REQUIRE_EQUAL(A.lib_number, b4->block_num());
 
-   // Then the operator shuts down channeld and decides to restart from the snapshot on B3.
+   // Then the operator shuts down humanityd and decides to restart from the snapshot on B3.
    A.close();
    A.remove_state();
    A.remove_reversible_data_and_blocks_log();
@@ -454,7 +454,7 @@ BOOST_FIXTURE_TEST_CASE(validate_qc_after_restart_from_snapshot, savanna_cluster
 // The node operator decided to take a snapshot on B6. After their node receives B9, B6 becomes
 // final and the snapshot on B6 becomes available to the node operator as a valid snapshot.
 //
-// Then the operator shuts down channeld and decides to restart from the snapshot on B6.
+// Then the operator shuts down humanityd and decides to restart from the snapshot on B6.
 //
 // After starting up from the snapshot, their node receives block B7 from the P2P network.
 // Since B7 advances the QC claim relative to its parent (from a strong QC claimed on B4 to a
@@ -534,7 +534,7 @@ BOOST_FIXTURE_TEST_CASE(validate_qc_requiring_finalizer_policies, savanna_cluste
    BOOST_REQUIRE_EQUAL(active->generation, p2);         // b6 has active finalizer policy p2
    BOOST_REQUIRE(!A.head_pending_finalizer_policy());   // and no pending finalizer policy.
 
-   // At this point, in the The Channel 1.0.0 implementation (which has the bug described in issue #694),
+   // At this point, in the Humanity Pro 1.0.0 implementation (which has the bug described in issue #694),
    // policy P2 is lost from the block_header_state of B6, which is the source of the problem
 
    auto b6_snapshot = A.snapshot();
@@ -694,8 +694,8 @@ static void sync_replayed_blockchain(const std::filesystem::path& ref_blockchain
 
 // ----------------------------------------------------------------------------------------------------
 // For issue #694, we need to change the finality core of the `block_header_state`, but we want to
-// ensure that this doesn't create a consensus incompatibility with The Channel 1.0.0, so the blocks created
-// with newer versions remain compatible (and linkable) with blocks by The Channel 1.0.0.
+// ensure that this doesn't create a consensus incompatibility with Humanity Pro 1.0.0, so the blocks created
+// with newer versions remain compatible (and linkable) with blocks by Humanity Pro 1.0.0.
 //
 // This test adds a utility that saves reference blockchain data and checks for
 // regression in compatibility of syncing and replaying the reference blockchain data.

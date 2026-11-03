@@ -41,16 +41,14 @@ void bpay::on_transfer( const name from, const name to, const asset quantity, co
 
     // get top n producers by vote, excluding inactive
     std::vector<name> top_producers;
-    while (true) {
-        if (prod == idx.end()) break;
-        if (prod->is_active == false) continue;
-        
-        top_producers.push_back(prod->owner);
-
-        if (top_producers.size() == producer_count) break;
-        
+    while (prod != idx.end() && top_producers.size() < producer_count) {
+        if (prod->is_active) {
+            top_producers.push_back(prod->owner);
+        }
         prod++;
     }
+
+    check( !top_producers.empty(), "no active producers" );
 
     asset reward = quantity / top_producers.size();
 

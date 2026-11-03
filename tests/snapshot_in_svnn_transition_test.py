@@ -52,9 +52,9 @@ try:
     numTrxGenerators=2
     Print("Stand up cluster")
     # For now do not load system contract as it does not support setfinalizer
-    specificExtraChanneldArgs = { irrNodeId: "--read-mode irreversible"}
+    specificExtraHumanitydArgs = { irrNodeId: "--read-mode irreversible"}
     if cluster.launch(pnodes=pnodes, totalNodes=total_nodes, prodCount=prod_count, maximumP2pPerHost=total_nodes+numTrxGenerators, topo=topo, delay=delay, loadSystemContract=False,
-                      activateIF=False, specificExtraChanneldArgs=specificExtraChanneldArgs) is False:
+                      activateIF=False, specificExtraHumanitydArgs=specificExtraHumanitydArgs) is False:
         errorExit("Failed to stand up eos cluster.")
 
     assert cluster.biosNode.getInfo(exitOnError=True)["head_block_producer"] != "ra", "launch should have waited for production to change"
@@ -80,7 +80,7 @@ try:
 
     # allow time for instant finality activation to be processed
     assert cluster.biosNode.waitForHeadToAdvance(blocksToAdvance=5), "Head should advance after instant finality activate"
-    
+
     # Take snapshots
     def takeSnapshot(node):
        ret = node.createSnapshot()

@@ -129,7 +129,7 @@ namespace eosio::chain {
       EOS_ASSERT(abi_version.is_valid(), unsupported_abi_version_exception, "Unrecognized abi version: ${v}",
                  ("v", abi.version));
       EOS_ASSERT(abi_version <= current_abi_support, unsupported_abi_version_exception,
-                 "ABI has an unsupported version: ${v}, current channeld supports up to: ${vc}",
+                 "ABI has an unsupported version: ${v}, current humanityd supports up to: ${vc}",
                  ("v", abi.version)("vc", current_abi_support.str()));
 
       size_t types_size = abi.types.size();

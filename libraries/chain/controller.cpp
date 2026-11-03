@@ -222,7 +222,7 @@ struct completed_block {
 
    const block_signing_authority& pending_block_signing_authority() const {
       // this should never be called on completed_block because `controller::is_building_block()` returns false
-      assert(0); 
+      assert(0);
       static block_signing_authority bsa; return bsa; // just so it builds
    }
 };
@@ -244,7 +244,7 @@ struct assembled_block {
 
    // --------------------------------------------------------------------------------
    struct assembled_block_if {
-      producer_authority                active_producer_authority; 
+      producer_authority                active_producer_authority;
       block_header_state                bhs;
       deque<transaction_metadata_ptr>   trx_metas;                 // Comes from building_block::pending_trx_metas
                                                                    // Carried over to put into block_state (optimization for fork reorgs)
@@ -287,7 +287,7 @@ struct assembled_block {
                     [](const assembled_block_if& ab)     -> const block_id_type& { return ab.bhs.id(); }},
          v);
    }
-   
+
    block_timestamp_type timestamp() const {
       return std::visit(
          overloaded{[](const assembled_block_legacy& ab) { return ab.pending_block_header_state.timestamp; },
@@ -402,7 +402,7 @@ struct building_block {
          action_receipt_digests(store_which)
       {
       }
-      
+
       bool is_protocol_feature_activated(const digest_type& digest, const flat_set<digest_type>& activated_features) const {
          if (activated_features.find(digest) != activated_features.end())
             return true;
@@ -432,7 +432,7 @@ struct building_block {
          };
       }
    };
-   
+
    // --------------------------------------------------------------------------------
    struct building_block_legacy : public building_block_common {
       pending_block_header_state_legacy          pending_block_header_state;
@@ -829,7 +829,7 @@ struct building_block {
 
 
 using block_stage_type = std::variant<building_block, assembled_block, completed_block>;
-      
+
 struct block_report {
    size_t             total_net_usage = 0;
    size_t             total_cpu_usage_us = 0;
@@ -873,7 +873,7 @@ struct pending_state {
    block_timestamp_type timestamp() const {
       return std::visit([](const auto& stage) { return stage.timestamp(); }, _block_stage);
    }
-   
+
    uint32_t block_num() const {
       return std::visit([](const auto& stage) { return stage.block_num(); }, _block_stage);
    }
@@ -2381,7 +2381,7 @@ struct controller_impl {
 
       block_state_pair result;
       if (header.version >= v8::minimum_version) {
-         // loading a snapshot saved by The Channel 1.0.1 and above.
+         // loading a snapshot saved by Humanity Pro 1.0.1 and above.
          // ---------------------------------------------------
          if (std::clamp(header.version, v8::minimum_version, v8::maximum_version) == header.version ) {
             snapshot->read_section("eosio::chain::block_state", [this, &result]( auto &section ){
@@ -2408,10 +2408,10 @@ struct controller_impl {
             EOS_THROW(snapshot_exception, "Unsupported block_state version");
          }
       } else if (header.version == 7) {
-         // snapshot created with The Channel 1.0.0, which was very soon superseded by The Channel 1.0.1
+         // snapshot created with Humanity Pro 1.0.0, which was very soon superseded by Humanity Pro 1.0.1
          // and a new snapshot format.
          // ----------------------------------------------------------------------------------
-         EOS_THROW(snapshot_exception, "v7 snapshots are not supported anymore in The Channel 1.0.1 and above");
+         EOS_THROW(snapshot_exception, "v7 snapshots are not supported anymore in Humanity Pro 1.0.1 and above");
       } else {
          // loading a snapshot saved by Leap up to version 6.
          // -------------------------------------------------
@@ -5384,7 +5384,7 @@ void controller::preactivate_feature( const digest_type& feature_digest, bool is
    // But it is still possible for a producer to retire a deferred transaction that deals with this subjective
    // information. If they recognized the feature, they would retire it successfully, but a validator that
    // does not recognize the feature should reject the entire block (not just fail the deferred transaction).
-   // Even if they don't recognize the feature, the producer could change their channeld code to treat it like an
+   // Even if they don't recognize the feature, the producer could change their humanityd code to treat it like an
    // objective failure thus leading the deferred transaction to retire with soft_fail or hard_fail.
    // In this case, validators that don't recognize the feature would reject the whole block immediately, and
    // validators that do recognize the feature would likely lead to a different retire status which would

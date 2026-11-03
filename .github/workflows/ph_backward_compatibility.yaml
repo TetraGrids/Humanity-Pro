@@ -65,12 +65,12 @@ jobs:
         run: |
           apt-get update
           apt-get install -y ./leap*.deb
-          rm build/bin/channeld
-          rm build/bin/chan
-          cp /usr/bin/channeld build/bin
-          cp /usr/bin/chan build/bin
-          ./build/bin/channeld --full-version
-          ./build/bin/chan version full
+          rm build/bin/humanityd
+          rm build/bin/humanity
+          cp /usr/bin/nodeos build/bin/humanityd
+          cp /usr/bin/cleos build/bin/humanity
+          ./build/bin/humanityd --full-version
+          ./build/bin/humanity version full
       - if: ${{ matrix.release == '3.1' || matrix.release == '3.2' }}
         name: Run Performance Tests (<v4.0)
         run: |

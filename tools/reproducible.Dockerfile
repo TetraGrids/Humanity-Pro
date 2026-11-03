@@ -54,8 +54,8 @@ RUN ls *.sig *.asc | xargs -n 1 gpg --verify && \
 
 RUN tar xf cmake-*.tar.gz && \
     cd cmake*[0-9] && \
-    echo 'set(CMAKE_USE_OPENSSL OFF CACHE BOOL "" FORCE)' > channel-init.cmake && \
-    ./bootstrap --parallel=$(nproc) --init=channel-init.cmake --generator=Ninja && \
+    echo 'set(CMAKE_USE_OPENSSL OFF CACHE BOOL "" FORCE)' > humanity-pro-init.cmake && \
+    ./bootstrap --parallel=$(nproc) --init=humanity-pro-init.cmake --generator=Ninja && \
     ninja install && \
     rm -rf cmake*
 
@@ -102,7 +102,7 @@ RUN tar xf llvm-project-${_SPRING_LLVM_VERSION}.src.tar.xz && \
 
 # It's possible to extract the toolchain to the host using this target by something like,
 #  docker build --target export-toolchain -o $HOME/springtoolchain/ -f tools/reproducible.Dockerfile .
-# and then use it for building channel by something like,
+# and then use it for building Humanity Pro by something like,
 #  cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/springtoolchain/pinnedtoolchain.cmake -D....
 # The build won't be reproducible, but it may help it troubleshooting errors, warnings, or bugs with the pinned compiler
 FROM scratch AS export-toolchain
@@ -110,14 +110,13 @@ COPY --from=builder /pinnedtoolchain/ /
 
 FROM builder AS build
 
-ARG CHANNEL_BUILD_JOBS
+ARG HUMANITY_PRO_BUILD_JOBS
 
-# Yuck: This places the source at the same location as channel's CI (build.yaml, build_base.yaml). Unfortunately this location only matches
-#       when build.yaml etc are being run from a repository named channel.
-COPY / /__w/channel/channel
-RUN cmake -S /__w/channel/channel -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -GNinja && \
-    cmake --build build -t package -- ${CHANNEL_BUILD_JOBS:+-j$CHANNEL_BUILD_JOBS} && \
-    /__w/channel/channel/tools/tweak-deb.sh build/the-channel_*.deb
+# Yuck: This places the source at the same location as Humanity Pro's CI (build.yaml, build_base.yaml).
+COPY / /__w/Humanity-Pro/Humanity-Pro
+RUN cmake -S /__w/Humanity-Pro/Humanity-Pro -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -GNinja && \
+    cmake --build build -t package -- ${HUMANITY_PRO_BUILD_JOBS:+-j$HUMANITY_PRO_BUILD_JOBS} && \
+    /__w/Humanity-Pro/Humanity-Pro/tools/tweak-deb.sh build/humanity-pro_*.deb
 
 FROM scratch AS exporter
 COPY --from=build /build/*.deb /build/*.tar.* /

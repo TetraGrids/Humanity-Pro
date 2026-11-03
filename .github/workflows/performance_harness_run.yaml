@@ -11,12 +11,12 @@ on:
       override-test-params:
         description: 'Override perf harness params'
         type: string
-      override-channel:
-        description: Override channel target
+      override-humanity:
+        description: Override Humanity Pro target
         type: string
-      override-channel-prerelease:
+      override-humanity-prerelease:
         type: choice
-        description: Override channel prelease
+        description: Override Humanity Pro prerelease
         options:
         - default
         - true
@@ -37,24 +37,24 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       test-params: ${{steps.overrides.outputs.test-params}}
-      channel-target: ${{steps.overrides.outputs.channel-target}}
-      channel-prerelease: ${{steps.overrides.outputs.channel-prerelease}}
+      humanity-target: ${{steps.overrides.outputs.humanity-target}}
+      humanity-prerelease: ${{steps.overrides.outputs.humanity-prerelease}}
     steps:
       - name: Setup Input Params
         id: overrides
         run: |
           echo test-params=findMax testBpOpMode >> $GITHUB_OUTPUT
-          echo channel-target="DEFAULT" >> $GITHUB_OUTPUT
-          echo channel-prerelease="false" >> $GITHUB_OUTPUT
+          echo humanity-target="DEFAULT" >> $GITHUB_OUTPUT
+          echo humanity-prerelease="false" >> $GITHUB_OUTPUT
 
           if [[ "${{inputs.override-test-params}}" != "" ]]; then
             echo test-params=${{inputs.override-test-params}} >> $GITHUB_OUTPUT
           fi
-          if [[ "${{inputs.override-channel}}" != "" ]]; then
-            echo channel-target=${{inputs.override-channel}} >> $GITHUB_OUTPUT
+          if [[ "${{inputs.override-humanity}}" != "" ]]; then
+            echo humanity-target=${{inputs.override-humanity}} >> $GITHUB_OUTPUT
           fi
-          if [[ "${{inputs.override-channel-prerelease}}" == +(true|false) ]]; then
-            echo channel-prerelease=${{inputs.override-channel-prerelease}} >> $GITHUB_OUTPUT
+          if [[ "${{inputs.override-humanity-prerelease}}" == +(true|false) ]]; then
+            echo humanity-prerelease=${{inputs.override-humanity-prerelease}} >> $GITHUB_OUTPUT
           fi
 
   platform-cache:
@@ -68,7 +68,7 @@ jobs:
       platform-files: .cicd/platforms
 
   reuse-build:
-    name: Reuse channel build
+    name: Reuse Humanity Pro build
     needs: [v]
     runs-on: ubuntu-latest
     outputs:
@@ -78,8 +78,8 @@ jobs:
           id: downloadBuild
           uses: AntelopeIO/asset-artifact-download-action@v3
           with:
-            owner: AntelopeIO
-            repo: channel
+            owner: ${{github.repository_owner}}
+            repo: ${{github.event.repository.name}}
             file: build.tar.zst
             target: ${{github.sha}}
             artifact-name: ${{github.event.inputs.platform-choice}}-build
@@ -116,26 +116,26 @@ jobs:
       - name: Extract Build Directory
         run: |
           zstdcat build.tar.zst | tar x
-      - if: ${{ needs.v.outputs.channel-target != 'DEFAULT' }}
-        name: Download Prev The Channel Version
+      - if: ${{ needs.v.outputs.humanity-target != 'DEFAULT' }}
+        name: Download Prev Humanity Pro Version
         uses: AntelopeIO/asset-artifact-download-action@v3
         with:
-          owner: AntelopeIO
-          repo: channel
-          target: '${{needs.v.outputs.channel-target}}'
-          prereleases: ${{fromJSON(needs.v.outputs.channel-prerelease)}}
-          file: 'channel.*${{github.event.inputs.platform-choice}}.*(x86_64|amd64).deb'
-      - if: ${{ needs.v.outputs.channel-target != 'DEFAULT' }}
-        name: Install channel & replace binaries for PH use
+          owner: ${{github.repository_owner}}
+          repo: ${{github.event.repository.name}}
+          target: '${{needs.v.outputs.humanity-target}}'
+          prereleases: ${{fromJSON(needs.v.outputs.humanity-prerelease)}}
+          file: 'humanity-pro.*${{github.event.inputs.platform-choice}}.*(x86_64|amd64).deb'
+      - if: ${{ needs.v.outputs.humanity-target != 'DEFAULT' }}
+        name: Install Humanity Pro & replace binaries for PH use
         run: |
           apt-get update
-          apt-get install -y ./channel*.deb
-          rm build/bin/channeld
-          rm build/bin/chan
-          cp /usr/bin/channeld build/bin
-          cp /usr/bin/chan build/bin
-          ./build/bin/channeld --full-version
-          ./build/bin/chan version full
+          apt-get install -y ./humanity-pro*.deb
+          rm build/bin/humanityd
+          rm build/bin/humanity
+          cp /usr/bin/humanityd build/bin
+          cp /usr/bin/humanity build/bin
+          ./build/bin/humanityd --full-version
+          ./build/bin/humanity version full
       - name: Run Performance Test
         run: |
           cd build

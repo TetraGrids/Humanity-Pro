@@ -103,11 +103,11 @@ struct signer_traits<chain_kind_ethereum, chain_key_type_ethereum> {
 };
 
 // ---------------------------------------------------------------------------
-// (wire, ethereum) -- The Channel transactions signed via MetaMask / personal_sign
+// (wire, ethereum) -- Humanity Pro transactions signed via MetaMask / personal_sign
 // Signs: keccak256(EIP-191 prefix + sha256_raw) via EM (secp256k1)
 // ---------------------------------------------------------------------------
 template<>
-struct signer_traits<chain_kind_channel, chain_key_type_ethereum> {
+struct signer_traits<chain_kind_humanity, chain_key_type_ethereum> {
    using input_type    = sha256;
    using prepared_type = keccak256;
    static constexpr bool recoverable = true;
@@ -197,33 +197,33 @@ struct signer {
 };
 
 // ===========================================================================
-// channel_signer -- key-type agnostic Wire transaction signing
+// humanity_signer -- key-type agnostic Wire transaction signing
 // Passes through to provider.sign(sha256); handles K1/EM/ED polymorphically
 // ===========================================================================
 
 /**
- * @brief Key-type-agnostic The Channel transaction signer.
+ * @brief Key-type-agnostic Humanity Pro transaction signer.
  *
  * Hands the 32-byte digest straight to `provider.sign(...)`, which dispatches
  * polymorphically over K1 / EM / ED keys inside the provider's closure.
  *
- * Unlike `signer<>` (and its `channel_eth_signer` alias), `channel_signer` has no
+ * Unlike `signer<>` (and its `humanity_eth_signer` alias), `humanity_signer` has no
  * `prepare()` hook: it raw-signs exactly the 32 bytes it is given and applies
  * no EIP-191 framing. For an Ethereum key that framing
  * (`ethereum::hash_user_message`) lives in
- * `signer_traits<chain_kind_channel, chain_key_type_ethereum>::prepare`, not in
+ * `signer_traits<chain_kind_humanity, chain_key_type_ethereum>::prepare`, not in
  * the signature provider -- a `KEY:` provider's `em::private_key_shim` and a
  * `KMS:` provider alike raw-sign the digest as handed in. Consequently
- * `channel_signer` and `channel_eth_signer` are NOT interchangeable even for an
+ * `humanity_signer` and `humanity_eth_signer` are NOT interchangeable even for an
  * identical provider: swapping one for the other changes which bytes are
- * signed. Use `channel_eth_signer` when The Channel transaction must carry a
- * MetaMask-compatible `personal_sign` signature; use `channel_signer` only when
+ * signed. Use `humanity_eth_signer` when Humanity Pro transaction must carry a
+ * MetaMask-compatible `personal_sign` signature; use `humanity_signer` only when
  * the caller has already produced the exact digest to be signed.
  */
-struct channel_signer {
+struct humanity_signer {
    const signature_provider_t& provider;
 
-   explicit channel_signer(const signature_provider_t& p) : provider(p) {}
+   explicit humanity_signer(const signature_provider_t& p) : provider(p) {}
 
    signature sign(const sha256& digest) const {
       return provider.sign(digest);
@@ -237,8 +237,8 @@ struct channel_signer {
 /// Signs Ethereum transactions (keccak256 hash of raw bytes)
 using eth_client_signer = signer<chain_kind_ethereum, chain_key_type_ethereum>;
 
-/// Signs The Channel transactions with EM keys (EIP-191 prefixed keccak256)
-using channel_eth_signer = signer<chain_kind_channel, chain_key_type_ethereum>;
+/// Signs Humanity Pro transactions with EM keys (EIP-191 prefixed keccak256)
+using humanity_eth_signer = signer<chain_kind_humanity, chain_key_type_ethereum>;
 
 /// Signs Solana transactions (ED25519 over raw bytes)
 using sol_client_signer = signer<chain_kind_solana, chain_key_type_solana>;

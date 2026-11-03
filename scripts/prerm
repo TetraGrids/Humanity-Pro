@@ -3,4 +3,4 @@
 # Cleanup symbolic links created during postinst
 Python_SITELIB=$(python3 -c "from sysconfig import get_path; print(get_path('platlib', 'deb_system'))")
 rm -f $Python_SITELIB/TestHarness
-rm -f /usr/local/share/channel_testing/bin
+rm -f /usr/local/share/humanity_pro_testing/bin

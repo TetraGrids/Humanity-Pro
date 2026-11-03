@@ -79,8 +79,8 @@ cleanup()
 # result stored in HEAD_BLOCK_NUM
 getHeadBlockNum()
 {
-  INFO="$(programs/chan/chan get info)"
-  verifyErrorCode "chan get info"
+  INFO="$(programs/humanity/humanity get info)"
+  verifyErrorCode "humanity get info"
   HEAD_BLOCK_NUM="$(echo "$INFO" | awk '/head_block_num/ {print $2}')"
   # remove trailing coma
   HEAD_BLOCK_NUM=${HEAD_BLOCK_NUM%,}
@@ -111,10 +111,10 @@ INITA_PRV_KEY="5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
 # cleanup from last run
 cleanup
 
-# stand up channeld cluster
+# stand up humanityd cluster
 launcherOpts="-p $pnodes -n $total_nodes -s $topo -d $delay"
-echo Launcher options: --channeld \"--plugin eosio::wallet_api_plugin\" $launcherOpts
-programs/eosio-launcher/eosio-launcher --channeld "--plugin eosio::wallet_api_plugin" $launcherOpts
+echo Launcher options: --humanityd \"--plugin eosio::wallet_api_plugin\" $launcherOpts
+programs/eosio-launcher/eosio-launcher --humanityd "--plugin eosio::wallet_api_plugin" $launcherOpts
 sleep 7
 
 startPort=8888
@@ -126,22 +126,22 @@ echo endPort: $endPort
 port2=$startPort
 while [ $port2  -ne $endport ]; do
     echo Request block 1 from node on port $port2
-    TRANS_INFO="$(programs/chan/chan --port $port2 get block 1)"
-    verifyErrorCode "chan get block"
+    TRANS_INFO="$(programs/humanity/humanity --port $port2 get block 1)"
+    verifyErrorCode "humanity get block"
     port2=`expr $port2 + 1`
 done
 
 # create 3 keys
-KEYS="$(programs/chan/chan create key)"
-verifyErrorCode "chan create key"
+KEYS="$(programs/humanity/humanity create key)"
+verifyErrorCode "humanity create key"
 PRV_KEY1="$(echo "$KEYS" | awk '/Private/ {print $3}')"
 PUB_KEY1="$(echo "$KEYS" | awk '/Public/ {print $3}')"
-KEYS="$(programs/chan/chan create key)"
-verifyErrorCode "chan create key"
+KEYS="$(programs/humanity/humanity create key)"
+verifyErrorCode "humanity create key"
 PRV_KEY2="$(echo "$KEYS" | awk '/Private/ {print $3}')"
 PUB_KEY2="$(echo "$KEYS" | awk '/Public/ {print $3}')"
-KEYS="$(programs/chan/chan create key)"
-verifyErrorCode "chan create key"
+KEYS="$(programs/humanity/humanity create key)"
+verifyErrorCode "humanity create key"
 PRV_KEY3="$(echo "$KEYS" | awk '/Private/ {print $3}')"
 PUB_KEY3="$(echo "$KEYS" | awk '/Public/ {print $3}')"
 if [ -z "$PRV_KEY1" ] || [ -z "$PRV_KEY2" ] || [ -z "$PRV_KEY3" ] || [ -z "$PUB_KEY1" ] || [ -z "$PUB_KEY2" ] || [ -z "$PUB_KEY3" ]; then
@@ -150,21 +150,21 @@ fi
 
 
 # create wallet for inita
-PASSWORD_INITA="$(programs/chan/chan wallet create --name inita)"
-verifyErrorCode "chan wallet create"
+PASSWORD_INITA="$(programs/humanity/humanity wallet create --name inita)"
+verifyErrorCode "humanity wallet create"
 # strip out password from output
 PASSWORD_INITA="$(echo "$PASSWORD_INITA" | awk '/PW/ {print $1}')"
 # remove leading/trailing quotes
 PASSWORD_INITA=${PASSWORD_INITA#\"}
 PASSWORD_INITA=${PASSWORD_INITA%\"}
-programs/chan/chan wallet import --name inita --private-key $INITA_PRV_KEY
-verifyErrorCode "chan wallet import"
-programs/chan/chan wallet import --name inita --private-key $PRV_KEY1
-verifyErrorCode "chan wallet import"
-programs/chan/chan wallet import --name inita --private-key $PRV_KEY2
-verifyErrorCode "chan wallet import"
-programs/chan/chan wallet import --name inita --private-key $PRV_KEY3
-verifyErrorCode "chan wallet import"
+programs/humanity/humanity wallet import --name inita --private-key $INITA_PRV_KEY
+verifyErrorCode "humanity wallet import"
+programs/humanity/humanity wallet import --name inita --private-key $PRV_KEY1
+verifyErrorCode "humanity wallet import"
+programs/humanity/humanity wallet import --name inita --private-key $PRV_KEY2
+verifyErrorCode "humanity wallet import"
+programs/humanity/humanity wallet import --name inita --private-key $PRV_KEY3
+verifyErrorCode "humanity wallet import"
 
 #
 # Account and Transfer Tests
@@ -172,12 +172,12 @@ verifyErrorCode "chan wallet import"
 
 # create new account
 echo Creating account testera
-ACCOUNT_INFO="$(programs/chan/chan create account inita testera $PUB_KEY1 $PUB_KEY3)"
-verifyErrorCode "chan create account"
+ACCOUNT_INFO="$(programs/humanity/humanity create account inita testera $PUB_KEY1 $PUB_KEY3)"
+verifyErrorCode "humanity create account"
 waitForNextBlock
 # verify account created
-ACCOUNT_INFO="$(programs/chan/chan get account testera)"
-verifyErrorCode "chan get account"
+ACCOUNT_INFO="$(programs/humanity/humanity get account testera)"
+verifyErrorCode "humanity get account"
 count=`echo $ACCOUNT_INFO | grep -c "staked_balance"`
 if [ $count == 0 ]; then
   error "FAILURE - account creation failed: $ACCOUNT_INFO"
@@ -189,8 +189,8 @@ echo Producing node port: $pPort
 while [ $port  -ne $endport ]; do
 
     echo Sending transfer request to node on port $port.
-    TRANSFER_INFO="$(programs/chan/chan transfer inita testera 975321 "test transfer")"
-    verifyErrorCode "chan transfer"
+    TRANSFER_INFO="$(programs/humanity/humanity transfer inita testera 975321 "test transfer")"
+    verifyErrorCode "humanity transfer"
     getTransactionId "$TRANSFER_INFO"
     echo Transaction id: $TRANS_ID
 
@@ -200,8 +200,8 @@ while [ $port  -ne $endport ]; do
     port2=$startPort
     while [ $port2  -ne $endport ]; do
 	echo Verifying transaction exists on node on port $port2
-   TRANS_INFO="$(programs/chan/chan --port $port2 get transaction $TRANS_ID)"
-   verifyErrorCode "chan get transaction trans_id of <$TRANS_INFO> from node on port $port2"
+   TRANS_INFO="$(programs/humanity/humanity --port $port2 get transaction $TRANS_ID)"
+   verifyErrorCode "humanity get transaction trans_id of <$TRANS_INFO> from node on port $port2"
 	port2=`expr $port2 + 1`
     done
 

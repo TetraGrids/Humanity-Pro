@@ -10,7 +10,7 @@ WALLET_PASS="password to eosmechanics wallet with benchmark permission key"
 PATH="$PATH:/usr/local/bin:/usr/local/eosio/bin/"
 
 date
-chan -u "$API_URL" --wallet-url "$WALLET_URL" wallet unlock -n "$WALLET_NAME" --password "$WALLET_PASS"
-chan -u "$API_URL" --wallet-url "$WALLET_URL" push action eosmechanics cpu '' -p eosmechanics@benchmark -f
-#chan -u "$API_URL" --wallet-url "$WALLET_URL" push action eosmechanics ram '' -p eosmechanics@benchmark -f
-chan -u "$API_URL" --wallet-url "$WALLET_URL" wallet stop
+humanity -u "$API_URL" --wallet-url "$WALLET_URL" wallet unlock -n "$WALLET_NAME" --password "$WALLET_PASS"
+humanity -u "$API_URL" --wallet-url "$WALLET_URL" push action eosmechanics cpu '' -p eosmechanics@benchmark -f
+#humanity -u "$API_URL" --wallet-url "$WALLET_URL" push action eosmechanics ram '' -p eosmechanics@benchmark -f
+humanity -u "$API_URL" --wallet-url "$WALLET_URL" wallet stop

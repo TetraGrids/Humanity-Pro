@@ -26,7 +26,7 @@ addEnum(BlockType, "head")
 addEnum(BlockType, "lib")
 
 
-class ChanneldQueries:
+class HumanitydQueries:
     def __init__(self, host, port, walletMgr=None):
         self.endpointHttp = f'http://{host}:{port}'
         self.endpointArgs = f'--url {self.endpointHttp}'
@@ -93,12 +93,12 @@ class ChanneldQueries:
 
         executed="executed"
 
-        transStatus=ChanneldQueries.getTransStatus(trans)
+        transStatus=HumanitydQueries.getTransStatus(trans)
         assert transStatus == executed, f"ERROR: Valid transaction should be '{executed}' but it was '{transStatus}'.\nTransaction: {json.dumps(trans, indent=1)}"
 
     @staticmethod
     def getTransStatus(trans):
-        cntxt=ChanneldQueries.Context(trans, "trans")
+        cntxt=HumanitydQueries.Context(trans, "trans")
         # could be a transaction response
         if cntxt.hasKey("processed"):
             cntxt.add("processed")
@@ -114,7 +114,7 @@ class ChanneldQueries:
 
     @staticmethod
     def getTransBlockNum(trans):
-        cntxt=ChanneldQueries.Context(trans, "trans")
+        cntxt=HumanitydQueries.Context(trans, "trans")
         # could be a transaction response
         if cntxt.hasKey("processed"):
             cntxt.add("processed")
@@ -147,7 +147,7 @@ class ChanneldQueries:
 
     @staticmethod
     def getRetryCmdArg(retry):
-        """Returns the chan cmd arg for retry"""
+        """Returns the humanity cmd arg for retry"""
         assert retry is None or isinstance(retry, int) or (isinstance(retry, str) and retry == "lib"), "Invalid retry passed"
         cmdRetry = ""
         if retry is not None:
@@ -203,7 +203,7 @@ class ChanneldQueries:
         cmdDesc="get block"
         cmd="%s %d" % (cmdDesc, blockNum)
         msg="(block number=%s)" % (blockNum);
-        return self.processChanCmd(cmd, cmdDesc, silentErrors=silentErrors, exitOnError=exitOnError, exitMsg=msg)
+        return self.processHumanityCmd(cmd, cmdDesc, silentErrors=silentErrors, exitOnError=exitOnError, exitMsg=msg)
 
     def isBlockPresent(self, blockNum, blockType=BlockType.head):
         """Does node have head_block_num/last_irreversible_block_num >= blockNum"""
@@ -246,7 +246,7 @@ class ChanneldQueries:
         cmd="%s %s" % (cmdDesc, transId)
         msg="(transaction id=%s)" % (transId);
         for i in range(0,(int(60/timeout) - 1)):
-            trans=self.processChanCmd(cmd, cmdDesc, silentErrors=True, exitOnError=exitOnErrorForDelayed, exitMsg=msg)
+            trans=self.processHumanityCmd(cmd, cmdDesc, silentErrors=True, exitOnError=exitOnErrorForDelayed, exitMsg=msg)
             if trans is not None or not delayedRetry:
                 return trans
             if Utils.Debug: Utils.Print("Could not find transaction with id %s, delay and retry" % (transId))
@@ -254,7 +254,7 @@ class ChanneldQueries:
 
         self.missingTransaction=True
         # either it is there or the transaction has timed out
-        return self.processChanCmd(cmd, cmdDesc, silentErrors=silentErrors, exitOnError=exitOnError, exitMsg=msg)
+        return self.processHumanityCmd(cmd, cmdDesc, silentErrors=silentErrors, exitOnError=exitOnError, exitMsg=msg)
 
     def isTransInBlock(self, transId, blockId, exitOnError=False):
         """Check if transId is within block identified by blockId"""
@@ -344,13 +344,13 @@ class ChanneldQueries:
         jsonFlag="-j" if returnType==ReturnType.json else ""
         cmd="%s %s %s" % (cmdDesc, jsonFlag, name)
         msg="( getEosAccount(name=%s) )" % (name);
-        return self.processChanCmd(cmd, cmdDesc, silentErrors=False, exitOnError=exitOnError, exitMsg=msg, returnType=returnType)
+        return self.processHumanityCmd(cmd, cmdDesc, silentErrors=False, exitOnError=exitOnError, exitMsg=msg, returnType=returnType)
 
     def getTable(self, contract, scope, table, exitOnError=False):
         cmdDesc = "get table"
         cmd=f"{cmdDesc} --time-limit 999 {contract} {scope} {table}"
         msg=f"contract={contract}, scope={scope}, table={table}"
-        return self.processChanCmd(cmd, cmdDesc, exitOnError=exitOnError, exitMsg=msg)
+        return self.processHumanityCmd(cmd, cmdDesc, exitOnError=exitOnError, exitMsg=msg)
 
     def getTableAccountBalance(self, contract, scope):
         assert(isinstance(contract, str))
@@ -374,7 +374,7 @@ class ChanneldQueries:
         cmdDesc = "get currency balance"
         cmd="%s %s %s %s" % (cmdDesc, contract, account, symbol)
         msg="contract=%s, account=%s, symbol=%s" % (contract, account, symbol);
-        return self.processChanCmd(cmd, cmdDesc, exitOnError=exitOnError, exitMsg=msg, returnType=ReturnType.raw)
+        return self.processHumanityCmd(cmd, cmdDesc, exitOnError=exitOnError, exitMsg=msg, returnType=ReturnType.raw)
 
     def getCurrencyStats(self, contract, symbol=CORE_SYMBOL, exitOnError=False):
         """returns Json output from get currency stats."""
@@ -385,7 +385,7 @@ class ChanneldQueries:
         cmdDesc = "get currency stats"
         cmd="%s %s %s" % (cmdDesc, contract, symbol)
         msg="contract=%s, symbol=%s" % (contract, symbol);
-        return self.processChanCmd(cmd, cmdDesc, exitOnError=exitOnError, exitMsg=msg)
+        return self.processHumanityCmd(cmd, cmdDesc, exitOnError=exitOnError, exitMsg=msg)
 
     # Verifies account. Returns "get account" json return object
     def verifyAccount(self, account):
@@ -464,9 +464,9 @@ class ChanneldQueries:
         cmdDesc = "get accounts"
         cmd="%s %s" % (cmdDesc, key)
         msg="key=%s" % (key);
-        return self.processChanCmd(cmd, cmdDesc, exitOnError=exitOnError, exitMsg=msg)
+        return self.processHumanityCmd(cmd, cmdDesc, exitOnError=exitOnError, exitMsg=msg)
 
-    # Get actions mapped to an account (chan get actions)
+    # Get actions mapped to an account (humanity get actions)
     def getActions(self, account, pos=-1, offset=-1, exitOnError=False):
         assert(isinstance(account, Account))
         assert(isinstance(pos, int))
@@ -475,7 +475,7 @@ class ChanneldQueries:
         cmdDesc = "get actions"
         cmd = "%s -j %s %d %d" % (cmdDesc, account.name, pos, offset)
         msg = "account=%s, pos=%d, offset=%d" % (account.name, pos, offset);
-        return self.processChanCmd(cmd, cmdDesc, exitOnError=exitOnError, exitMsg=msg)
+        return self.processHumanityCmd(cmd, cmdDesc, exitOnError=exitOnError, exitMsg=msg)
 
     # Gets accounts mapped to key. Returns array
     def getAccountsArrByKey(self, key):
@@ -489,7 +489,7 @@ class ChanneldQueries:
         cmdDesc = "get servants"
         cmd="%s %s" % (cmdDesc, name)
         msg="name=%s" % (name);
-        return self.processChanCmd(cmd, cmdDesc, exitOnError=exitOnError, exitMsg=msg)
+        return self.processHumanityCmd(cmd, cmdDesc, exitOnError=exitOnError, exitMsg=msg)
 
     def getServantsArr(self, name):
         trans=self.getServants(name, exitOnError=True)
@@ -497,7 +497,7 @@ class ChanneldQueries:
         return servants
 
     def getAccountEosBalanceStr(self, scope):
-        """Returns SYS currency0000 account balance from chan get table command. Returned balance is string following syntax "98.0311 SYS". """
+        """Returns SYS currency0000 account balance from humanity get table command. Returned balance is string following syntax "98.0311 SYS". """
         assert isinstance(scope, str)
         amount=self.getTableAccountBalance("ra.token", scope)
         if Utils.Debug: Utils.Print("getNodeAccountEosBalance %s %s" % (scope, amount))
@@ -505,9 +505,9 @@ class ChanneldQueries:
         return amount
 
     def getAccountEosBalance(self, scope):
-        """Returns SYS currency0000 account balance from chan get table command. Returned balance is an integer e.g. 980311. """
+        """Returns SYS currency0000 account balance from humanity get table command. Returned balance is an integer e.g. 980311. """
         balanceStr=self.getAccountEosBalanceStr(scope)
-        balance=ChanneldQueries.currencyStrToInt(balanceStr)
+        balance=HumanitydQueries.currencyStrToInt(balanceStr)
         return balance
 
     def getAccountCodeHash(self, account):
@@ -557,7 +557,7 @@ class ChanneldQueries:
         keys=list(row.keys())
         return keys
 
-    def processChanCmd(self, cmd, cmdDesc, silentErrors=True, exitOnError=False, exitMsg=None, returnType=ReturnType.json):
+    def processHumanityCmd(self, cmd, cmdDesc, silentErrors=True, exitOnError=False, exitMsg=None, returnType=ReturnType.json):
         assert(isinstance(returnType, ReturnType))
         cmd="%s %s %s" % (Utils.EosClientPath, self.eosClientArgs(), cmd)
         if Utils.Debug: Utils.Print("cmd: %s" % (cmd))
@@ -663,7 +663,7 @@ class ChanneldQueries:
 
     def getInfo(self, silentErrors=False, exitOnError=False):
         cmdDesc = "get info"
-        info=self.processChanCmd(cmdDesc, cmdDesc, silentErrors=silentErrors, exitOnError=exitOnError)
+        info=self.processHumanityCmd(cmdDesc, cmdDesc, silentErrors=silentErrors, exitOnError=exitOnError)
         if info is None:
             self.infoValid=False
         else:
@@ -675,7 +675,7 @@ class ChanneldQueries:
 
     def getTransactionStatus(self, transId, silentErrors=False, exitOnError=True):
         cmdDesc = f"get transaction-status {transId}"
-        status=self.processChanCmd(cmdDesc, cmdDesc, silentErrors=silentErrors, exitOnError=exitOnError)
+        status=self.processHumanityCmd(cmdDesc, cmdDesc, silentErrors=silentErrors, exitOnError=exitOnError)
         return status
 
     def checkPulse(self, exitOnError=False):
@@ -683,7 +683,7 @@ class ChanneldQueries:
         return False if info is None else True
 
     def getHeadBlockNum(self):
-        """returns head block number(string) as returned by chan get info."""
+        """returns head block number(string) as returned by humanity get info."""
         info = self.getInfo(exitOnError=True)
         if info is not None:
             headBlockNumTag = "head_block_num"
@@ -714,7 +714,7 @@ class ChanneldQueries:
                 Utils.errorExit(f"getBlock returned None for {blockNum}")
             else:
                 return None
-        return ChanneldQueries.getBlockAttribute(block, "producer", blockNum, exitOnError=exitOnError)
+        return HumanitydQueries.getBlockAttribute(block, "producer", blockNum, exitOnError=exitOnError)
 
     def getBlockProducer(self, timeout=None, waitForBlock=True, exitOnError=True, blockType=BlockType.head):
         blockNum=self.getBlockNum(blockType=blockType)
@@ -724,7 +724,7 @@ class ChanneldQueries:
                 Utils.errorExit(f"getBlock returned None for {blockNum}")
             else:
                 return None
-        return ChanneldQueries.getBlockAttribute(block, "producer", blockNum, exitOnError=exitOnError)
+        return HumanitydQueries.getBlockAttribute(block, "producer", blockNum, exitOnError=exitOnError)
 
     def getProducerSchedule(self):
         scheduled_producers = []
@@ -736,7 +736,7 @@ class ChanneldQueries:
     def getNextCleanProductionCycle(self, trans):
         rounds=21*12*2  # max time to ensure that at least 2/3+1 of producers x blocks per producer x at least 2 times
         if trans is not None:
-            transId=ChanneldQueries.getTransId(trans)
+            transId=HumanitydQueries.getTransId(trans)
             self.waitForTransFinalization(transId, timeout=rounds/2)
         else:
             transId="Null"
@@ -792,7 +792,7 @@ class ChanneldQueries:
     def getLatestBlockHeaderState(self):
         headBlockNum = self.getHeadBlockNum()
         cmdDesc = "get block {} --header-state".format(headBlockNum)
-        latestBlockHeaderState = self.processChanCmd(cmdDesc, cmdDesc)
+        latestBlockHeaderState = self.processHumanityCmd(cmdDesc, cmdDesc)
         return latestBlockHeaderState
 
     def getActivatedProtocolFeatures(self):

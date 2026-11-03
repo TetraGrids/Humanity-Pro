@@ -7,8 +7,8 @@ from TestHarness import Cluster, TestHelper, Utils, WalletMgr
 ###############################################################
 # auto_bp_peering_test
 #
-# This test sets up  a cluster with 21 producers channeld, each channeld is configured with only one producer and only connects to the bios node.
-# Moreover, each producer channeld is also configured with a list of p2p-auto-bp-peer so that each one can automatically establish p2p connections to
+# This test sets up  a cluster with 21 producers humanityd, each humanityd is configured with only one producer and only connects to the bios node.
+# Moreover, each producer humanityd is also configured with a list of p2p-auto-bp-peer so that each one can automatically establish p2p connections to
 # other bps. Test verifies connections are established when producer schedule is active.
 #
 ###############################################################
@@ -63,11 +63,11 @@ peer_names["localhost:9776"] = "bios"
 
 testSuccessful = False
 try:
-    specificChanneldArgs = {}
+    specificHumanitydArgs = {}
     for nodeId in range(0, producerNodes):
-        specificChanneldArgs[nodeId] = auto_bp_peer_args
+        specificHumanitydArgs[nodeId] = auto_bp_peer_args
 
-    specificChanneldArgs[5] = specificChanneldArgs[5] + ' --p2p-server-address ext-ip0:9999'
+    specificHumanitydArgs[5] = specificHumanitydArgs[5] + ' --p2p-server-address ext-ip0:9999'
 
     TestHelper.printSystemInfo("BEGIN")
     cluster.launch(
@@ -77,8 +77,8 @@ try:
         totalProducers=producerNodes,
         activateIF=activateIF,
         topo="./tests/auto_bp_peering_test_shape.json",
-        extraChanneldArgs=" --plugin eosio::net_api_plugin ",
-        specificExtraChanneldArgs=specificChanneldArgs,
+        extraHumanitydArgs=" --plugin eosio::net_api_plugin ",
+        specificExtraHumanitydArgs=specificHumanitydArgs,
     )
 
     # wait until produceru is seen by every node

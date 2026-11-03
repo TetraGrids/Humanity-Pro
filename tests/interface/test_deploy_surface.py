@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Checks you can make without compiling channeld.
+"""Checks you can make without compiling humanityd.
 
 The node build is a separate workflow. This one looks at the wasm and ABI
 CDT emits for the contracts a deployment actually setcodes, and at the EOSIO

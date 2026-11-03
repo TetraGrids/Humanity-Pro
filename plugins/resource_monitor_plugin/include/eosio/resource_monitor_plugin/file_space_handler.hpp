@@ -106,7 +106,7 @@ namespace eosio::resource_monitor {
                wlog("Space usage warning: ${path}'s file system approaching threshold. available: ${available} GiB, warning_available: ${warning_available} GiB",
                     ("path", fs.path_name.string())("available", to_gib(info.available))("warning_available", to_gib(fs.warning_available)));
                if ( shutdown_on_exceeded) {
-                  wlog("channeld will shutdown when space usage exceeds threshold ${threshold_desc}", ("threshold_desc", threshold_desc()));
+                  wlog("humanityd will shutdown when space usage exceeds threshold ${threshold_desc}", ("threshold_desc", threshold_desc()));
                }
             }
          }
@@ -162,7 +162,7 @@ namespace eosio::resource_monitor {
    void space_monitor_loop() {
       if ( is_threshold_exceeded() && shutdown_on_exceeded ) {
          elog("Gracefully shutting down, exceeded file system configured threshold.");
-         appbase::app().quit(); // This will gracefully stop Channeld
+         appbase::app().quit(); // This will gracefully stop Humanityd
          return;
       }
       update_warning_interval_counter();

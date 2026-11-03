@@ -30,47 +30,47 @@ done
 
 EOSIO_STUFF_DIR=$(mktemp -d)
 trap "rm -rf $EOSIO_STUFF_DIR" EXIT
-CHANNELD_LAUNCH_PARAMS="./programs/channeld/channeld --resource-monitor-not-shutdown-on-threshold-exceeded -d $EOSIO_STUFF_DIR --config-dir $EOSIO_STUFF_DIR \
+HUMANITYD_LAUNCH_PARAMS="./programs/humanityd/humanityd --resource-monitor-not-shutdown-on-threshold-exceeded -d $EOSIO_STUFF_DIR --config-dir $EOSIO_STUFF_DIR \
 --chain-state-db-size-mb 8 --chain-state-db-guard-size-mb 0 \
 -e -peosio"
 
-run_channeld() {
+run_humanityd() {
    if (( $VERBOSE == 0 )); then
-      $CHANNELD_LAUNCH_PARAMS --http-server-address '' --p2p-listen-endpoint '' "$@" 2>/dev/null &
+      $HUMANITYD_LAUNCH_PARAMS --http-server-address '' --p2p-listen-endpoint '' "$@" 2>/dev/null &
    else
-      $CHANNELD_LAUNCH_PARAMS --http-server-address '' --p2p-listen-endpoint '' "$@" &
+      $HUMANITYD_LAUNCH_PARAMS --http-server-address '' --p2p-listen-endpoint '' "$@" &
    fi
 }
 
 run_expect_success() {
-   run_channeld "$@"
-   local CHANNELD_PID=$!
+   run_humanityd "$@"
+   local HUMANITYD_PID=$!
    sleep 10
-   kill $CHANNELD_PID
+   kill $HUMANITYD_PID
    rc=0
-   wait $CHANNELD_PID && rc=$? || rc=$?
-   if [[ $rc -eq  127  || $rc -eq  $CHANNELD_PID ]]; then
+   wait $HUMANITYD_PID && rc=$? || rc=$?
+   if [[ $rc -eq  127  || $rc -eq  $HUMANITYD_PID ]]; then
       rc=0
    fi
    return $rc
 }
 
 run_and_kill() {
-   run_channeld "$@"
-   local CHANNELD_PID=$!
+   run_humanityd "$@"
+   local HUMANITYD_PID=$!
    sleep 10
-   kill -KILL $CHANNELD_PID
-   ! wait $CHANNELD_PID
+   kill -KILL $HUMANITYD_PID
+   ! wait $HUMANITYD_PID
 }
 
 run_expect_failure() {
-   run_channeld "$@"
-   local CHANNELD_PID=$!
+   run_humanityd "$@"
+   local HUMANITYD_PID=$!
    MYPID=$$
    (sleep 20; kill -ALRM $MYPID) & local TIMER_PID=$!
-   trap "kill $CHANNELD_PID; wait $CHANNELD_PID; exit 1" ALRM
+   trap "kill $HUMANITYD_PID; wait $HUMANITYD_PID; exit 1" ALRM
    sleep 10
-   if wait $CHANNELD_PID; then exit 1; fi
+   if wait $HUMANITYD_PID; then exit 1; fi
    kill $TIMER_PID
    trap ALRM
 }

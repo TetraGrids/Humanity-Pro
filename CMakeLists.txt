@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.21...4.0 )
 
-project( the-channel )
+project( humanity-pro )
 include(CTest)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
@@ -42,10 +42,10 @@ option(ENABLE_WERROR "Enable `-Werror` compilation flag." Off)
 option(ENABLE_WEXTRA "Enable `-Wextra` compilation flag." Off)
 
 
-set( CLI_CLIENT_EXECUTABLE_NAME chan )
-set( NODE_EXECUTABLE_NAME channeld )
-set( KEY_STORE_EXECUTABLE_NAME keyd )
-set( CHANNEL_UTIL_EXECUTABLE_NAME channel-util )
+set( CLI_CLIENT_EXECUTABLE_NAME humanity )
+set( NODE_EXECUTABLE_NAME humanityd )
+set( KEY_STORE_EXECUTABLE_NAME humanity-keyd )
+set( HUMANITY_UTIL_EXECUTABLE_NAME humanity-util )
 
 # http://stackoverflow.com/a/18369825
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -64,7 +64,7 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 set(BUILD_DOXYGEN FALSE CACHE BOOL "Build doxygen documentation on every make")
-set(ENABLE_MULTIVERSION_PROTOCOL_TEST FALSE CACHE BOOL "Enable channeld multiversion protocol test")
+set(ENABLE_MULTIVERSION_PROTOCOL_TEST FALSE CACHE BOOL "Enable humanityd multiversion protocol test")
 
 option(ENABLE_OC "Enable eosvm-oc on supported platforms" ON)
 
@@ -78,7 +78,7 @@ if(ENABLE_OC AND CMAKE_SIZEOF_VOID_P EQUAL 8 AND NOT WIN32)
       # can be created with the exact version found
       find_package(LLVM REQUIRED CONFIG)
       if(LLVM_VERSION_MAJOR VERSION_LESS 7 OR LLVM_VERSION_MAJOR VERSION_GREATER_EQUAL 12)
-	      message(FATAL_ERROR "The Channel requires an LLVM version 7 through 11")
+	      message(FATAL_ERROR "Humanity Pro requires an LLVM version 7 through 11")
       endif()
    endif()
 endif()
@@ -106,12 +106,12 @@ endif()
 
 if( APPLE AND UNIX )
 # Apple Specific Options Here
-    message( STATUS "Configuring The Channel on macOS" )
+    message( STATUS "Configuring Humanity Pro on macOS" )
     set( CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wall -Wno-deprecated-declarations" )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-deprecated-declarations" )
 else()
     # Linux Specific Options Here
-    message( STATUS "Configuring The Channel on Linux" )
+    message( STATUS "Configuring Humanity Pro on Linux" )
     set( CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wall" )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall" )
     if ( FULL_STATIC_BUILD )
@@ -141,13 +141,13 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wthread-safety" )
 endif()
 
-option(EOSIO_ENABLE_DEVELOPER_OPTIONS "enable developer options for The Channel" OFF)
+option(EOSIO_ENABLE_DEVELOPER_OPTIONS "enable developer options for Humanity Pro" OFF)
 
 # based on http://www.delorie.com/gnu/docs/gdb/gdb_70.html
 # uncomment this line to tell GDB about macros (slows compile times)
 # set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -gdwarf-2 -g3" )
 
-set(ENABLE_COVERAGE_TESTING FALSE CACHE BOOL "Build The Channel for code coverage analysis")
+set(ENABLE_COVERAGE_TESTING FALSE CACHE BOOL "Build Humanity Pro for code coverage analysis")
 
 if(ENABLE_COVERAGE_TESTING)
   SET(CMAKE_C_FLAGS   "--coverage ${CMAKE_C_FLAGS}")
@@ -171,16 +171,16 @@ endif()
 
 message( STATUS "Using '${CORE_SYMBOL_NAME}' as CORE symbol name" )
 
-if ("${CHANNEL_ROOT_KEY}" STREQUAL "")
-   set(CHANNEL_ROOT_KEY "PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63")
+if ("${HUMANITY_ROOT_KEY}" STREQUAL "")
+   set(HUMANITY_ROOT_KEY "PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63")
 endif()
 
-message( STATUS "Using '${CHANNEL_ROOT_KEY}' as public key for 'ra' account" )
+message( STATUS "Using '${HUMANITY_ROOT_KEY}' as public key for 'ra' account" )
 
 option(ENABLE_TCMALLOC "use tcmalloc (requires gperftools)" OFF)
 if( ENABLE_TCMALLOC )
     find_package( Gperftools REQUIRED )
-    message( STATUS "Compiling The Channel with TCMalloc")
+    message( STATUS "Compiling Humanity Pro with TCMalloc")
     #if doing this by the book, simply link_libraries( ${GPERFTOOLS_TCMALLOC} ) here. That will
     #give the performance benefits of tcmalloc but since it won't be linked last
     #the heap profiler & checker may not be accurate. This here is rather undocumented behavior
@@ -189,7 +189,7 @@ if( ENABLE_TCMALLOC )
     set(CMAKE_CXX_STANDARD_LIBRARIES "${CMAKE_CXX_STANDARD_LIBRARIES} ${GPERFTOOLS_TCMALLOC}")
 endif()
 
-# channel includes a bundled BoringSSL which conflicts with OpenSSL. Make sure any other bundled libraries (such as boost)
+# Humanity Pro includes a bundled BoringSSL which conflicts with OpenSSL. Make sure any other bundled libraries (such as boost)
 # do not attempt to use an external OpenSSL in any manner
 set(CMAKE_DISABLE_FIND_PACKAGE_OpenSSL On)
 
@@ -246,10 +246,10 @@ configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/EosioCheckVersion.cmake ${CMAKE_
 configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/leap-config.cmake.in ${CMAKE_BINARY_DIR}/lib/cmake/leap/leap-config.cmake @ONLY)
 configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/EosioTesterBuild.cmake.in ${CMAKE_BINARY_DIR}/lib/cmake/leap/EosioTester.cmake @ONLY)
 configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/EosioCheckVersion.cmake ${CMAKE_BINARY_DIR}/lib/cmake/leap/EosioCheckVersion.cmake COPYONLY)
-# channel CMake files
-configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/channel-config.cmake.in ${CMAKE_BINARY_DIR}/lib/cmake/channel/channel-config.cmake @ONLY)
-configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/EosioTesterBuild.cmake.in ${CMAKE_BINARY_DIR}/lib/cmake/channel/EosioTester.cmake @ONLY)
-configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/EosioCheckVersion.cmake ${CMAKE_BINARY_DIR}/lib/cmake/channel/EosioCheckVersion.cmake COPYONLY)
+# Humanity Pro CMake files
+configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/humanity-pro-config.cmake.in ${CMAKE_BINARY_DIR}/lib/cmake/humanity-pro/humanity-pro-config.cmake @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/EosioTesterBuild.cmake.in ${CMAKE_BINARY_DIR}/lib/cmake/humanity-pro/EosioTester.cmake @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/EosioCheckVersion.cmake ${CMAKE_BINARY_DIR}/lib/cmake/humanity-pro/EosioCheckVersion.cmake COPYONLY)
 
 set(EOS_ROOT_DIR "${CMAKE_INSTALL_FULL_LIBDIR}")
 configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/EosioTester.cmake.in ${CMAKE_BINARY_DIR}/modules/EosioTester.cmake @ONLY)
@@ -263,35 +263,35 @@ configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/leap-config.cmake.in ${CMAKE_BIN
 install(FILES ${CMAKE_BINARY_DIR}/modules/leap-config.cmake DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/leap COMPONENT dev EXCLUDE_FROM_ALL)
 install(FILES ${CMAKE_BINARY_DIR}/modules/EosioTester.cmake DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/leap COMPONENT dev EXCLUDE_FROM_ALL)
 install(FILES ${CMAKE_SOURCE_DIR}/CMakeModules/EosioCheckVersion.cmake DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/leap COMPONENT dev EXCLUDE_FROM_ALL)
-# channel CMake files
-configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/channel-config.cmake.in ${CMAKE_BINARY_DIR}/modules/channel-config.cmake @ONLY)
-install(FILES ${CMAKE_BINARY_DIR}/modules/channel-config.cmake DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/channel COMPONENT dev EXCLUDE_FROM_ALL)
-install(FILES ${CMAKE_BINARY_DIR}/modules/EosioTester.cmake DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/channel COMPONENT dev EXCLUDE_FROM_ALL)
-install(FILES ${CMAKE_SOURCE_DIR}/CMakeModules/EosioCheckVersion.cmake DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/channel COMPONENT dev EXCLUDE_FROM_ALL)
+# Humanity Pro CMake files
+configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/humanity-pro-config.cmake.in ${CMAKE_BINARY_DIR}/modules/humanity-pro-config.cmake @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/modules/humanity-pro-config.cmake DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/humanity-pro COMPONENT dev EXCLUDE_FROM_ALL)
+install(FILES ${CMAKE_BINARY_DIR}/modules/EosioTester.cmake DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/humanity-pro COMPONENT dev EXCLUDE_FROM_ALL)
+install(FILES ${CMAKE_SOURCE_DIR}/CMakeModules/EosioCheckVersion.cmake DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/humanity-pro COMPONENT dev EXCLUDE_FROM_ALL)
 
-configure_file(LICENSE                                                     licenses/channel/LICENSE           COPYONLY)
-configure_file(libraries/softfloat/COPYING.txt                             licenses/channel/LICENSE.softfloat COPYONLY)
-configure_file(libraries/wasm-jit/LICENSE                                  licenses/channel/LICENSE.wavm      COPYONLY)
-configure_file(libraries/libfc/secp256k1/secp256k1/COPYING                 licenses/channel/LICENSE.secp256k1 COPYONLY)
-configure_file(libraries/libfc/include/fc/crypto/webauthn_json/license.txt licenses/channel/LICENSE.rapidjson COPYONLY)
-configure_file(libraries/eos-vm/LICENSE                                    licenses/channel/LICENSE.eos-vm    COPYONLY)
-configure_file(libraries/prometheus/prometheus-cpp/LICENSE                 licenses/channel/LICENSE.prom      COPYONLY)
-configure_file(programs/chan/LICENSE.CLI11                                licenses/channel/LICENSE.CLI11     COPYONLY)
-configure_file(libraries/libfc/libraries/bls12-381/LICENSE                 licenses/channel/LICENSE.bls12-381 COPYONLY)
-configure_file(libraries/libfc/libraries/boringssl/bssl/LICENSE            licenses/channel/LICENSE.boringssl COPYONLY)
-configure_file(libraries/libfc/libraries/xxhash/xxHash/LICENSE             licenses/channel/LICENSE.xxHash    COPYONLY)
+configure_file(LICENSE                                                     licenses/humanity-pro/LICENSE           COPYONLY)
+configure_file(libraries/softfloat/COPYING.txt                             licenses/humanity-pro/LICENSE.softfloat COPYONLY)
+configure_file(libraries/wasm-jit/LICENSE                                  licenses/humanity-pro/LICENSE.wavm      COPYONLY)
+configure_file(libraries/libfc/secp256k1/secp256k1/COPYING                 licenses/humanity-pro/LICENSE.secp256k1 COPYONLY)
+configure_file(libraries/libfc/include/fc/crypto/webauthn_json/license.txt licenses/humanity-pro/LICENSE.rapidjson COPYONLY)
+configure_file(libraries/eos-vm/LICENSE                                    licenses/humanity-pro/LICENSE.eos-vm    COPYONLY)
+configure_file(libraries/prometheus/prometheus-cpp/LICENSE                 licenses/humanity-pro/LICENSE.prom      COPYONLY)
+configure_file(programs/humanity/LICENSE.CLI11                                licenses/humanity-pro/LICENSE.CLI11     COPYONLY)
+configure_file(libraries/libfc/libraries/bls12-381/LICENSE                 licenses/humanity-pro/LICENSE.bls12-381 COPYONLY)
+configure_file(libraries/libfc/libraries/boringssl/bssl/LICENSE            licenses/humanity-pro/LICENSE.boringssl COPYONLY)
+configure_file(libraries/libfc/libraries/xxhash/xxHash/LICENSE             licenses/humanity-pro/LICENSE.xxHash    COPYONLY)
 
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/licenses/channel" DESTINATION "${CMAKE_INSTALL_FULL_DATAROOTDIR}/licenses/" COMPONENT base)
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/licenses/humanity-pro" DESTINATION "${CMAKE_INSTALL_FULL_DATAROOTDIR}/licenses/" COMPONENT base)
 
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/libraries/testing/contracts DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/channel_testing/libraries/testing COMPONENT dev EXCLUDE_FROM_ALL
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/libraries/testing/contracts DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/humanity_pro_testing/libraries/testing COMPONENT dev EXCLUDE_FROM_ALL
         PATTERN "CMakeFiles" EXCLUDE
         PATTERN "*.cmake" EXCLUDE
         PATTERN "Makefile" EXCLUDE)
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/unittests/contracts DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/channel_testing/unittests COMPONENT dev EXCLUDE_FROM_ALL
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/unittests/contracts DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/humanity_pro_testing/unittests COMPONENT dev EXCLUDE_FROM_ALL
         PATTERN "CMakeFiles" EXCLUDE
         PATTERN "*.cmake" EXCLUDE
         PATTERN "Makefile" EXCLUDE)
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests/TestHarness DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/channel_testing/tests COMPONENT dev EXCLUDE_FROM_ALL
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests/TestHarness DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/humanity_pro_testing/tests COMPONENT dev EXCLUDE_FROM_ALL
         FILES_MATCHING
         PATTERN "*.py"
         PATTERN "*.json"
@@ -300,20 +300,20 @@ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests/TestHarness DESTINATION ${CM
 
 add_custom_target(link_target ALL
    COMMAND ${CMAKE_COMMAND} -E make_directory lib/python3/dist-packages
-   COMMAND ${CMAKE_COMMAND} -E create_symlink ../../../share/channel_testing/tests/TestHarness lib/python3/dist-packages/TestHarness
-   COMMAND ${CMAKE_COMMAND} -E make_directory share/channel_testing
-   COMMAND ${CMAKE_COMMAND} -E create_symlink ../../bin share/channel_testing/bin)
+   COMMAND ${CMAKE_COMMAND} -E create_symlink ../../../share/humanity_pro_testing/tests/TestHarness lib/python3/dist-packages/TestHarness
+   COMMAND ${CMAKE_COMMAND} -E make_directory share/humanity_pro_testing
+   COMMAND ${CMAKE_COMMAND} -E create_symlink ../../bin share/humanity_pro_testing/bin)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/lib/python3/dist-packages/TestHarness DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/python3/dist-packages COMPONENT dev EXCLUDE_FROM_ALL)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/channel_testing/bin DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/channel_testing COMPONENT dev EXCLUDE_FROM_ALL)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/humanity_pro_testing/bin DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/humanity_pro_testing COMPONENT dev EXCLUDE_FROM_ALL)
 
-configure_file(${CMAKE_SOURCE_DIR}/libraries/cli11/bash-completion/completions/channel-util
-               ${CMAKE_BINARY_DIR}/programs/channel-util/bash-completion/completions/channel-util COPYONLY)
-configure_file(${CMAKE_SOURCE_DIR}/libraries/cli11/bash-completion/completions/chan
-               ${CMAKE_BINARY_DIR}/programs/chan/bash-completion/completions/chan COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/libraries/cli11/bash-completion/completions/humanity-util
+               ${CMAKE_BINARY_DIR}/programs/humanity-util/bash-completion/completions/humanity-util COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/libraries/cli11/bash-completion/completions/humanity
+               ${CMAKE_BINARY_DIR}/programs/humanity/bash-completion/completions/humanity COPYONLY)
 
-install(FILES libraries/cli11/bash-completion/completions/channel-util DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/bash-completion/completions COMPONENT base)
-install(FILES libraries/cli11/bash-completion/completions/chan DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/bash-completion/completions COMPONENT base)
+install(FILES libraries/cli11/bash-completion/completions/humanity-util DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/bash-completion/completions COMPONENT base)
+install(FILES libraries/cli11/bash-completion/completions/humanity DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/bash-completion/completions COMPONENT base)
 
 # Add the boost submodule we used to build to our install package, so headers can be found for libtester
 install(DIRECTORY "${CMAKE_SOURCE_DIR}/libraries/boost/"
@@ -336,7 +336,7 @@ add_custom_target(dev-install
 
 include(doxygen)
 
-option(ENABLE_CHANNEL_DEV_DEB "Enable building the channel-dev .deb package" OFF)
+option(ENABLE_HUMANITY_PRO_DEV_DEB "Enable building the humanity-pro-dev .deb package" OFF)
 
 include(package.cmake)
 include(CPack)

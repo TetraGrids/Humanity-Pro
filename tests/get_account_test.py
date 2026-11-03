@@ -7,7 +7,7 @@ from TestHarness import Account, Cluster, ReturnType, TestHelper, Utils, WalletM
 ###############################################################
 # get_account_test
 #
-# integration test for chan get account
+# integration test for humanity get account
 #
 ###############################################################
 
@@ -49,13 +49,13 @@ try:
 
         print("Stand up walletd")
         if walletMgr.launch() is False:
-            errorExit("Failed to stand up keyd.")
+            errorExit("Failed to stand up humanity-keyd.")
 
     Print ("producing nodes: %s, non-producing nodes: %d, topology: %s, delay between nodes launch(seconds): %d" % (pnodes, total_nodes-pnodes, topo, delay))
 
     Print("Stand up cluster")
-    extraChanneldArgs=" --http-max-response-time-ms 990000 --disable-subjective-api-billing false "
-    if cluster.launch(pnodes=pnodes, totalNodes=total_nodes, activateIF=True, topo=topo, delay=delay,extraChanneldArgs=extraChanneldArgs ) is False:
+    extraHumanitydArgs=" --http-max-response-time-ms 990000 --disable-subjective-api-billing false "
+    if cluster.launch(pnodes=pnodes, totalNodes=total_nodes, activateIF=True, topo=topo, delay=delay,extraHumanitydArgs=extraHumanitydArgs ) is False:
        errorExit("Failed to stand up eos cluster.")
 
     Print ("Wait for Cluster stabilization")

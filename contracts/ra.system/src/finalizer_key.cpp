@@ -12,7 +12,7 @@ namespace rasystem {
    {
    }
 
-   // Returns true if channeld has transitioned to Savanna (having last proposed finalizers)
+   // Returns true if humanityd has transitioned to Savanna (having last proposed finalizers)
    bool system_contract::is_savanna_consensus() {
       return !get_last_proposed_finalizers().empty();
    }
@@ -306,7 +306,7 @@ namespace rasystem {
 
       // Check the key belongs to the finalizer
       check(fin_key_itr->finalizer_name == name(finalizer_name), "finalizer key " + finalizer_key + " was not registered by the finalizer " + finalizer_name.to_string() );
-      
+
       if( fin_key_itr->is_active(finalizer->active_key_id) ) {
          check( finalizer->finalizer_key_count == 1, "cannot delete an active key unless it is the last registered finalizer key, has " + std::to_string(finalizer->finalizer_key_count) + " keys");
       }

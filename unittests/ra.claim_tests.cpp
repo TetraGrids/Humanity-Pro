@@ -2,16 +2,14 @@
 #include <eosio/testing/tester.hpp>
 
 #include <fc/crypto/hex.hpp>
-#include <fc/io/fstream.hpp>
 #include <fc/io/raw.hpp>
 #include <fc/variant_object.hpp>
 
 #include <boost/test/unit_test.hpp>
 
 #include <contracts.hpp>
+#include <core_contracts.hpp>
 #include <test_contracts.hpp>
-
-#include <filesystem>
 
 using namespace eosio::testing;
 using namespace eosio;
@@ -19,26 +17,6 @@ using namespace eosio::chain;
 using namespace fc;
 
 using mvo = fc::mutable_variant_object;
-
-static bool load_core_contract( tester& chain, const name& account, const std::string& stem ) {
-#ifdef CHANNEL_CONTRACTS_DIR
-   const std::string base = std::string( CHANNEL_CONTRACTS_DIR ) + "/" + stem + "/" + stem;
-   if ( !std::filesystem::exists( base + ".wasm" ) || !std::filesystem::exists( base + ".abi" ) )
-      return false;
-   std::string wasm;
-   std::string abi;
-   fc::read_file_contents( base + ".wasm", wasm );
-   fc::read_file_contents( base + ".abi", abi );
-   chain.set_code( account, std::vector<uint8_t>( wasm.begin(), wasm.end() ) );
-   chain.set_abi( account, abi );
-   return true;
-#else
-   (void)chain;
-   (void)account;
-   (void)stem;
-   return false;
-#endif
-}
 
 static std::string checksum_hex( const checksum256_type& h ) {
    return h.str();

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Boot a local Channel single-producer chain with ra.* contracts and RA.
+"""Boot a local Humanity Pro single-producer chain with ra.* contracts and RA.
 
-Requires built channeld/chan/keyd and compiled contract wasm (cmake
+Requires built humanityd/humanity/humanity-keyd and compiled contract wasm (cmake
 -DBUILD_CONTRACTS=ON, or artifacts from the Compile contracts Action).
 
   python3 scripts/launch-devnet.py --reset
@@ -23,7 +23,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
-# Matches -DCHANNEL_ROOT_KEY default in CMakeLists.txt / genesis/channel_genesis.json
+# Matches -DHUMANITY_ROOT_KEY default in CMakeLists.txt / genesis/humanity_genesis.json
 DEFAULT_PUBLIC_KEY = "PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63"
 DEFAULT_PRIVATE_KEY = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
 
@@ -163,9 +163,9 @@ def http_post_json(url: str, body: dict) -> dict:
         return json.loads(raw) if raw else {}
 
 
-def chan_cmd(args: argparse.Namespace) -> list[str]:
+def humanity_cmd(args: argparse.Namespace) -> list[str]:
     return [
-        str(args.chan),
+        str(args.humanity),
         "--url",
         f"http://127.0.0.1:{args.http_port}",
         "--wallet-url",
@@ -183,7 +183,7 @@ def set_contract(args: argparse.Namespace, account: str, contract_dir: Path, was
         wasm = found[0]
     abi_name = wasm.name.replace(".wasm", ".abi")
     run(
-        chan_cmd(args)
+        humanity_cmd(args)
         + ["set", "contract", account, str(contract_dir), wasm.name, abi_name, "-p", f"{account}@active"]
     )
 
@@ -199,13 +199,13 @@ def cleanup(*_sig) -> None:
             proc.kill()
 
 
-def start_keyd(args: argparse.Namespace) -> None:
+def start_humanity_keyd(args: argparse.Namespace) -> None:
     wallet_dir = args.data_dir / "wallet"
     if args.reset and wallet_dir.exists():
         shutil.rmtree(wallet_dir)
     wallet_dir.mkdir(parents=True, exist_ok=True)
     cmd = [
-        str(args.keyd),
+        str(args.humanity_keyd),
         "--unlock-timeout",
         "999999999",
         "--http-server-address",
@@ -216,18 +216,18 @@ def start_keyd(args: argparse.Namespace) -> None:
     log(" ".join(cmd))
     procs.append(subprocess.Popen(cmd))
     wait_http(f"http://127.0.0.1:{args.wallet_port}/v1/wallet/list_wallets", args.wait)
-    run(chan_cmd(args) + ["wallet", "create", "--to-console"])
-    run(chan_cmd(args) + ["wallet", "import", "--private-key", args.private_key])
+    run(humanity_cmd(args) + ["wallet", "create", "--to-console"])
+    run(humanity_cmd(args) + ["wallet", "import", "--private-key", args.private_key])
 
 
-def start_channeld(args: argparse.Namespace) -> None:
+def start_humanityd(args: argparse.Namespace) -> None:
     node_dir = args.data_dir / "node"
     if args.reset and node_dir.exists():
         shutil.rmtree(node_dir)
     node_dir.mkdir(parents=True, exist_ok=True)
     stderr = open(node_dir / "stderr.log", "w")
     cmd = [
-        str(args.channeld),
+        str(args.humanityd),
         "--max-irreversible-block-age",
         "-1",
         "--max-transaction-time=200",
@@ -265,7 +265,7 @@ def start_channeld(args: argparse.Namespace) -> None:
     log(" ".join(cmd))
     procs.append(subprocess.Popen(cmd, stdout=stderr, stderr=stderr))
     wait_http(f"http://127.0.0.1:{args.http_port}/v1/chain/get_info", args.wait)
-    log("channeld is producing")
+    log("humanityd is producing")
 
 
 def activate_preactivate(args: argparse.Namespace) -> None:
@@ -285,7 +285,7 @@ def activate_features(args: argparse.Namespace) -> None:
             continue
         log(f"activate {name}")
         run(
-            chan_cmd(args)
+            humanity_cmd(args)
             + ["push", "action", "ra", "activate", json.dumps([digest]), "-p", "ra@active"]
         )
         time.sleep(0.6)
@@ -298,17 +298,17 @@ def deploy_optional(args: argparse.Namespace, account: str, wasm_stem: str, extr
         return
     set_contract(args, account, contract_dir, wasm_stem)
     if account in CODE_ACCOUNTS:
-        run(chan_cmd(args) + ["set", "account", "permission", account, "active", "--add-code", "-p", f"{account}@active"])
+        run(humanity_cmd(args) + ["set", "account", "permission", account, "active", "--add-code", "-p", f"{account}@active"])
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Launch a local Channel chain and boot ra.* contracts.")
+    parser = argparse.ArgumentParser(description="Launch a local Humanity Pro chain and boot ra.* contracts.")
     parser.add_argument("--build-dir", type=Path, default=REPO_ROOT / "build")
-    parser.add_argument("--channeld")
-    parser.add_argument("--chan")
-    parser.add_argument("--keyd")
+    parser.add_argument("--humanityd")
+    parser.add_argument("--humanity")
+    parser.add_argument("--humanity-keyd")
     parser.add_argument("--contracts-dir", type=Path, default=None)
-    parser.add_argument("--genesis", type=Path, default=REPO_ROOT / "genesis" / "channel_genesis.json")
+    parser.add_argument("--genesis", type=Path, default=REPO_ROOT / "genesis" / "humanity_genesis.json")
     parser.add_argument("--data-dir", type=Path, default=REPO_ROOT / "devnet")
     parser.add_argument("--public-key", default=DEFAULT_PUBLIC_KEY)
     parser.add_argument("--private-key", default=DEFAULT_PRIVATE_KEY)
@@ -322,7 +322,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--reset", action="store_true", help="Wipe --data-dir before start")
     parser.add_argument("--no-forward-setcode", action="store_true", help="Keep native setcode intercept; skips SAVANNA")
     parser.add_argument("--no-boot", action="store_true", help="Start node and wallet only")
-    parser.add_argument("--exit-after-boot", action="store_true", help="Stop channeld and keyd after a successful boot")
+    parser.add_argument("--exit-after-boot", action="store_true", help="Stop humanityd and humanity-keyd after a successful boot")
     return parser.parse_args()
 
 
@@ -343,15 +343,15 @@ def main() -> None:
     if not args.genesis.is_file():
         fail(f"genesis not found: {args.genesis}")
 
-    args.channeld = find_binary("channeld", args.channeld, args.build_dir)
-    args.chan = find_binary("chan", args.chan, args.build_dir)
-    args.keyd = find_binary("keyd", args.keyd, args.build_dir)
+    args.humanityd = find_binary("humanityd", args.humanityd, args.build_dir)
+    args.humanity = find_binary("humanity", args.humanity, args.build_dir)
+    args.humanity_keyd = find_binary("humanity-keyd", args.humanity_keyd, args.build_dir)
 
     signal.signal(signal.SIGINT, lambda *_: (cleanup(), sys.exit(130)))
     signal.signal(signal.SIGTERM, lambda *_: (cleanup(), sys.exit(143)))
 
-    start_keyd(args)
-    start_channeld(args)
+    start_humanity_keyd(args)
+    start_humanityd(args)
 
     if args.no_boot:
         log(f"node up at http://127.0.0.1:{args.http_port} (boot skipped)")
@@ -373,14 +373,14 @@ def main() -> None:
         )
 
     for account in SYSTEM_ACCOUNTS:
-        run(chan_cmd(args) + ["create", "account", "ra", account, args.public_key, args.public_key])
+        run(humanity_cmd(args) + ["create", "account", "ra", account, args.public_key, args.public_key])
 
     set_contract(args, "ra.token", token, "ra.token")
     set_contract(args, "ra.msig", msig, "ra.msig")
 
     supply = f"{args.max_supply} {args.symbol}"
-    run(chan_cmd(args) + ["push", "action", "ra.token", "create", json.dumps(["ra", supply]), "-p", "ra.token@active"])
-    run(chan_cmd(args) + ["push", "action", "ra.token", "issue", json.dumps(["ra", supply, "genesis"]), "-p", "ra@active"])
+    run(humanity_cmd(args) + ["push", "action", "ra.token", "create", json.dumps(["ra", supply]), "-p", "ra.token@active"])
+    run(humanity_cmd(args) + ["push", "action", "ra.token", "issue", json.dumps(["ra", supply, "genesis"]), "-p", "ra@active"])
 
     activate_preactivate(args)
     set_contract(args, "ra", boot, "ra.boot")
@@ -388,13 +388,13 @@ def main() -> None:
     activate_features(args)
     set_contract(args, "ra", system, "ra.system")
 
-    run(chan_cmd(args) + ["push", "action", "ra", "init", json.dumps([0, f"4,{args.symbol}"]), "-p", "ra@active"])
-    run(chan_cmd(args) + ["push", "action", "ra", "setpriv", json.dumps(["ra.msig", 1]), "-p", "ra@active"])
-    run(chan_cmd(args) + ["set", "account", "permission", "ra.msig", "active", "--add-code", "-p", "ra.msig@active"])
+    run(humanity_cmd(args) + ["push", "action", "ra", "init", json.dumps([0, f"4,{args.symbol}"]), "-p", "ra@active"])
+    run(humanity_cmd(args) + ["push", "action", "ra", "setpriv", json.dumps(["ra.msig", 1]), "-p", "ra@active"])
+    run(humanity_cmd(args) + ["set", "account", "permission", "ra.msig", "active", "--add-code", "-p", "ra.msig@active"])
 
     deploy_optional(args, "ra.wrap", "ra.wrap")
     if find_contract_dir(args.contracts_dir, "ra.wrap") is not None:
-        run(chan_cmd(args) + ["push", "action", "ra", "setpriv", json.dumps(["ra.wrap", 1]), "-p", "ra@active"])
+        run(humanity_cmd(args) + ["push", "action", "ra", "setpriv", json.dumps(["ra.wrap", 1]), "-p", "ra@active"])
 
     deploy_optional(args, "ra.fees", "ra.fees")
     deploy_optional(args, "ra.bpay", "ra.bpay")
@@ -407,11 +407,11 @@ def main() -> None:
     if find_contract_dir(args.contracts_dir, "ra.resources") is not None:
         qty = f"{args.resource_fund} {args.symbol}"
         run(
-            chan_cmd(args)
+            humanity_cmd(args)
             + ["push", "action", "ra.token", "transfer", json.dumps(["ra", "ra.resources", qty, "fund"]), "-p", "ra@active"]
         )
         run(
-            chan_cmd(args)
+            humanity_cmd(args)
             + [
                 "push",
                 "action",
@@ -425,7 +425,7 @@ def main() -> None:
 
     info = http_post_json(f"http://127.0.0.1:{args.http_port}/v1/chain/get_info", {})
     log(f"boot complete  chain_id={info.get('chain_id')}  head={info.get('head_block_num')}  producer={info.get('head_block_producer')}")
-    log(f"chan --url http://127.0.0.1:{args.http_port} --wallet-url http://127.0.0.1:{args.wallet_port} get info")
+    log(f"humanity --url http://127.0.0.1:{args.http_port} --wallet-url http://127.0.0.1:{args.wallet_port} get info")
     log("Ctrl-C to stop")
 
     if args.exit_after_boot:

@@ -2,7 +2,7 @@
 name: make-releases
 description: >-
   Cut GitHub releases for TetraGrids/Humanity-Pro. Use when the user asks to
-  release, tag, publish, or ship The Channel (channeld, contracts wasm, notes).
+  release, tag, publish, or ship Humanity Pro (humanityd, contracts wasm, notes).
 ---
 
 # Make releases
@@ -11,7 +11,7 @@ Repo: `TetraGrids/Humanity-Pro`. Default branch `main` is development; do not tr
 
 ## Preconditions
 
-- Ubuntu 22.04 is the supported build host. Do not release a Mac-only `channeld` binary.
+- Ubuntu 22.04 is the supported build host. Do not release a Mac-only `humanityd` binary.
 - Contracts: green **Compile contracts** workflow (CDT 4.1.1) or an Ubuntu CDT build of `contracts/`.
 - MIT `LICENSE` stays in the tree.
 - Follow [never-push-commits](../never-push-commits/SKILL.md): never `git push`. Leave tags local; the user pushes.
@@ -28,11 +28,11 @@ Tags are `vMAJOR.MINOR.PATCH` (optional `-rc.N`). Match `CMakeLists.txt` / versi
 4. Create the tag and GitHub release with `gh`:
 
 ```bash
-git tag -a vX.Y.Z -m "The Channel vX.Y.Z"
+git tag -a vX.Y.Z -m "Humanity Pro vX.Y.Z"
 # User pushes the tag. Do not git push.
 # After they push: gh release create vX.Y.Z --title "vX.Y.Z" --notes-file - <<'EOF'
 ## Summary
-- 
+-
 
 ## Contracts
 Wasm/ABI from Actions artifact contracts-wasm on this tag (or attach files).

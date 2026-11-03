@@ -23,9 +23,9 @@ loggingFile=configDir+"/logging.json"
 stderrFile=dataDir + "/stderr.txt"
 
 testNum=0
-max_start_time_secs=10 # time channeld takes to start
+max_start_time_secs=10 # time humanityd takes to start
 
-# We need debug level to get more information about channeld process
+# We need debug level to get more information about humanityd process
 logging="""{
   "includes": [],
   "appenders": [{
@@ -74,12 +74,12 @@ def prepareDirectories():
     with open(loggingFile, "w") as textFile:
         print(logging,file=textFile)
 
-def runChanneld(extraChanneldArgs, myTimeout):
-    """Startup channeld, wait for timeout (before forced shutdown) and collect output."""
-    if debug: Print("Launching channeld process.")
-    cmd="programs/channeld/channeld --config-dir rsmStaging/etc -e -p eosio --plugin eosio::chain_api_plugin --data-dir " + dataDir + " "
+def runHumanityd(extraHumanitydArgs, myTimeout):
+    """Startup humanityd, wait for timeout (before forced shutdown) and collect output."""
+    if debug: Print("Launching humanityd process.")
+    cmd="programs/humanityd/humanityd --config-dir rsmStaging/etc -e -p eosio --plugin eosio::chain_api_plugin --data-dir " + dataDir + " "
 
-    cmd=cmd + extraChanneldArgs
+    cmd=cmd + extraHumanitydArgs
     if debug: Print("cmd: %s" % (cmd))
     with open(stderrFile, 'w') as serr:
         proc=subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=serr)
@@ -99,15 +99,15 @@ def isMsgInStderrFile(msg):
                 break
     return msgFound
 
-def testCommon(title, extraChanneldArgs, expectedMsgs):
+def testCommon(title, extraHumanitydArgs, expectedMsgs):
     global testNum
     testNum+=1
     Print("Test %d: %s" % (testNum, title))
 
     prepareDirectories()
 
-    timeout=max_start_time_secs  # Leave sufficient time such channeld can start up fully in any platforms
-    runChanneld(extraChanneldArgs, timeout)
+    timeout=max_start_time_secs  # Leave sufficient time such humanityd can start up fully in any platforms
+    runHumanityd(extraHumanitydArgs, timeout)
 
     for msg in expectedMsgs:
         if not isMsgInStderrFile(msg):
@@ -147,9 +147,9 @@ def fillFS(dir, threshold):
         filesize = (available - warningAvailable) * 1.1 // (1024 * 1024) # add 0.1 redundancy to ensure warning be triggered
         os.system('dd if=/dev/zero of=' + fillerFile + ' count=' + str(filesize) + ' bs=1M')
 
-testIntervalMaxTimeout = 300 # Assume channeld at most runs 300 sec for this test
+testIntervalMaxTimeout = 300 # Assume humanityd at most runs 300 sec for this test
 
-def testInterval(title, extraChanneldArgs, interval, expectedMsgs, warningThreshold):
+def testInterval(title, extraHumanitydArgs, interval, expectedMsgs, warningThreshold):
     global testNum
     testNum += 1
     Print("Test %d: %s" % (testNum, title))
@@ -157,10 +157,10 @@ def testInterval(title, extraChanneldArgs, interval, expectedMsgs, warningThresh
     prepareDirectories()
     fillFS(dataDir, warningThreshold)
 
-    timeout = max_start_time_secs + interval * 2 # Leave sufficient time so channeld can start up fully in any platforms, and at least two warnings can be output
-    if timeout > testIntervalMaxTimeout: 
+    timeout = max_start_time_secs + interval * 2 # Leave sufficient time so humanityd can start up fully in any platforms, and at least two warnings can be output
+    if timeout > testIntervalMaxTimeout:
         errorExit ("Max timeout for testInterval is %d sec" % (testIntervalMaxTimeout))
-    runChanneld(extraChanneldArgs, timeout)
+    runHumanityd(extraHumanitydArgs, timeout)
 
     for msg in expectedMsgs:
         hasMsg, validInterval = isMsgIntervalValid(msg, interval)
@@ -174,21 +174,21 @@ def testAll():
 
     # default arguments and default directories to be monitored
     testCommon("Resmon not enabled: no arguments", "", ["interval set to 2", "threshold set to 90", "Shutdown flag when threshold exceeded set to true", "snapshots's file system to be monitored", "blocks's file system to be monitored", "state's file system to be monitored"])
-    
+
     # default arguments with registered directories
     testCommon("Resmon not enabled: Producer, Chain, State History and Trace Api", "--plugin eosio::state_history_plugin --state-history-dir=/tmp/state-history --disable-replay-opts --plugin eosio::trace_api_plugin --trace-dir=/tmp/trace --trace-no-abis", ["interval set to 2", "threshold set to 90", "Shutdown flag when threshold exceeded set to true", "snapshots's file system to be monitored", "blocks's file system to be monitored", "state's file system to be monitored", "state-history's file system to be monitored", "trace's file system to be monitored"])
 
     testCommon("Resmon enabled: Producer, Chain, State History and Trace Api", "--plugin  eosio::resource_monitor_plugin --plugin eosio::state_history_plugin --state-history-dir=/tmp/state-history --disable-replay-opts --plugin eosio::trace_api_plugin --trace-dir=/tmp/trace --trace-no-abis --resource-monitor-space-threshold=80 --resource-monitor-interval-seconds=3", ["snapshots's file system to be monitored", "blocks's file system to be monitored", "state's file system to be monitored", "state-history's file system to be monitored", "trace's file system to be monitored", "threshold set to 80", "interval set to 3", "Shutdown flag when threshold exceeded set to true"])
 
     # Only test minimum warning threshold (i.e. 6) to trigger warning as much as possible
-    testInterval("Resmon enabled: set warning interval", 
-        "--plugin eosio::resource_monitor_plugin --resource-monitor-space-threshold=6 --resource-monitor-warning-interval=5 --resource-monitor-not-shutdown-on-threshold-exceeded", 
+    testInterval("Resmon enabled: set warning interval",
+        "--plugin eosio::resource_monitor_plugin --resource-monitor-space-threshold=6 --resource-monitor-warning-interval=5 --resource-monitor-not-shutdown-on-threshold-exceeded",
         2 * 5, # Default monitor interval is 2 sec
         ["Space usage warning"],
         6)
 
-    testInterval("Resmon enabled: default warning interval", 
-        "--plugin eosio::resource_monitor_plugin --resource-monitor-space-threshold=6 --resource-monitor-interval-seconds=1 --resource-monitor-not-shutdown-on-threshold-exceeded", 
+    testInterval("Resmon enabled: default warning interval",
+        "--plugin eosio::resource_monitor_plugin --resource-monitor-space-threshold=6 --resource-monitor-interval-seconds=1 --resource-monitor-not-shutdown-on-threshold-exceeded",
         1 * 30, # Default warning interval is 30
         ["Space usage warning"],
         6)

@@ -55,18 +55,18 @@ try:
     # 01-nonProdNode connects to 02 & 03, but 02 & 03 do not connect to 01 so they will not receive any blocks
     # 02 & 03 are connected to the bios node to get blocks until bios node is killed.
     #
-    specificExtraChanneldArgs = {}
+    specificExtraHumanitydArgs = {}
     # nonProdNode01 will connect normally but will not send blocks because 02 & 03 have specified :trx only
-    specificExtraChanneldArgs[1] = f'--p2p-peer-address localhost:9902 --p2p-peer-address localhost:9903 '
+    specificExtraHumanitydArgs[1] = f'--p2p-peer-address localhost:9902 --p2p-peer-address localhost:9903 '
     # add a trx only listen endpoint to noBlocks02 & noBlocks03
-    specificExtraChanneldArgs[2] =  f'--p2p-peer-address localhost:9776 --read-mode speculative ' # connect to bios
-    specificExtraChanneldArgs[2] += f'--p2p-listen-endpoint localhost:9878 --p2p-server-address localhost:9878 '
-    specificExtraChanneldArgs[2] += f'--p2p-listen-endpoint localhost:9902:trx --p2p-server-address localhost:9902:trx '
-    specificExtraChanneldArgs[3] =  f'--p2p-peer-address localhost:9776 ' # connect to bios
-    specificExtraChanneldArgs[3] += f'--p2p-listen-endpoint localhost:9879 --p2p-server-address localhost:9879 '
-    specificExtraChanneldArgs[3] += f'--p2p-listen-endpoint localhost:9903:trx --p2p-server-address localhost:9903:trx '
+    specificExtraHumanitydArgs[2] =  f'--p2p-peer-address localhost:9776 --read-mode speculative ' # connect to bios
+    specificExtraHumanitydArgs[2] += f'--p2p-listen-endpoint localhost:9878 --p2p-server-address localhost:9878 '
+    specificExtraHumanitydArgs[2] += f'--p2p-listen-endpoint localhost:9902:trx --p2p-server-address localhost:9902:trx '
+    specificExtraHumanitydArgs[3] =  f'--p2p-peer-address localhost:9776 ' # connect to bios
+    specificExtraHumanitydArgs[3] += f'--p2p-listen-endpoint localhost:9879 --p2p-server-address localhost:9879 '
+    specificExtraHumanitydArgs[3] += f'--p2p-listen-endpoint localhost:9903:trx --p2p-server-address localhost:9903:trx '
     if cluster.launch(pnodes=pnodes, unstartedNodes=2, totalNodes=total_nodes, prodCount=prod_count,
-                      extraChanneldArgs="--connection-cleanup-period 3", specificExtraChanneldArgs=specificExtraChanneldArgs,
+                      extraHumanitydArgs="--connection-cleanup-period 3", specificExtraHumanitydArgs=specificExtraHumanitydArgs,
                       topo='./tests/p2p_no_blocks_test_shape.json', delay=delay, activateIF=activateIF, biosFinalizer=False) is False:
         errorExit("Failed to stand up eos cluster.")
 
@@ -114,7 +114,7 @@ try:
     Print("Send transfer trx")
     cmdDesc = "push transaction --skip-sign"
     cmd     = "%s '%s'" % (cmdDesc, json.dumps(trx))
-    trans = nonProdNode01.processChanCmd(cmd, cmdDesc, silentErrors=False, exitOnError=True)
+    trans = nonProdNode01.processHumanityCmd(cmd, cmdDesc, silentErrors=False, exitOnError=True)
 
     # can't wait for transaction in block, so just sleep
     time.sleep(0.5)

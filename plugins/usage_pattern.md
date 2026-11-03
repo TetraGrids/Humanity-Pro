@@ -14,10 +14,10 @@
 * Happens when `appbase::scoped_app::initialize(argc, argv)` is called
 * Plugins to be initialized are those passed as options (using the `--plugin` command line option) or as template parameters  to the `initialize()` call, as well as their dependents.
 * if we try to initialize an unregistered plugin, we get an exception (`std::exception::what: unable to find plugin`).
-* initialization order: 
+* initialization order:
     - for each plugin specified in command line, initialize its dependents (depth first) and then itself
     - for each plugin specified as template parameter, initialize its dependents (depth first) and then itself
-* Plugin state is updated to `initialized` *before* its descendents and itself are initialized. 
+* Plugin state is updated to `initialized` *before* its descendents and itself are initialized.
   So if there was a dependency cycle, the same plugin would not be initialized twice.
 * After the plugin initialization, `app().plugin_initialized(this);` is called which allows appbase to add it to its list of initialized plugins.
 
@@ -26,17 +26,17 @@
 
 Currently, `appbase::initialize()` can:
 
-1. either return `false` 
+1. either return `false`
      - if a specified option like `--help` or `--version` is specified, which does not require to continue the program execution
      - if a configuration error is detected (for ex `--logconf` specified dir missing, `--config` file missing)
-2. or throw in case of failure 
+2. or throw in case of failure
      - if any plugin throws during `plugin_initialize`, `appbase::initialize()` logs the error and rethrows the exception
 3. or return `true` is initialization was successful and the application should proceed.
-     
-     
+
+
 So an application should exit cleanly in cases 1 and 2 (without calling `app->startup();` or `app->exec();`), and continue in case 3.
 
-Unfortunately, when `appbase::initialize()` returns false, it is not clear whether it indicates a normal exit or an error, so for example in `channeld` we do:
+Unfortunately, when `appbase::initialize()` returns false, it is not clear whether it indicates a normal exit or an error, so for example in `humanityd` we do:
 
 
 ```c++
@@ -64,7 +64,7 @@ Unfortunately, when `appbase::initialize()` returns false, it is not clear wheth
 
 #### Application Startup
 
-This is when `appbase::scoped_app::startup()` is called. Besides starting a thread for catching signals, the main task is to call `startup() on all initialized plugins. 
+This is when `appbase::scoped_app::startup()` is called. Besides starting a thread for catching signals, the main task is to call `startup() on all initialized plugins.
 
 
 ```c++
@@ -102,17 +102,17 @@ If a plugin calls `app().quit()` during plugin_startup (not recommended), the ap
   Those dependencies should have been specified in the plugin class definition using `APPBASE_PLUGIN_REQUIRES`
 - use the provided program options to configure the plugin
 - possibly read additional configuration from files
-- create new objects, directories, files, etc... 
+- create new objects, directories, files, etc...
   critically any deallocation/cleanup of these (or other objects created during the plugin execution) should be done in the plugin destructor, not in `plugin_shutdown()`.
 - connect to signals from other plugins (ex: `chain.applied_transaction.connect([this](...) { ... });`)
-- register provider methods (that others can connect to via signals). 
+- register provider methods (that others can connect to via signals).
   Ex: `app().get_method<incoming::methods::transaction_async>().register_provider([this](...) { ... });`
 - relay signals to channels.
   Ex: `pre_accepted_block_connection = chain->pre_accepted_block.connect([this](...) { ...; pre_accepted_block_channel.publish(...); });`
 
 #### Rules to follow in `plugin_initialize`
 
-- in case of irrecoverable error, appropriate action is to throw an exception (possibly after logging the error). 
+- in case of irrecoverable error, appropriate action is to throw an exception (possibly after logging the error).
   This will cause the application to terminate.
 - `io_context`s should not be running, and threads should not be started that would run on any `io_context` before `plugin_startup`.
 - plugins should not post any action involving callbacks (timer, io, etc), either on the main appbbase thread or on plugin-specific thread pools, during `plugin_initialize`.
@@ -128,7 +128,7 @@ If a plugin calls `app().quit()` during plugin_startup (not recommended), the ap
 
 `plugin_startup()` is intended to allow the plugins to activate their `io_context`s, thread pools, timers, establish connections with dependent plugins, and start the intended processing of the plugin, in order to make sure that all the resources necessary are available. If critical resources  required for the application correct functioning are not available, the plugin should throw an exception.
 
-Ideally, all resource allocation is completed before `plugin_startup` returns. 
+Ideally, all resource allocation is completed before `plugin_startup` returns.
 
 If the plugin was to start a thread, which allocates resources upon startup, this could trigger an exception while another plugin is executing `plugin_startup`, making the log harder to decipher as it would intermingle messages from different sources.
 
@@ -151,7 +151,7 @@ Example of actions in `plugin_startup`:
 #### Guarantees provided by appbase to `plugin_startup`
 
 - `plugin_startup()` is called in a depth-first fashion, according to the stated dependency graph specified by `APPBASE_PLUGIN_REQUIRES`.
-- `plugin_startup()` is called within a try/catch block. 
+- `plugin_startup()` is called within a try/catch block.
 - If an exception is thrown while `plugin_startup()` is executed on any plugin, `plugin_shutdown()` is  called on it immediately, and an application shutdown is triggered.
 - but if the plugin does call `app().quit()` during `plugin_startup()`, the framework will throw, ensuring no other plugin is started and application terminates cleanly.
 - Before `plugin_startup()` is called, the plugin is added to the list of running plugins, which ensures that `plugin_shutdown()` will be called on it (either at application shutdown, or in case of an exception occurring before that)
@@ -167,16 +167,16 @@ Example of actions in `plugin_startup`:
 
 - stop thread pools (stop the `io_context`, join all threads)
 - cancel timers, e.g. `boost::asio::steady_timer` or `boost::asio::deadline_timer`
-  - Normally this should not be needed. If the timers are running on the thread pool then stopping the thread pool is sufficient 
+  - Normally this should not be needed. If the timers are running on the thread pool then stopping the thread pool is sufficient
 
 #### Rules to follow in `plugin_shutdown`
 
-- plugin created objects, or the plugin itself, should *not* be destroyed during `plugin_shutdown()`. 
+- plugin created objects, or the plugin itself, should *not* be destroyed during `plugin_shutdown()`.
   This must be done in the plugin destructor.
 
 #### Guarantees provided by appbase to `plugin_shutdown`
 
 - `plugin_shutdown()` is called within a try/catch block for each running plugin, starting from the last registered first.
-  This means that `plugin_shutdown()` is called on the inverse order of `plugin_startup()`, 
+  This means that `plugin_shutdown()` is called on the inverse order of `plugin_startup()`,
 - If an exception is thrown during `plugin_shutdown()`, it is logged on `std::cerr`, but doesn't prevent `plugin_shutdown()` from being called on the remaining running plugins.
 - The appbase framework will destruct the running plugins in a second phase of shutdown (last one added to the running list is destructed first).

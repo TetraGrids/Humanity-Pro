@@ -5,7 +5,7 @@ content_title: Build Antelope from Source
 The shell scripts previously recommended for building the software have been removed in favor of a build process entirely driven by CMake. Those wishing to build from source are now responsible for installing the necessary dependencies. The list of dependencies and the recommended build procedure are in the [`README.md`](https://github.com/TetraGrids/Humanity-Pro/blob/main/README.md) file. Instructions are also included for efficiently running the tests.
 
 ### Building From Source
-You can also build and install The Channel from source. Instructions for that currently live [here](https://github.com/TetraGrids/Humanity-Pro/blob/main/README.md#build-and-install-from-source).
+You can also build and install Humanity Pro from source. Instructions for that currently live [here](https://github.com/TetraGrids/Humanity-Pro/blob/main/README.md#build-and-install-from-source).
 
 #### Building Pinned Build Binary Packages
 The pinned build instructions have moved [here](https://github.com/TetraGrids/Humanity-Pro/blob/main/README.md#pinned-build). You may want to look at the [prerequisites](https://github.com/TetraGrids/Humanity-Pro/blob/main/README.md#prerequisites) and our warning on parallelization using the `-j` jobs flag [here](https://github.com/TetraGrids/Humanity-Pro/blob/main/README.md#step-3---build) before you build.

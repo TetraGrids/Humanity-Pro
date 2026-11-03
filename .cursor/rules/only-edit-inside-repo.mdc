@@ -9,7 +9,7 @@ Only create, edit, or delete files inside this repository's tree. Everything out
 
 ## Never modify
 
-- Files outside this repo: other checkouts (e.g. `The-Channel`), `$HOME`, `/tmp`, `/usr/local`, system headers, or any path not under this repo root.
+- Files outside this repo: other checkouts (e.g. `Humanity-Pro`), `$HOME`, `/tmp`, `/usr/local`, system headers, or any path not under this repo root.
 - Dependencies this repo does not control: system/Homebrew libraries (e.g. GMP, OpenSSL), global toolchains, SDKs, and installed packages.
 - Git submodules and other underlying library repos checked out under this tree (boost, appbase, eos-vm, softfloat, boringssl, etc.) - they are their own repositories; changes there will not show up here.
 

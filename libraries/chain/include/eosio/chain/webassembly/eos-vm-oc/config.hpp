@@ -15,7 +15,7 @@ namespace eosio { namespace chain { namespace eosvmoc {
 
 struct subjective_compile_limits {
    // subjective limits for OC compilation.
-   // channeld enforces the limits by the default values unless account is whitelisted.
+   // humanityd enforces the limits by the default values unless account is whitelisted.
    // libtester disables the limits in all tests, except enforces the limits
    // in the tests in unittests/eosvmoc_limits_tests.cpp.
    std::optional<rlim_t>   cpu_limit {20u};

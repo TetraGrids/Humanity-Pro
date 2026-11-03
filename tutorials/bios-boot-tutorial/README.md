@@ -12,7 +12,7 @@ The `bios-boot-tutorial.py` script simulates the bios boot sequence.
 
 ## Steps
 
-1. Install the latest [The Channel binaries](https://github.com/AntelopeIO/spring/releases) by following the steps provided in the README.
+1. Install the latest [Humanity Pro binaries](https://github.com/AntelopeIO/spring/releases) by following the steps provided in the README.
 
 2. Install the latest [CDT binaries](https://github.com/AntelopeIO/cdt/releases) by following the steps provided in the README.
 
@@ -59,6 +59,6 @@ The last command in the previous step printed the vaulta contracts directory. Ma
 $ pip install numpy
 $ cd ~
 $ git clone -b release/*latest* https://github.com/AntelopeIO/spring
-$ cd ./channel/tutorials/bios-boot-tutorial/
-$ python3 bios-boot-tutorial.py --chan=chan --channeld=channeld --keyd=keyd --core-contracts-dir="${CORE_CONTRACTS_DIRECTORY}" --vaulta-contracts-dir="${VAULTA_CONTRACTS_DIRECTOR}" --symbol="EOS" -w -a
+$ cd ./Humanity-Pro/tutorials/bios-boot-tutorial/
+$ python3 bios-boot-tutorial.py --humanity=humanity --humanityd=humanityd --humanity-keyd=humanity-keyd --core-contracts-dir="${CORE_CONTRACTS_DIRECTORY}" --vaulta-contracts-dir="${VAULTA_CONTRACTS_DIRECTOR}" --symbol="EOS" -w -a
 ```

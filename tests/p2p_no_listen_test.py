@@ -12,7 +12,7 @@ from TestHarness import Node, TestHelper, Utils
 ###############################################################
 # p2p_no_listen_test
 #
-# Test channeld disabling p2p
+# Test humanityd disabling p2p
 #
 ###############################################################
 

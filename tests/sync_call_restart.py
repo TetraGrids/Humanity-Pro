@@ -43,10 +43,10 @@ try:
     cluster.setWalletMgr(walletMgr)
 
     # Enable OC so that the test can execute paths invloved OC reources
-    specificExtraChanneldArgs={0: " --eos-vm-oc-enable all "}
+    specificExtraHumanitydArgs={0: " --eos-vm-oc-enable all "}
 
     Print("Stand up cluster")
-    if cluster.launch(pnodes=pnodes, totalNodes=total_nodes, activateIF=True, specificExtraChanneldArgs=specificExtraChanneldArgs) is False:
+    if cluster.launch(pnodes=pnodes, totalNodes=total_nodes, activateIF=True, specificExtraHumanitydArgs=specificExtraHumanitydArgs) is False:
         errorExit("Failed to stand up cluster.")
 
     cluster.waitOnClusterSync(blockAdvancing=5)

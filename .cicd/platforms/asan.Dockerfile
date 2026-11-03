@@ -21,7 +21,7 @@ RUN apt-get update && apt-get upgrade -y && \
 
 RUN yes | bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)" llvm.sh 20
 
-#make sure no confusion on what llvm library channel's cmake should pick up on
+#make sure no confusion on what llvm library Humanity Pro's CMake should pick up on
 RUN rm -rf /usr/lib/llvm-20/lib/cmake
 
 ENV SPRING_PLATFORM_HAS_EXTRAS_CMAKE=1

@@ -73,7 +73,7 @@ public:
             get_balance(name("ra")) + get_balance(name("ra.ramfee")) + get_balance(name("ra.stake")) + get_balance(name("ra.ram")) );
    }
 
-   T::action_result open( account_name  owner,
+   typename T::action_result open( account_name  owner,
                        const string& symbolname,
                        account_name  ram_payer    ) {
       return push_action( ram_payer, "open"_n, mvo()
@@ -209,18 +209,18 @@ public:
       return T::push_transaction( trx );
    }
 
-   T::action_result buyram( const account_name& payer, account_name receiver, const asset& eosin ) {
+   typename T::action_result buyram( const account_name& payer, account_name receiver, const asset& eosin ) {
       return push_action( payer, "buyram"_n, mvo()( "payer",payer)("receiver",receiver)("quant",eosin) );
    }
-   T::action_result buyrambytes( const account_name& payer, account_name receiver, uint32_t numbytes ) {
+   typename T::action_result buyrambytes( const account_name& payer, account_name receiver, uint32_t numbytes ) {
       return push_action( payer, "buyrambytes"_n, mvo()( "payer",payer)("receiver",receiver)("bytes",numbytes) );
    }
 
-   T::action_result sellram( const account_name& account, uint64_t numbytes ) {
+   typename T::action_result sellram( const account_name& account, uint64_t numbytes ) {
       return push_action( account, "sellram"_n, mvo()( "account", account)("bytes",numbytes) );
    }
 
-   T::action_result push_action( const account_name& signer, const action_name &name, const variant_object &data, bool auth = true ) {
+   typename T::action_result push_action( const account_name& signer, const action_name &name, const variant_object &data, bool auth = true ) {
          string action_type_name = abi_ser.get_action_type(name);
 
          action act({}, config::system_account_name, name,
@@ -231,7 +231,7 @@ public:
                                           signer == "bob111111111"_n ? "alice1111111"_n.to_uint64_t() : "bob111111111"_n.to_uint64_t() );
    }
 
-   T::action_result stake( const account_name& from, const account_name& to, const asset& net, const asset& cpu ) {
+   typename T::action_result stake( const account_name& from, const account_name& to, const asset& net, const asset& cpu ) {
       return push_action( name(from), "delegatebw"_n, mvo()
                           ("from",     from)
                           ("receiver", to)
@@ -241,11 +241,11 @@ public:
       );
    }
 
-   T::action_result stake( const account_name& acnt, const asset& net, const asset& cpu ) {
+   typename T::action_result stake( const account_name& acnt, const asset& net, const asset& cpu ) {
       return stake( acnt, acnt, net, cpu );
    }
 
-   T::action_result stake_with_transfer( const account_name& from, const account_name& to, const asset& net, const asset& cpu ) {
+   typename T::action_result stake_with_transfer( const account_name& from, const account_name& to, const asset& net, const asset& cpu ) {
       return push_action( name(from), "delegatebw"_n, mvo()
                           ("from",     from)
                           ("receiver", to)
@@ -255,11 +255,11 @@ public:
       );
    }
 
-   T::action_result stake_with_transfer( const account_name& acnt, const asset& net, const asset& cpu ) {
+   typename T::action_result stake_with_transfer( const account_name& acnt, const asset& net, const asset& cpu ) {
       return stake_with_transfer( acnt, acnt, net, cpu );
    }
 
-   T::action_result unstake( const account_name& from, const account_name& to, const asset& net, const asset& cpu ) {
+   typename T::action_result unstake( const account_name& from, const account_name& to, const asset& net, const asset& cpu ) {
       return push_action( name(from), "undelegatebw"_n, mvo()
                           ("from",     from)
                           ("receiver", to)
@@ -268,11 +268,11 @@ public:
       );
    }
 
-   T::action_result unstake( const account_name& acnt, const asset& net, const asset& cpu ) {
+   typename T::action_result unstake( const account_name& acnt, const asset& net, const asset& cpu ) {
       return unstake( acnt, acnt, net, cpu );
    }
 
-   T::action_result bidname( const account_name& bidder, const account_name& newname, const asset& bid ) {
+   typename T::action_result bidname( const account_name& bidder, const account_name& newname, const asset& bid ) {
       return push_action( name(bidder), "bidname"_n, mvo()
                           ("bidder",  bidder)
                           ("newname", newname)
@@ -280,14 +280,14 @@ public:
                           );
    }
 
-   T::action_result deposit( const account_name& owner, const asset& amount ) {
+   typename T::action_result deposit( const account_name& owner, const asset& amount ) {
       return push_action( name(owner), "deposit"_n, mvo()
                           ("owner",  owner)
                           ("amount", amount)
       );
    }
 
-   T::action_result withdraw( const account_name& owner, const asset& amount ) {
+   typename T::action_result withdraw( const account_name& owner, const asset& amount ) {
       return push_action( name(owner), "withdraw"_n, mvo()
                           ("owner",  owner)
                           ("amount", amount)
@@ -351,7 +351,7 @@ public:
          ("ram_reserve_ratio", 100 + n);
    }
 
-   T::action_result regproducer( const account_name& acnt, int params_fixture = 1 ) {
+   typename T::action_result regproducer( const account_name& acnt, int params_fixture = 1 ) {
       typename T::action_result r = push_action( acnt, "regproducer"_n, mvo()
                           ("producer",  acnt )
                           ("producer_key", T::get_public_key( acnt, "active" ) )
@@ -362,7 +362,7 @@ public:
       return r;
    }
 
-   T::action_result vote( const account_name& voter, const std::vector<account_name>& producers, const account_name& proxy = name(0) ) {
+   typename T::action_result vote( const account_name& voter, const std::vector<account_name>& producers, const account_name& proxy = name(0) ) {
       return push_action(voter, "voteproducer"_n, mvo()
                          ("voter",     voter)
                          ("proxy",     proxy)

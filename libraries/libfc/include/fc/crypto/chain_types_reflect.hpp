@@ -5,7 +5,7 @@
 /** Add reflection for `chain_kind_t` */
 FC_REFLECT_ENUM_WITH_STRIP(fc::crypto::chain_kind_t,
    (chain_kind_unknown)
-   (chain_kind_channel)
+   (chain_kind_humanity)
    (chain_kind_ethereum)
    (chain_kind_solana)
    (chain_kind_sui), true);
@@ -13,8 +13,8 @@ FC_REFLECT_ENUM_WITH_STRIP(fc::crypto::chain_kind_t,
 /** Add reflection for `chain_key_type_t` */
 FC_REFLECT_ENUM_WITH_STRIP(fc::crypto::chain_key_type_t,
    (chain_key_type_unknown)
-   (chain_key_type_channel)
-   (chain_key_type_channel_bls)
+   (chain_key_type_humanity)
+   (chain_key_type_humanity_bls)
    (chain_key_type_ethereum)
    (chain_key_type_solana)
    (chain_key_type_sui), true);

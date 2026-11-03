@@ -18,17 +18,17 @@ from TestHarness import Account, Node, ReturnType, Utils, WalletMgr
 
 testSuccessful=False
 
-def channeld_help_test():
-    """Test that channeld help contains option descriptions"""
-    help_text = subprocess.check_output(["./programs/channeld/channeld", "--help"])
+def humanityd_help_test():
+    """Test that humanityd help contains option descriptions"""
+    help_text = subprocess.check_output(["./programs/humanityd/humanityd", "--help"])
 
     assert(re.search(b'Application.*Options', help_text))
     assert(re.search(b'Options for .*_plugin', help_text))
 
 
-def chan_help_test(args):
-    """Test that chan help contains option and subcommand descriptions"""
-    help_text = subprocess.check_output(["./programs/chan/chan"] + args)
+def humanity_help_test(args):
+    """Test that humanity help contains option and subcommand descriptions"""
+    help_text = subprocess.check_output(["./programs/humanity/humanity"] + args)
 
     assert(b'Options:' in help_text)
     assert(b'Subcommands:' in help_text)
@@ -37,7 +37,7 @@ def chan_help_test(args):
 def cli11_bugfix_test():
     """Test that subcommand names can be used as option arguments"""
     completed_process = subprocess.run(
-        ['./programs/chan/chan', '--no-auto-keyd', '-u', 'http://localhost:0/',
+        ['./programs/humanity/humanity', '--no-auto-humanity-keyd', '-u', 'http://localhost:0/',
          'push', 'action', 'accout', 'action', '["data"]', '-p', 'wallet'],
         check=False,
         stderr=subprocess.PIPE)
@@ -48,7 +48,7 @@ def cli11_bugfix_test():
 
     # Make sure that the command failed because of the connection error,
     # not the command line parsing error.
-    assert(b'Failed http request to channeld' in completed_process.stderr)
+    assert(b'Failed http request to humanityd' in completed_process.stderr)
 
 
 def cli11_optional_option_arg_test():
@@ -56,17 +56,17 @@ def cli11_optional_option_arg_test():
     chain = 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
     key = '5Jgfqh3svgBZvCAQkcnUX8sKmVUkaUekYDGqFakm52Ttkc5MBA4'
 
-    output = subprocess.check_output(['./programs/chan/chan', '--no-auto-keyd', 'sign',
+    output = subprocess.check_output(['./programs/humanity/humanity', '--no-auto-humanity-keyd', 'sign',
                                       '-c', chain, '-k', '{}'],
                                      input=key.encode(),
                                      stderr=subprocess.DEVNULL)
     assert(b'signatures' in output)
 
-    output = subprocess.check_output(['./programs/chan/chan', '--no-auto-keyd', 'sign',
+    output = subprocess.check_output(['./programs/humanity/humanity', '--no-auto-humanity-keyd', 'sign',
                                       '-c', chain, '-k', key, '{}'])
     assert(b'signatures' in output)
 
-def chan_sign_test():
+def humanity_sign_test():
     """Test that sign can on both regular and packed transactions"""
     chain = 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
     key = '5Jgfqh3svgBZvCAQkcnUX8sKmVUkaUekYDGqFakm52Ttkc5MBA4'
@@ -96,7 +96,7 @@ def chan_sign_test():
         '"context_free_data": []'
     '}')
 
-    output = subprocess.check_output(['./programs/chan/chan', '--no-auto-keyd', 'sign',
+    output = subprocess.check_output(['./programs/humanity/humanity', '--no-auto-humanity-keyd', 'sign',
                                       '-c', chain, '-k', key, trx])
     # make sure it is signed
     assert(b'signatures' in output)
@@ -114,7 +114,7 @@ def chan_sign_test():
 
     # Test packed transaction is unpacked. Only with options --print-request and --public-key
     # the sign request is dumped to stderr.
-    cmd = ['./programs/chan/chan', '--print-request', '--no-auto-keyd', 'sign', '-c', chain, '--public-key', 'PUB_K1_8Dq1KosJ9PMn1vKQK3TbiihgfUiDBUsz471xaCE6eYUsmdCc5Y', packed_trx]
+    cmd = ['./programs/humanity/humanity', '--print-request', '--no-auto-humanity-keyd', 'sign', '-c', chain, '--public-key', 'PUB_K1_8Dq1KosJ9PMn1vKQK3TbiihgfUiDBUsz471xaCE6eYUsmdCc5Y', packed_trx]
     outs=None
     errs=None
     try:
@@ -135,13 +135,13 @@ def chan_sign_test():
     assert(b'"data": "000000000000a6690000000000ea305501000000000000000453595300000000016d"' in errs)
 
     # Test packed transaction is signed.
-    output = subprocess.check_output(['./programs/chan/chan', '--no-auto-keyd', 'sign',
+    output = subprocess.check_output(['./programs/humanity/humanity', '--no-auto-humanity-keyd', 'sign',
                                       '-c', chain, '-k', key, packed_trx])
     # Make sure signatures not empty
     assert(b'signatures' in output)
     assert(b'"signatures": []' not in output)
 
-def processChanCommand(cmd):
+def processHumanityCommand(cmd):
     outs = None
     errs = None
     try:
@@ -153,7 +153,7 @@ def processChanCommand(cmd):
         print(f"STDERR: {ex.stderr}")
     return outs, errs
 
-def chan_abi_file_test():
+def humanity_abi_file_test():
     """Test option --abi-file """
     token_abi_path = os.path.abspath(os.getcwd() + '/unittests/contracts/ra.token/ra.token.abi')
     system_abi_path = os.path.abspath(os.getcwd() + '/unittests/contracts/ra.system/ra.system.abi')
@@ -164,15 +164,15 @@ def chan_abi_file_test():
     account = 'ra.token'
     action = 'transfer'
     unpacked_action_data = '{"from":"aaa","to":"bbb","quantity":"10.0000 SYS","memo":"hello"}'
-    # use URL http://127.0.0.1:12345 to make sure chan not to connect to any running channeld
-    cmd = ['./programs/chan/chan', '-u', 'http://127.0.0.1:12345', 'convert', 'pack_action_data', account, action, unpacked_action_data]
-    outs, errs = processChanCommand(cmd)
-    assert(b'Failed http request to channeld' in errs)
+    # use URL http://127.0.0.1:12345 to make sure humanity not to connect to any running humanityd
+    cmd = ['./programs/humanity/humanity', '-u', 'http://127.0.0.1:12345', 'convert', 'pack_action_data', account, action, unpacked_action_data]
+    outs, errs = processHumanityCommand(cmd)
+    assert(b'Failed http request to humanityd' in errs)
 
     # invalid option --abi-file
     invalid_abi_arg = 'ra.token' + ' ' + token_abi_path
-    cmd = ['./programs/chan/chan', '-u', 'http://127.0.0.1:12345', '--abi-file', invalid_abi_arg, 'convert', 'pack_action_data', account, action, unpacked_action_data]
-    outs, errs = processChanCommand(cmd)
+    cmd = ['./programs/humanity/humanity', '-u', 'http://127.0.0.1:12345', '--abi-file', invalid_abi_arg, 'convert', 'pack_action_data', account, action, unpacked_action_data]
+    outs, errs = processHumanityCommand(cmd)
     assert(b'please specify --abi-file in form of <contract name>:<abi file path>.' in errs)
 
     # pack token transfer data
@@ -180,14 +180,14 @@ def chan_abi_file_test():
     action = 'transfer'
     unpacked_action_data = '{"from":"aaa","to":"bbb","quantity":"10.0000 SYS","memo":"hello"}'
     packed_action_data = '0000000000008c31000000000000ce39a08601000000000004535953000000000568656c6c6f'
-    cmd = ['./programs/chan/chan', '-u','http://127.0.0.1:12345', '--abi-file', token_abi_file_arg, 'convert', 'pack_action_data', account, action, unpacked_action_data]
-    outs, errs = processChanCommand(cmd)
+    cmd = ['./programs/humanity/humanity', '-u','http://127.0.0.1:12345', '--abi-file', token_abi_file_arg, 'convert', 'pack_action_data', account, action, unpacked_action_data]
+    outs, errs = processHumanityCommand(cmd)
     actual = outs.strip()
     assert(actual.decode('utf-8') == packed_action_data)
 
     # unpack token transfer data
-    cmd = ['./programs/chan/chan', '-u','http://127.0.0.1:12345', '--abi-file', token_abi_file_arg, 'convert', 'unpack_action_data', account, action, packed_action_data]
-    outs, errs = processChanCommand(cmd)
+    cmd = ['./programs/humanity/humanity', '-u','http://127.0.0.1:12345', '--abi-file', token_abi_file_arg, 'convert', 'unpack_action_data', account, action, packed_action_data]
+    outs, errs = processHumanityCommand(cmd)
     assert(b'"from": "aaa"' in outs)
     assert(b'"to": "bbb"' in outs)
     assert(b'"quantity": "10.0000 SYS"' in outs)
@@ -222,15 +222,15 @@ def chan_abi_file_test():
         }
     }"""
 
-    cmd = ['./programs/chan/chan', '-u','http://127.0.0.1:12345', '--abi-file', system_abi_file_arg, 'convert', 'pack_action_data', account, action, unpacked_action_data]
+    cmd = ['./programs/humanity/humanity', '-u','http://127.0.0.1:12345', '--abi-file', system_abi_file_arg, 'convert', 'pack_action_data', account, action, unpacked_action_data]
     packed_action_data = '0000000000ea30550000000000000e3d01000000010002c0ded2bc1f1305fb0faac5e6c03ee3a1924234985427b6167ca569d13df435cf0100000001000000010002c0ded2bc1f1305fb0faac5e6c03ee3a1924234985427b6167ca569d13df435cf01000000'
-    outs, errs = processChanCommand(cmd)
+    outs, errs = processHumanityCommand(cmd)
     actual = outs.strip()
     assert(actual.decode('utf-8') == packed_action_data)
 
     # unpack account create data
-    cmd = ['./programs/chan/chan', '-u','http://127.0.0.1:12345', '--abi-file', system_abi_file_arg, 'convert', 'unpack_action_data', account, action, packed_action_data]
-    outs, errs = processChanCommand(cmd)
+    cmd = ['./programs/humanity/humanity', '-u','http://127.0.0.1:12345', '--abi-file', system_abi_file_arg, 'convert', 'unpack_action_data', account, action, packed_action_data]
+    outs, errs = processHumanityCommand(cmd)
     assert(b'"creator": "ra"' in outs)
     assert(b'"name": "bob"' in outs)
 
@@ -301,8 +301,8 @@ def chan_abi_file_test():
     }"""
 
     expected_output = b'3aacf360ee010b864b7e00000000020000000000ea305500409e9a2264b89a010000000000ea305500000000a8ed3232660000000000ea30550000000000000e3d01000000010002c0ded2bc1f1305fb0faac5e6c03ee3a1924234985427b6167ca569d13df435cf0100000001000000010002c0ded2bc1f1305fb0faac5e6c03ee3a1924234985427b6167ca569d13df435cf0100000000a6823403ea3055000000572d3ccdcd010000000000008c3100000000a8ed3232260000000000008c31000000000000ce39a08601000000000004535953000000000568656c6c6f00'
-    cmd = ['./programs/chan/chan', '-u','http://127.0.0.1:12345', '--abi-file', system_abi_file_arg, token_abi_file_arg, 'convert', 'pack_transaction', '--pack-action-data', unpacked_trx]
-    outs, errs = processChanCommand(cmd)
+    cmd = ['./programs/humanity/humanity', '-u','http://127.0.0.1:12345', '--abi-file', system_abi_file_arg, token_abi_file_arg, 'convert', 'pack_transaction', '--pack-action-data', unpacked_trx]
+    outs, errs = processHumanityCommand(cmd)
     assert(expected_output in outs)
 
     # unpack transaction
@@ -314,8 +314,8 @@ def chan_abi_file_test():
         "packed_context_free_data": "",
         "packed_trx": "3aacf360ee010b864b7e00000000020000000000ea305500409e9a2264b89a010000000000ea305500000000a8ed3232660000000000ea30550000000000000e3d01000000010002c0ded2bc1f1305fb0faac5e6c03ee3a1924234985427b6167ca569d13df435cf0100000001000000010002c0ded2bc1f1305fb0faac5e6c03ee3a1924234985427b6167ca569d13df435cf0100000000a6823403ea3055000000572d3ccdcd010000000000008c3100000000a8ed3232260000000000008c31000000000000ce39a08601000000000004535953000000000568656c6c6f00"
     }"""
-    cmd = ['./programs/chan/chan', '-u','http://127.0.0.1:12345', '--abi-file', system_abi_file_arg, token_abi_file_arg, 'convert', 'unpack_transaction', '--unpack-action-data', packed_trx]
-    outs, errs = processChanCommand(cmd)
+    cmd = ['./programs/humanity/humanity', '-u','http://127.0.0.1:12345', '--abi-file', system_abi_file_arg, token_abi_file_arg, 'convert', 'unpack_transaction', '--unpack-action-data', packed_trx]
+    outs, errs = processHumanityCommand(cmd)
     assert(b'"creator": "ra"' in outs)
     assert(b'"name": "bob"' in outs)
 
@@ -324,7 +324,7 @@ def chan_abi_file_test():
     assert(b'"quantity": "10.0000 SYS"' in outs)
     assert(b'"memo": "hello"' in outs)
 
-def abi_file_with_channeld_test():
+def abi_file_with_humanityd_test():
     # push action token transfer with option `--abi-file`
     global testSuccessful
     try:
@@ -345,7 +345,7 @@ def abi_file_with_channeld_test():
 
         tries = 30
         while not Utils.arePortsAvailable(set(range(8888, 8889))):
-            Utils.Print("ERROR: Another process is listening on channeld test port 8888. wait...")
+            Utils.Print("ERROR: Another process is listening on humanityd test port 8888. wait...")
             if tries == 0:
                 assert False
             tries -= 1
@@ -355,7 +355,7 @@ def abi_file_with_channeld_test():
         os.makedirs(data_dir, exist_ok=True)
         walletMgr = WalletMgr(True)
         walletMgr.launch()
-        cmd = "./programs/channeld/channeld -e -p eosio --plugin eosio::trace_api_plugin --trace-no-abis --plugin eosio::producer_plugin --plugin eosio::producer_api_plugin --plugin eosio::chain_api_plugin --plugin eosio::chain_plugin --plugin eosio::http_plugin --access-control-allow-origin=* --http-validate-host=false --max-transaction-time=-1 --resource-monitor-not-shutdown-on-threshold-exceeded " + "--data-dir " + data_dir + " --config-dir " + data_dir
+        cmd = "./programs/humanityd/humanityd -e -p eosio --plugin eosio::trace_api_plugin --trace-no-abis --plugin eosio::producer_plugin --plugin eosio::producer_api_plugin --plugin eosio::chain_api_plugin --plugin eosio::chain_plugin --plugin eosio::http_plugin --access-control-allow-origin=* --http-validate-host=false --max-transaction-time=-1 --resource-monitor-not-shutdown-on-threshold-exceeded " + "--data-dir " + data_dir + " --config-dir " + data_dir
         node = Node('localhost', 8888, nodeId, data_dir=Path(data_dir), config_dir=Path(data_dir), cmd=shlex.split(cmd), launch_time=datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S'), walletMgr=walletMgr)
         time.sleep(5)
         node.waitForBlock(1)
@@ -382,7 +382,7 @@ def abi_file_with_channeld_test():
 
         node.transferFunds(accounts[1], accounts[2], '100.0000 SYS')
 
-        node.processChanCmd('set abi ra.token ' + malicious_token_abi_path, 'set malicious ra.token abi', returnType=ReturnType.raw)
+        node.processHumanityCmd('set abi ra.token ' + malicious_token_abi_path, 'set malicious ra.token abi', returnType=ReturnType.raw)
 
         cmdArr = node.transferFundsCmdArr(accounts[2], accounts[3], '25.0000 SYS', 'm', False, None, False, False, 90, False)
         cmdArr.insert(6, '--print-request')
@@ -404,7 +404,7 @@ def abi_file_with_channeld_test():
             if not node.killed:
                 node.kill(signal.SIGKILL)
         if testSuccessful:
-            Utils.Print("Cleanup channeld data.")
+            Utils.Print("Cleanup humanityd data.")
             shutil.rmtree(Utils.DataPath)
 
         if malicious_token_abi_path:
@@ -414,30 +414,30 @@ def abi_file_with_channeld_test():
         walletMgr.testFailed = not testSuccessful
 
 def public_key_convert_test():
-    assert(processChanCommand(['./programs/chan/chan', 'convert', 'legacy_public_key', 'EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV'])[0]     == b'EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV\n')
-    assert(processChanCommand(['./programs/chan/chan', 'convert', 'legacy_public_key', 'PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63'])[0] == b'EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV\n')
-    assert(processChanCommand(['./programs/chan/chan', 'convert', 'public_key',        'EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV'])[0]     == b'PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63\n')
-    assert(processChanCommand(['./programs/chan/chan', 'convert', 'public_key',        'PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63'])[0] == b'PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63\n')
+    assert(processHumanityCommand(['./programs/humanity/humanity', 'convert', 'legacy_public_key', 'EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV'])[0]     == b'EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV\n')
+    assert(processHumanityCommand(['./programs/humanity/humanity', 'convert', 'legacy_public_key', 'PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63'])[0] == b'EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV\n')
+    assert(processHumanityCommand(['./programs/humanity/humanity', 'convert', 'public_key',        'EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV'])[0]     == b'PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63\n')
+    assert(processHumanityCommand(['./programs/humanity/humanity', 'convert', 'public_key',        'PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63'])[0] == b'PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63\n')
 
-    assert(processChanCommand(['./programs/chan/chan', 'convert', 'legacy_public_key', 'PUB_R1_6p9aKPd9zweERtaPwp2vEyVgQcdmyYBstH3vYocLiwuETfJm7r'])[0] == b'PUB_R1_6p9aKPd9zweERtaPwp2vEyVgQcdmyYBstH3vYocLiwuETfJm7r\n')
+    assert(processHumanityCommand(['./programs/humanity/humanity', 'convert', 'legacy_public_key', 'PUB_R1_6p9aKPd9zweERtaPwp2vEyVgQcdmyYBstH3vYocLiwuETfJm7r'])[0] == b'PUB_R1_6p9aKPd9zweERtaPwp2vEyVgQcdmyYBstH3vYocLiwuETfJm7r\n')
 
-    _, errs = processChanCommand(['./programs/chan/chan', 'convert', 'legacy_public_key', 'BANANA6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV'])
+    _, errs = processHumanityCommand(['./programs/humanity/humanity', 'convert', 'legacy_public_key', 'BANANA6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV'])
     assert(b'Invalid public key' in errs)
 
-channeld_help_test()
+humanityd_help_test()
 
-chan_help_test(['--help'])
-chan_help_test(['system', '--help'])
-chan_help_test(['version', '--help'])
-chan_help_test(['wallet', '--help'])
+humanity_help_test(['--help'])
+humanity_help_test(['system', '--help'])
+humanity_help_test(['version', '--help'])
+humanity_help_test(['wallet', '--help'])
 
 cli11_bugfix_test()
 
 cli11_optional_option_arg_test()
-chan_sign_test()
+humanity_sign_test()
 
-chan_abi_file_test()
-abi_file_with_channeld_test()
+humanity_abi_file_test()
+abi_file_with_humanityd_test()
 public_key_convert_test()
 
 errorCode = 0 if testSuccessful else 1

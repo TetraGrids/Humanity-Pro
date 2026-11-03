@@ -1,6 +1,6 @@
-# Contributing to The Channel
+# Contributing to Humanity Pro
 
-Thanks for contributing. This is the workflow for **this** repository: Spring-family Antelope node software (`channeld`, `chan`, `keyd`, `channel-util`), CDT Wasm contracts (`ra.*`, `flex.token`), CMake, and Make.
+Thanks for contributing. This is the workflow for **this** repository: Spring-family Antelope node software (`humanityd`, `humanity`, `humanity-keyd`, `humanity-util`), CDT Wasm contracts (`ra.*`, `flex.token`), CMake, and Make.
 
 Build, install, and test commands live in [README.md](./README.md). Do not duplicate a second setup story here.
 
@@ -146,7 +146,7 @@ Use [GitHub private vulnerability reporting](https://github.com/TetraGrids/Human
 
 ## Releases
 
-Tags are `vMAJOR.MINOR.PATCH` (optional `-rc.N`). Notes go on [GitHub Releases](https://github.com/TetraGrids/Humanity-Pro/releases). Ubuntu 22.04 is the supported release host; do not ship a Mac-only `channeld` as the official binary.
+Tags are `vMAJOR.MINOR.PATCH` (optional `-rc.N`). Notes go on [GitHub Releases](https://github.com/TetraGrids/Humanity-Pro/releases). Ubuntu 22.04 is the supported release host; do not ship a Mac-only `humanityd` as the official binary.
 
 ## License
 
@@ -156,5 +156,5 @@ Contributions are under the project [LICENSE](./LICENSE) (MIT). Third-party libr
 
 - [GitHub Issues](https://github.com/TetraGrids/Humanity-Pro/issues)
 - [README.md](./README.md) for build and test
-- [docs/](./docs/) for `channeld` / `chan` / `keyd`
+- [docs/](./docs/) for `humanityd` / `humanity` / `humanity-keyd`
 - [WHITEPAPER.md](./WHITEPAPER.md) and [PURE-LIQUID.md](./PURE-LIQUID.md) for protocol intent

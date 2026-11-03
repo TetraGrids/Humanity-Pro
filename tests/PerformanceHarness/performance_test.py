@@ -213,7 +213,7 @@ class PerformanceTest:
         for threadCount in range(minThreadCount, maxThreadCount+1):
             print(f"Running {optPlugin.value} thread count optimization check with {threadCount} {optPlugin.value} threads")
 
-            setattr(getattr(clusterConfig.extraChanneldArgs, optPlugin.value + 'PluginArgs'), f"{optPlugin.value}Threads", threadCount)
+            setattr(getattr(clusterConfig.extraHumanitydArgs, optPlugin.value + 'PluginArgs'), f"{optPlugin.value}Threads", threadCount)
 
             binSearchResults = self.performPtbBinarySearch(clusterConfig=clusterConfig, logDirRoot=self.loggingConfig.pluginThreadOptLogsDirPath,
                                                             delReport=True, quiet=False, delPerfLogs=True, saveState=False)
@@ -266,7 +266,7 @@ class PerformanceTest:
         return report
 
     def createReport(self, producerThreadResult: PluginThreadOptResult=None, chainThreadResult: PluginThreadOptResult=None, netThreadResult: PluginThreadOptResult=None,
-                     tpsTestResult: dict=None, channeldVers: str="") -> dict:
+                     tpsTestResult: dict=None, humanitydVers: str="") -> dict:
         report = {}
         report['perfTestsBegin'] = self.testsStart
         report['perfTestsFinish'] = self.testsFinish
@@ -286,7 +286,7 @@ class PerformanceTest:
 
         report['args'] =  self.prepArgsDict()
         report['env'] = {'system': system(), 'os': os.name, 'release': release(), 'logical_cpu_count': os.cpu_count()}
-        report['channeldVersion'] = channeldVers
+        report['humanitydVersion'] = humanitydVers
         return report
 
     def testDirsCleanup(self):
@@ -375,9 +375,9 @@ class PerformanceTest:
             else:
                 optType = PerformanceTest.PluginThreadOptRunType.LOCAL_MAX
             chainResults = self.optimizePluginThreadCount(optPlugin=PerformanceTest.PluginThreadOpt.CHAIN, optType=optType,
-                                                          minThreadCount=self.clusterConfig.extraChanneldArgs.chainPluginArgs._chainThreadsChanneldDefault)
+                                                          minThreadCount=self.clusterConfig.extraHumanitydArgs.chainPluginArgs._chainThreadsHumanitydDefault)
             print(f"Chain Thread Optimization results: {chainResults}")
-            self.clusterConfig.extraChanneldArgs.chainPluginArgs.threads = chainResults.recommendedThreadCount
+            self.clusterConfig.extraHumanitydArgs.chainPluginArgs.threads = chainResults.recommendedThreadCount
 
         netResults = None
         if self.ptConfig.calcNetThreads != "none":
@@ -387,9 +387,9 @@ class PerformanceTest:
             else:
                 optType = PerformanceTest.PluginThreadOptRunType.LOCAL_MAX
             netResults = self.optimizePluginThreadCount(optPlugin=PerformanceTest.PluginThreadOpt.NET, optType=optType,
-                                                        minThreadCount=self.clusterConfig.extraChanneldArgs.netPluginArgs._netThreadsChanneldDefault)
+                                                        minThreadCount=self.clusterConfig.extraHumanitydArgs.netPluginArgs._netThreadsHumanitydDefault)
             print(f"Net Thread Optimization results: {netResults}")
-            self.clusterConfig.extraChanneldArgs.netPluginArgs.threads = netResults.recommendedThreadCount
+            self.clusterConfig.extraHumanitydArgs.netPluginArgs.threads = netResults.recommendedThreadCount
 
         tpsTestResult = None
         if not self.ptConfig.skipTpsTests:
@@ -400,7 +400,7 @@ class PerformanceTest:
 
         self.testsFinish = datetime.utcnow()
 
-        self.report = self.createReport(chainThreadResult=chainResults, netThreadResult=netResults, tpsTestResult=tpsTestResult, channeldVers=self.clusterConfig.channeldVers)
+        self.report = self.createReport(chainThreadResult=chainResults, netThreadResult=netResults, tpsTestResult=tpsTestResult, humanitydVers=self.clusterConfig.humanitydVers)
         jsonReport = JsonReportHandler.reportAsJSON(self.report)
 
         if not self.ptConfig.quiet:

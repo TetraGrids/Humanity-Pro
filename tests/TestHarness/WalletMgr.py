@@ -14,17 +14,17 @@ Wallet=namedtuple("Wallet", "name password host port")
 # pylint: disable=too-many-instance-attributes
 class WalletMgr(object):
     __walletDataDir=f"{Utils.DataPath}/test_wallet_0"
-    __walletLogOutFile=f"{__walletDataDir}/test_keyd_out.log"
-    __walletLogErrFile=f"{__walletDataDir}/test_keyd_err.log"
+    __walletLogOutFile=f"{__walletDataDir}/test_humanity_keyd_out.log"
+    __walletLogErrFile=f"{__walletDataDir}/test_humanity_keyd_err.log"
     __MaxPort=9999
 
     # pylint: disable=too-many-arguments
-    # walletd [True|False] True=Launch wallet(keyd) process; False=Manage launch process externally.
-    def __init__(self, walletd, channeldPort=8888, channeldHost="localhost", port=9899, host="localhost", keepRunning=False, keepLogs=False):
+    # walletd [True|False] True=Launch wallet(humanity-keyd) process; False=Manage launch process externally.
+    def __init__(self, walletd, humanitydPort=8888, humanitydHost="localhost", port=9899, host="localhost", keepRunning=False, keepLogs=False):
         atexit.register(self.shutdown)
         self.walletd=walletd
-        self.channeldPort=channeldPort
-        self.channeldHost=channeldHost
+        self.humanitydPort=humanitydPort
+        self.humanitydHost=humanitydHost
         self.port=port
         self.host=host
         self.keepRunning=keepRunning
@@ -41,7 +41,7 @@ class WalletMgr(object):
         return " --wallet-url http://%s:%d" % (self.host, self.port)
 
     def getArgs(self):
-        return " --url http://%s:%d%s %s" % (self.channeldHost, self.channeldPort, self.getWalletEndpointArgs(), Utils.MiscEosClientArgs)
+        return " --url http://%s:%d%s %s" % (self.humanitydHost, self.humanitydPort, self.getWalletEndpointArgs(), Utils.MiscEosClientArgs)
 
     def isLaunched(self):
         return self.walletPid is not None
@@ -62,7 +62,7 @@ class WalletMgr(object):
 
     def launch(self):
         if not self.walletd:
-            Utils.Print("ERROR: Wallet Manager wasn't configured to launch keyd")
+            Utils.Print("ERROR: Wallet Manager wasn't configured to launch humanity-keyd")
             return False
 
         if self.isLaunched():
@@ -96,7 +96,7 @@ class WalletMgr(object):
             self.popenProc=subprocess.Popen(cmd.split(), stdout=sout, stderr=serr)
             self.walletPid=self.popenProc.pid
 
-        # Give keyd time to warm up
+        # Give humanity-keyd time to warm up
         time.sleep(2)
 
         try:
@@ -295,7 +295,7 @@ class WalletMgr(object):
                 shutil.copyfileobj(f, sys.stdout)
 
     def shutdown(self):
-        '''Shutdown the managed keyd instance unless keepRunning was set.'''
+        '''Shutdown the managed humanity-keyd instance unless keepRunning was set.'''
         if self.keepRunning:
             return
         if self.popenProc:

@@ -28,7 +28,7 @@ testSuccessful = False
 try:
     TestHelper.printSystemInfo("BEGIN")
 
-    specificChanneldArgs = {
+    specificHumanitydArgs = {
         0 : "--enable-stale-production",
 
         3 : "--read-mode head",

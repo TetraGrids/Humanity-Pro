@@ -2,7 +2,7 @@
 name: never-push
 description: >-
   Never git push for the user. Use on every git, commit, tag, or GitHub
-  operation in The Channel. Don't ever push commits for me.
+  operation in Humanity Pro. Don't ever push commits for me.
 ---
 
 # Never push

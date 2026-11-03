@@ -20,9 +20,9 @@ Makefile
 # configure_file outputs
 /eosio.version.hpp
 /eos.doxygen
-/programs/channeld/config.hpp
-/programs/chan/config.hpp
-/programs/keyd/config.hpp
+/programs/humanityd/config.hpp
+/programs/humanity/config.hpp
+/programs/humanity-keyd/config.hpp
 /lib/
 /modules/
-/licenses/channel/
+/licenses/humanity-pro/

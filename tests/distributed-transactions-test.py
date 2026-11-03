@@ -57,19 +57,19 @@ try:
 
         print("Stand up walletd")
         if walletMgr.launch() is False:
-            errorExit("Failed to stand up keyd.")
+            errorExit("Failed to stand up humanity-keyd.")
     else:
         Print ("producing nodes: %s, non-producing nodes: %d, topology: %s, delay between nodes launch(seconds): %d" %
                (pnodes, total_nodes-pnodes, topo, delay))
 
         Print("Stand up cluster")
-        specificExtraChanneldArgs = {}
-        specificExtraChanneldArgs[total_nodes-1] = f' --read-mode head '
+        specificExtraHumanitydArgs = {}
+        specificExtraHumanitydArgs[total_nodes-1] = f' --read-mode head '
         if activateIF: # irreversible mode speculative trx execution not recommended in legacy mode
-            specificExtraChanneldArgs[total_nodes-2] = f' --read-mode irreversible '
-        specificExtraChanneldArgs[total_nodes-3] = f' --read-mode speculative '
+            specificExtraHumanitydArgs[total_nodes-2] = f' --read-mode irreversible '
+        specificExtraHumanitydArgs[total_nodes-3] = f' --read-mode speculative '
 
-        if cluster.launch(pnodes=pnodes, totalNodes=total_nodes, topo=topo, delay=delay, specificExtraChanneldArgs=specificExtraChanneldArgs, activateIF=activateIF) is False:
+        if cluster.launch(pnodes=pnodes, totalNodes=total_nodes, topo=topo, delay=delay, specificExtraHumanitydArgs=specificExtraHumanitydArgs, activateIF=activateIF) is False:
             errorExit("Failed to stand up eos cluster.")
 
         Print ("Wait for Cluster stabilization")

@@ -25,7 +25,7 @@ Ticks must be multiples of the pool spacing (10 / 60 / 200 for fees 500 / 3000 /
 `flex.token@active` must include `flex.token@eosio.code`, or every inline transfer, `createpool`, `addliquid`, and `lockpos` is rejected:
 
 ```bash
-chan set account permission flex.token active --add-code
+humanity set account permission flex.token active --add-code
 ```
 
 The contract pays the RAM for the pool, position, ticks, bitmap, and lock rows.

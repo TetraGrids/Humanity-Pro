@@ -39,7 +39,7 @@ walletMgr=WalletMgr(True, port=walletPort)
 testSuccessful=False
 
 WalletdName=Utils.EosWalletName
-ClientName="chan"
+ClientName="humanity"
 
 try:
     TestHelper.printSystemInfo("BEGIN prod_preactivation_test.py")
@@ -50,7 +50,7 @@ try:
     if localTest and not dontLaunch:
         Print("Stand up cluster")
         if cluster.launch(pnodes=prodCount, totalNodes=prodCount, prodCount=1,
-                          pfSetupPolicy=PFSetupPolicy.NONE, extraChanneldArgs=" --plugin eosio::producer_api_plugin  --http-max-response-time-ms 990000 ") is False:
+                          pfSetupPolicy=PFSetupPolicy.NONE, extraHumanitydArgs=" --plugin eosio::producer_api_plugin  --http-max-response-time-ms 990000 ") is False:
             cmdError("launcher")
             errorExit("Failed to stand up eos cluster.")
 

@@ -55,7 +55,7 @@ namespace fc { namespace crypto {
          explicit signature(const std::string& base58str);
          static signature from_string(const std::string& str, sig_type type = sig_type::unknown);
 
-         // The Channel native string form always carries the SIG_<TYPE>_ prefix.
+         // Humanity Pro native string form always carries the SIG_<TYPE>_ prefix.
          std::string to_string(const fc::yield_function_t& yield = fc::yield_function_t()) const;
 
          constexpr bool is_webauthn() const { return std::holds_alternative<webauthn::signature>(_storage); }

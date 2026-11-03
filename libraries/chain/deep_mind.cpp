@@ -50,7 +50,7 @@ namespace eosio::chain {
    void deep_mind_handler::on_startup(chainbase::database& db, uint32_t head_block_num)
    {
       // FIXME: We should probably feed that from CMake directly somehow ...
-      fc_dlog(_logger, "DEEP_MIND_VERSION channel 2 0");
+      fc_dlog(_logger, "DEEP_MIND_VERSION humanity 2 0");
 
       fc_dlog(_logger, "ABIDUMP START ${block_num} ${global_sequence_num}",
          ("block_num", head_block_num)
@@ -147,7 +147,7 @@ namespace eosio::chain {
    void deep_mind_handler::on_applied_transaction(uint32_t block_num, const transaction_trace_ptr& trace)
    {
       std::vector<char> packed_trace;
-      
+
       if (_config.zero_elapsed) {
          transaction_trace trace_copy = *trace;
          set_trace_elapsed_to_zero(trace_copy);

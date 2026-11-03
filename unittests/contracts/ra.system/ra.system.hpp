@@ -10,13 +10,13 @@
 #include <string>
 #include <deque>
 
-#ifdef CHANNEL_RAM_AND_NAMEBID_FEES_TO_REX
-#undef CHANNEL_RAM_AND_NAMEBID_FEES_TO_REX
+#ifdef HUMANITY_PRO_RAM_AND_NAMEBID_FEES_TO_REX
+#undef HUMANITY_PRO_RAM_AND_NAMEBID_FEES_TO_REX
 #endif
-// CHANNEL_RAM_AND_NAMEBID_FEES_TO_REX macro determines whether ramfee and namebid proceeds are
+// HUMANITY_PRO_RAM_AND_NAMEBID_FEES_TO_REX macro determines whether ramfee and namebid proceeds are
 // channeled to REX pool. In order to stop these proceeds from being channeled, the macro must
 // be set to 0.
-#define CHANNEL_RAM_AND_NAMEBID_FEES_TO_REX 1
+#define HUMANITY_PRO_RAM_AND_NAMEBID_FEES_TO_REX 1
 
 namespace eosiosystem {
 

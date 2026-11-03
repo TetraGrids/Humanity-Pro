@@ -9,10 +9,10 @@ from TestHarness import Cluster, TestHelper, Utils, WalletMgr
 
 ###############################################################################
 # ship_restart_test
-# 
+#
 # This test verifies SHiP shuts down gracefully or recovers when restarting
 # with various scenarios of corrupted log and/or index files.
-# 
+#
 ###############################################################################
 
 Print=Utils.Print
@@ -58,13 +58,13 @@ try:
     cluster.setWalletMgr(walletMgr)
     Print("Stand up cluster")
 
-    specificExtraChanneldArgs={}
-    specificExtraChanneldArgs[prodNodeId]="--plugin eosio::producer_api_plugin"
-    specificExtraChanneldArgs[shipNodeId]="--plugin eosio::state_history_plugin --trace-history --chain-state-history --finality-data-history --state-history-stride 200 --plugin eosio::net_api_plugin --plugin eosio::producer_api_plugin"
+    specificExtraHumanitydArgs={}
+    specificExtraHumanitydArgs[prodNodeId]="--plugin eosio::producer_api_plugin"
+    specificExtraHumanitydArgs[shipNodeId]="--plugin eosio::state_history_plugin --trace-history --chain-state-history --finality-data-history --state-history-stride 200 --plugin eosio::net_api_plugin --plugin eosio::producer_api_plugin"
 
     if cluster.launch(topo="mesh", pnodes=totalProducerNodes, totalNodes=totalNodes,
                       activateIF=True,
-                      specificExtraChanneldArgs=specificExtraChanneldArgs) is False:
+                      specificExtraHumanitydArgs=specificExtraHumanitydArgs) is False:
         Utils.cmdError("launcher")
         Utils.errorExit("Failed to stand up cluster.")
 
@@ -98,7 +98,7 @@ try:
     shutil.copyfile(stateHistoryIndex, origStateHistoryIndex)
 
     ############## Part 1: tests while producer node is down  #################
-    
+
     #-------- Index file is removed. It should be regenerated at restart.
     Print("index file removed test")
 

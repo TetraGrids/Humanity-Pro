@@ -45,11 +45,11 @@ try:
 
     Print("Stand up cluster")
     if args.plugin:
-        extraChanneldArgs = ''.join([i+j for i,j in zip([' --plugin '] * len(args.plugin), args.plugin)])
+        extraHumanitydArgs = ''.join([i+j for i,j in zip([' --plugin '] * len(args.plugin), args.plugin)])
     else:
-        extraChanneldArgs = ''
-    if cluster.launch(pnodes=pnodes, totalNodes=total_nodes, prodCount=prod_count, topo=topo, delay=delay, 
-                      activateIF=activateIF, extraChanneldArgs=extraChanneldArgs) is False:
+        extraHumanitydArgs = ''
+    if cluster.launch(pnodes=pnodes, totalNodes=total_nodes, prodCount=prod_count, topo=topo, delay=delay,
+                      activateIF=activateIF, extraHumanitydArgs=extraHumanitydArgs) is False:
         errorExit("Failed to stand up eos cluster.")
 
     testSuccessful=True

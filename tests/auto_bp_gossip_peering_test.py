@@ -8,8 +8,8 @@ from TestHarness import Cluster, TestHelper, Utils, WalletMgr, CORE_SYMBOL, crea
 ###############################################################
 # auto_bp_gossip_peering_test
 #
-# This test sets up a cluster with 21 producers channeld, each channeld is configured with only one producer and only
-# connects to the bios node. Moreover, each producer channeld is also configured with a p2p-bp-gossip-endpoint so that
+# This test sets up a cluster with 21 producers humanityd, each humanityd is configured with only one producer and only
+# connects to the bios node. Moreover, each producer humanityd is also configured with a p2p-bp-gossip-endpoint so that
 # each one can automatically establish p2p connections to other bps. Test verifies connections are established when
 # producer schedule is active.
 #
@@ -78,19 +78,19 @@ try:
     voteAccounts[4].name="tester555555"
 
     if walletMgr.launch() is False:
-        errorExit("Failed to stand up keyd.")
+        errorExit("Failed to stand up humanity-keyd.")
 
-    specificChanneldArgs = {}
+    specificHumanitydArgs = {}
     for nodeId in range(0, producerNodes):
-        specificChanneldArgs[nodeId] = auto_bp_peer_arg
+        specificHumanitydArgs[nodeId] = auto_bp_peer_arg
         producer_name = "defproducer" + chr(ord('a') + nodeId)
-        specificChanneldArgs[nodeId] += (f" --signature-provider {accounts[nodeId].activePublicKey}=KEY:{accounts[nodeId].activePrivateKey}")
+        specificHumanitydArgs[nodeId] += (f" --signature-provider {accounts[nodeId].activePublicKey}=KEY:{accounts[nodeId].activePrivateKey}")
 
-    specificChanneldArgs[5] = specificChanneldArgs[5] + ' --p2p-server-address ext-ip0:9999'
+    specificHumanitydArgs[5] = specificHumanitydArgs[5] + ' --p2p-server-address ext-ip0:9999'
 
     # restarting all producers can trigger production pause, so disable
     # net_api_plugin for /v1/net/connections
-    extraChanneldArgs = " --production-pause-vote-timeout-ms 0 --plugin eosio::net_api_plugin "
+    extraHumanitydArgs = " --production-pause-vote-timeout-ms 0 --plugin eosio::net_api_plugin "
 
     TestHelper.printSystemInfo("BEGIN")
     cluster.launch(
@@ -100,8 +100,8 @@ try:
         totalProducers=producerNodes,
         activateIF=True,
         topo="./tests/auto_bp_peering_test_shape.json",
-        extraChanneldArgs=extraChanneldArgs,
-        specificExtraChanneldArgs=specificChanneldArgs,
+        extraHumanitydArgs=extraHumanitydArgs,
+        specificExtraHumanitydArgs=specificHumanitydArgs,
     )
 
     testWalletName="test"

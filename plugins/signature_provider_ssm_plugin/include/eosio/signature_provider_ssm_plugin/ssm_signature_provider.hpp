@@ -4,7 +4,7 @@
  * AWS SSM Parameter Store-backed signature provider -- provider machinery of `signature_provider_ssm_plugin`, installed
  * at `eosio/signature_provider_ssm_plugin/ssm_signature_provider.hpp`.
  *
- * This implements the `SSM:<param-ref>` spec grammar -- a sibling of the built-in `KEY:` / `KEYD:` forms and the kms
+ * This implements the `SSM:<param-ref>` spec grammar -- a sibling of the built-in `KEY:` / `HUMANITY-KEYD:` forms and the kms
  * plugin's `KMS:` -- where the private key is fetched from AWS SSM Parameter Store (a KMS-encrypted `SecureString`
  * parameter) exactly once, when the provider is created, and signing is local thereafter. Semantically this is `KEY:`
  * without the key material ever appearing in config files, command lines, process listings, or shell history:
@@ -25,7 +25,7 @@
  * signer. The block is bounded by the AWS SDK's connect / request timeouts and its default retry strategy.
  *
  * The manager plugin never links this code; `SSM:` support is enabled per binary+config with
- * `plugin = eosio::signature_provider_ssm_plugin` (channeld links the plugin; enablement is the operator's choice). A
+ * `plugin = eosio::signature_provider_ssm_plugin` (humanityd links the plugin; enablement is the operator's choice). A
  * host application that does not use the plugin can instead link this code and call
  *   plugin.register_spec_handler("SSM", &eosio::sigprov::ssm::create_ssm_provider);
  * from `main()` before `app().initialize(...)`.

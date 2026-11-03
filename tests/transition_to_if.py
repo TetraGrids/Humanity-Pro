@@ -42,9 +42,9 @@ try:
     numTrxGenerators=2
     Print("Stand up cluster")
     # For now do not load system contract as it does not support setfinalizer
-    specificExtraChanneldArgs = { irreversibleNodeId: "--read-mode irreversible"}
+    specificExtraHumanitydArgs = { irreversibleNodeId: "--read-mode irreversible"}
     if cluster.launch(pnodes=pnodes, totalNodes=total_nodes, prodCount=prod_count, maximumP2pPerHost=total_nodes+numTrxGenerators, delay=delay, loadSystemContract=False,
-                      activateIF=False, specificExtraChanneldArgs=specificExtraChanneldArgs) is False:
+                      activateIF=False, specificExtraHumanitydArgs=specificExtraHumanitydArgs) is False:
         errorExit("Failed to stand up eos cluster.")
 
     assert cluster.biosNode.getInfo(exitOnError=True)["head_block_producer"] != "ra", "launch should have waited for production to change"

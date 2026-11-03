@@ -76,12 +76,12 @@ def sleep(t):
 def startWallet():
     run('rm -rf ' + os.path.abspath(args.wallet_dir))
     run('mkdir -p ' + os.path.abspath(args.wallet_dir))
-    background(args.keyd + ' --unlock-timeout %d --http-server-address 127.0.0.1:6666 --http-max-response-time-ms 99999 --wallet-dir %s' % (unlockTimeout, os.path.abspath(args.wallet_dir)))
+    background(args.humanity_keyd + ' --unlock-timeout %d --http-server-address 127.0.0.1:6666 --http-max-response-time-ms 99999 --wallet-dir %s' % (unlockTimeout, os.path.abspath(args.wallet_dir)))
     sleep(.4)
-    run(args.chan + 'wallet create --to-console')
+    run(args.humanity + 'wallet create --to-console')
 
 def importKeys():
-    run(args.chan + 'wallet import --private-key ' + args.private_key)
+    run(args.humanity + 'wallet import --private-key ' + args.private_key)
     keys = {}
     for a in accounts:
         key = a['pvt']
@@ -89,13 +89,13 @@ def importKeys():
             if len(keys) >= args.max_user_keys:
                 break
             keys[key] = True
-            run(args.chan + 'wallet import --private-key ' + key)
+            run(args.humanity + 'wallet import --private-key ' + key)
     for i in range(firstProducer, firstProducer + numProducers):
         a = accounts[i]
         key = a['pvt']
         if not key in keys:
             keys[key] = True
-            run(args.chan + 'wallet import --private-key ' + key)
+            run(args.humanity + 'wallet import --private-key ' + key)
 
 def startNode(nodeIndex, account):
     dir = args.nodes_dir + ('%02d-' % nodeIndex) + account['name'] + '/'
@@ -105,9 +105,9 @@ def startNode(nodeIndex, account):
     if not nodeIndex: otherOpts += (
         '    --plugin eosio::trace_api_plugin --trace-no-abis'
     )
-    # if SVN blsFinKeys 
+    # if SVN blsFinKeys
     cmd = (
-        args.channeld +
+        args.humanityd +
         '    --max-irreversible-block-age -1'
         # max-transaction-time must be less than block time
         # (which is defined in .../chain/include/eosio/chain/config.hpp
@@ -143,7 +143,7 @@ def startProducers(b, e):
 
 def createSystemAccounts():
     for a in systemAccounts:
-        run(args.chan + 'create account eosio ' + a + ' ' + args.public_key)
+        run(args.humanity + 'create account eosio ' + a + ' ' + args.public_key)
 
 def intToCurrency(i):
     return '%d.%04d %s' % (i // 10000, i % 10000, args.symbol)
@@ -182,20 +182,20 @@ def createStakedAccounts(b, e):
         stakeCpu = stake - stakeNet
         print('%s: total funds=%s, ram=%s, net=%s, cpu=%s, unstaked=%s' % (a['name'], intToCurrency(a['funds']), intToCurrency(ramFunds), intToCurrency(stakeNet), intToCurrency(stakeCpu), intToCurrency(unstaked)))
         assert(funds == ramFunds + stakeNet + stakeCpu + unstaked)
-        retry(args.chan + 'system newaccount --transfer eosio %s %s --stake-net "%s" --stake-cpu "%s" --buy-ram "%s"   ' % 
+        retry(args.humanity + 'system newaccount --transfer eosio %s %s --stake-net "%s" --stake-cpu "%s" --buy-ram "%s"   ' %
             (a['name'], a['pub'], intToCurrency(stakeNet), intToCurrency(stakeCpu), intToCurrency(ramFunds)))
         if unstaked:
-            retry(args.chan + 'transfer eosio %s "%s"' % (a['name'], intToCurrency(unstaked)))
+            retry(args.humanity + 'transfer eosio %s "%s"' % (a['name'], intToCurrency(unstaked)))
 
 def regProducers(b, e):
     for i in range(b, e):
         a = accounts[i]
-        retry(args.chan + 'system regproducer ' + a['name'] + ' ' + a['pub'] + ' https://' + a['name'] + '.com' + '/' + a['pub'])
+        retry(args.humanity + 'system regproducer ' + a['name'] + ' ' + a['pub'] + ' https://' + a['name'] + '.com' + '/' + a['pub'])
 
 #dfe regFinKeys(b, e): for i in range(b,e): a = account[i] reg fin key all point 8000
 
 def listProducers():
-    run(args.chan + 'system listproducers')
+    run(args.humanity + 'system listproducers')
 
 def vote(b, e):
     for i in range(b, e):
@@ -205,27 +205,27 @@ def vote(b, e):
             k = numProducers - 1
         prods = random.sample(range(firstProducer, firstProducer + numProducers), k)
         prods = ' '.join(map(lambda x: accounts[x]['name'], prods))
-        retry(args.chan + 'system voteproducer prods ' + voter + ' ' + prods)
+        retry(args.humanity + 'system voteproducer prods ' + voter + ' ' + prods)
 
 def claimRewards():
-    table = getJsonOutput(args.chan + 'get table eosio eosio producers -l 100')
+    table = getJsonOutput(args.humanity + 'get table eosio eosio producers -l 100')
     times = []
     for row in table['rows']:
         if row['unpaid_blocks'] and not row['last_claim_time']:
-            times.append(getJsonOutput(args.chan + 'system claimrewards -j ' + row['owner'])['processed']['elapsed'])
+            times.append(getJsonOutput(args.humanity + 'system claimrewards -j ' + row['owner'])['processed']['elapsed'])
     print('Elapsed time for claimrewards:', times)
 
 def proxyVotes(b, e):
     vote(firstProducer, firstProducer + 1)
     proxy = accounts[firstProducer]['name']
-    retry(args.chan + 'system regproxy ' + proxy)
+    retry(args.humanity + 'system regproxy ' + proxy)
     sleep(1.0)
     for i in range(b, e):
         voter = accounts[i]['name']
-        retry(args.chan + 'system voteproducer proxy ' + voter + ' ' + proxy)
+        retry(args.humanity + 'system voteproducer proxy ' + voter + ' ' + proxy)
 
 def updateAuth(account, permission, parent, controller):
-    run(args.chan + 'push action eosio updateauth' + jsonArg({
+    run(args.humanity + 'push action eosio updateauth' + jsonArg({
         'account': account,
         'permission': permission,
         'parent': parent,
@@ -242,7 +242,7 @@ def resign(account, controller):
     updateAuth(account, 'owner', '', controller)
     updateAuth(account, 'active', 'owner', controller)
     sleep(1)
-    run(args.chan + 'get account ' + account)
+    run(args.humanity + 'get account ' + account)
 
 def randomTransfer(b, e):
     for j in range(20):
@@ -250,7 +250,7 @@ def randomTransfer(b, e):
         dest = src
         while dest == src:
             dest = accounts[random.randint(b, e - 1)]['name']
-        run(args.chan + 'transfer -f ' + src + ' ' + dest + ' "0.0001 ' + args.symbol + '"' + ' || true')
+        run(args.humanity + 'transfer -f ' + src + ' ' + dest + ' "0.0001 ' + args.symbol + '"' + ' || true')
 
 def msigProposeReplaceSystem(proposer, proposalName):
     requestedPermissions = []
@@ -259,20 +259,20 @@ def msigProposeReplaceSystem(proposer, proposalName):
     trxPermissions = [{'actor': 'ra', 'permission': 'active'}]
     with open(fastUnstakeSystem, mode='rb') as f:
         setcode = {'account': 'ra', 'vmtype': 0, 'vmversion': 0, 'code': f.read().hex()}
-    run(args.chan + 'multisig propose ' + proposalName + jsonArg(requestedPermissions) + 
+    run(args.humanity + 'multisig propose ' + proposalName + jsonArg(requestedPermissions) +
         jsonArg(trxPermissions) + 'eosio setcode' + jsonArg(setcode) + ' -p ' + proposer)
 
 def msigApproveReplaceSystem(proposer, proposalName):
     for i in range(firstProducer, firstProducer + numProducers):
-        run(args.chan + 'multisig approve ' + proposer + ' ' + proposalName +
+        run(args.humanity + 'multisig approve ' + proposer + ' ' + proposalName +
             jsonArg({'actor': accounts[i]['name'], 'permission': 'active'}) +
             '-p ' + accounts[i]['name'])
 
 def msigExecReplaceSystem(proposer, proposalName):
-    retry(args.chan + 'multisig exec ' + proposer + ' ' + proposalName + ' -p ' + proposer)
+    retry(args.humanity + 'multisig exec ' + proposer + ' ' + proposalName + ' -p ' + proposer)
 
 def msigReplaceSystem():
-    run(args.chan + 'push action eosio buyrambytes' + jsonArg(['ra', accounts[0]['name'], 200000]) + '-p eosio')
+    run(args.humanity + 'push action eosio buyrambytes' + jsonArg(['ra', accounts[0]['name'], 200000]) + '-p eosio')
     sleep(1)
     msigProposeReplaceSystem(accounts[0]['name'], 'fast.unstake')
     sleep(1)
@@ -282,7 +282,7 @@ def msigReplaceSystem():
 def produceNewAccounts():
     with open('newusers', 'w') as f:
         for i in range(120_000, 200_000):
-            x = getOutput(args.chan + 'create key --to-console')
+            x = getOutput(args.humanity + 'create key --to-console')
             r = re.match('Private key: *([^ \n]*)\nPublic key: *([^ \n]*)', x, re.DOTALL | re.MULTILINE)
             name = 'user'
             for j in range(7, -1, -1):
@@ -297,103 +297,103 @@ def stepStartBoot():
     startNode(0, {'name': 'ra', 'pvt': args.private_key, 'pub': args.public_key})
     sleep(10.0)
 def stepInstallSystemContracts():
-    run(args.chan + 'set contract ra.token ' + args.core_contracts_dir + '/ra.token/')
-    run(args.chan + 'set contract ra.msig ' + args.core_contracts_dir + '/ra.msig/')
+    run(args.humanity + 'set contract ra.token ' + args.core_contracts_dir + '/ra.token/')
+    run(args.humanity + 'set contract ra.msig ' + args.core_contracts_dir + '/ra.msig/')
 def stepCreateTokens():
-    run(args.chan + 'push action ra.token create \'["ra", "10000000000.0000 %s"]\' -p ra.token' % (args.symbol))
+    run(args.humanity + 'push action ra.token create \'["ra", "10000000000.0000 %s"]\' -p ra.token' % (args.symbol))
     totalAllocation = allocateFunds(0, len(accounts))
-    run(args.chan + 'push action ra.token issue \'["ra", "%s", "memo"]\' -p eosio' % intToCurrency(totalAllocation))
+    run(args.humanity + 'push action ra.token issue \'["ra", "%s", "memo"]\' -p eosio' % intToCurrency(totalAllocation))
     sleep(1)
 def stepSetSystemContract():
-    # All of the protocol upgrade features introduced in v1.8 first require a special protocol 
-    # feature (codename PREACTIVATE_FEATURE) to be activated and for an updated version of the system 
-    # contract that makes use of the functionality introduced by that feature to be deployed. 
+    # All of the protocol upgrade features introduced in v1.8 first require a special protocol
+    # feature (codename PREACTIVATE_FEATURE) to be activated and for an updated version of the system
+    # contract that makes use of the functionality introduced by that feature to be deployed.
 
     # activate PREACTIVATE_FEATURE before installing ra.boot
-    retry('curl -X POST http://127.0.0.1:%d' % args.http_port + 
+    retry('curl -X POST http://127.0.0.1:%d' % args.http_port +
         '/v1/producer/schedule_protocol_feature_activations ' +
         '-d \'{"protocol_features_to_activate": ["0ec7e080177b2c02b278d5088611686b49d739925a92d9bfcacd7fc6b74053bd"]}\'')
     sleep(3)
 
-    # install ra.boot which supports the native actions and activate 
-    # action that allows activating desired protocol features prior to 
-    # deploying a system contract with more features such as ra.bios 
+    # install ra.boot which supports the native actions and activate
+    # action that allows activating desired protocol features prior to
+    # deploying a system contract with more features such as ra.bios
     # or ra.system
-    retry(args.chan + 'set contract eosio ' + args.core_contracts_dir + '/ra.boot/')
+    retry(args.humanity + 'set contract eosio ' + args.core_contracts_dir + '/ra.boot/')
     sleep(3)
 
     # activate remaining features
     # ACTION_RETURN_VALUE
-    retry(args.chan + 'push action eosio activate \'["c3a6138c5061cf291310887c0b5c71fcaffeab90d5deb50d3b9e687cead45071"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["c3a6138c5061cf291310887c0b5c71fcaffeab90d5deb50d3b9e687cead45071"]\' -p ra@active')
     # CONFIGURABLE_WASM_LIMITS2
-    retry(args.chan + 'push action eosio activate \'["d528b9f6e9693f45ed277af93474fd473ce7d831dae2180cca35d907bd10cb40"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["d528b9f6e9693f45ed277af93474fd473ce7d831dae2180cca35d907bd10cb40"]\' -p ra@active')
     # BLOCKCHAIN_PARAMETERS
-    retry(args.chan + 'push action eosio activate \'["5443fcf88330c586bc0e5f3dee10e7f63c76c00249c87fe4fbf7f38c082006b4"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["5443fcf88330c586bc0e5f3dee10e7f63c76c00249c87fe4fbf7f38c082006b4"]\' -p ra@active')
     # GET_SENDER
-    retry(args.chan + 'push action eosio activate \'["f0af56d2c5a48d60a4a5b5c903edfb7db3a736a94ed589d0b797df33ff9d3e1d"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["f0af56d2c5a48d60a4a5b5c903edfb7db3a736a94ed589d0b797df33ff9d3e1d"]\' -p ra@active')
     # FORWARD_SETCODE
-    retry(args.chan + 'push action eosio activate \'["2652f5f96006294109b3dd0bbde63693f55324af452b799ee137a81a905eed25"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["2652f5f96006294109b3dd0bbde63693f55324af452b799ee137a81a905eed25"]\' -p ra@active')
     # ONLY_BILL_FIRST_AUTHORIZER
-    retry(args.chan + 'push action eosio activate \'["8ba52fe7a3956c5cd3a656a3174b931d3bb2abb45578befc59f283ecd816a405"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["8ba52fe7a3956c5cd3a656a3174b931d3bb2abb45578befc59f283ecd816a405"]\' -p ra@active')
     # RESTRICT_ACTION_TO_SELF
-    retry(args.chan + 'push action eosio activate \'["ad9e3d8f650687709fd68f4b90b41f7d825a365b02c23a636cef88ac2ac00c43"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["ad9e3d8f650687709fd68f4b90b41f7d825a365b02c23a636cef88ac2ac00c43"]\' -p ra@active')
     # DISALLOW_EMPTY_PRODUCER_SCHEDULE
-    retry(args.chan + 'push action eosio activate \'["68dcaa34c0517d19666e6b33add67351d8c5f69e999ca1e37931bc410a297428"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["68dcaa34c0517d19666e6b33add67351d8c5f69e999ca1e37931bc410a297428"]\' -p ra@active')
     # FIX_LINKAUTH_RESTRICTION
-    retry(args.chan + 'push action eosio activate \'["e0fb64b1085cc5538970158d05a009c24e276fb94e1a0bf6a528b48fbc4ff526"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["e0fb64b1085cc5538970158d05a009c24e276fb94e1a0bf6a528b48fbc4ff526"]\' -p ra@active')
     # REPLACE_DEFERRED
-    retry(args.chan + 'push action eosio activate \'["ef43112c6543b88db2283a2e077278c315ae2c84719a8b25f25cc88565fbea99"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["ef43112c6543b88db2283a2e077278c315ae2c84719a8b25f25cc88565fbea99"]\' -p ra@active')
     # NO_DUPLICATE_DEFERRED_ID
-    retry(args.chan + 'push action eosio activate \'["4a90c00d55454dc5b059055ca213579c6ea856967712a56017487886a4d4cc0f"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["4a90c00d55454dc5b059055ca213579c6ea856967712a56017487886a4d4cc0f"]\' -p ra@active')
     # ONLY_LINK_TO_EXISTING_PERMISSION
-    retry(args.chan + 'push action eosio activate \'["1a99a59d87e06e09ec5b028a9cbb7749b4a5ad8819004365d02dc4379a8b7241"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["1a99a59d87e06e09ec5b028a9cbb7749b4a5ad8819004365d02dc4379a8b7241"]\' -p ra@active')
     # RAM_RESTRICTIONS
-    retry(args.chan + 'push action eosio activate \'["4e7bf348da00a945489b2a681749eb56f5de00b900014e137ddae39f48f69d67"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["4e7bf348da00a945489b2a681749eb56f5de00b900014e137ddae39f48f69d67"]\' -p ra@active')
     # WEBAUTHN_KEY
-    retry(args.chan + 'push action eosio activate \'["4fca8bd82bbd181e714e283f83e1b45d95ca5af40fb89ad3977b653c448f78c2"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["4fca8bd82bbd181e714e283f83e1b45d95ca5af40fb89ad3977b653c448f78c2"]\' -p ra@active')
     # WTMSIG_BLOCK_SIGNATURES
-    retry(args.chan + 'push action eosio activate \'["299dcb6af692324b899b39f16d5a530a33062804e41f09dc97e9f156b4476707"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["299dcb6af692324b899b39f16d5a530a33062804e41f09dc97e9f156b4476707"]\' -p ra@active')
     # GET_CODE_HASH
-    retry(args.chan + 'push action eosio activate \'["bcd2a26394b36614fd4894241d3c451ab0f6fd110958c3423073621a70826e99"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["bcd2a26394b36614fd4894241d3c451ab0f6fd110958c3423073621a70826e99"]\' -p ra@active')
     # GET_BLOCK_NUM
-    retry(args.chan + 'push action eosio activate \'["35c2186cc36f7bb4aeaf4487b36e57039ccf45a9136aa856a5d569ecca55ef2b"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["35c2186cc36f7bb4aeaf4487b36e57039ccf45a9136aa856a5d569ecca55ef2b"]\' -p ra@active')
     # CRYPTO_PRIMITIVES
-    retry(args.chan + 'push action eosio activate \'["6bcb40a24e49c26d0a60513b6aeb8551d264e4717f306b81a37a5afb3b47cedc"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["6bcb40a24e49c26d0a60513b6aeb8551d264e4717f306b81a37a5afb3b47cedc"]\' -p ra@active')
     # BLS_PRIMITIVES2
-    retry(args.chan + 'push action eosio activate \'["63320dd4a58212e4d32d1f58926b73ca33a247326c2a5e9fd39268d2384e011a"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["63320dd4a58212e4d32d1f58926b73ca33a247326c2a5e9fd39268d2384e011a"]\' -p ra@active')
     # DISABLE_DEFERRED_TRXS_STAGE_1 - DISALLOW NEW DEFERRED TRANSACTIONS
-    retry(args.chan + 'push action eosio activate \'["fce57d2331667353a0eac6b4209b67b843a7262a848af0a49a6e2fa9f6584eb4"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["fce57d2331667353a0eac6b4209b67b843a7262a848af0a49a6e2fa9f6584eb4"]\' -p ra@active')
     # DISABLE_DEFERRED_TRXS_STAGE_2 - PREVENT PREVIOUSLY SCHEDULED DEFERRED TRANSACTIONS FROM REACHING OTHER NODE
-    # THIS DEPENDS ON DISABLE_DEFERRED_TRXS_STAGE_1 
-    retry(args.chan + 'push action eosio activate \'["09e86cb0accf8d81c9e85d34bea4b925ae936626d00c984e4691186891f5bc16"]\' -p ra@active')
+    # THIS DEPENDS ON DISABLE_DEFERRED_TRXS_STAGE_1
+    retry(args.humanity + 'push action eosio activate \'["09e86cb0accf8d81c9e85d34bea4b925ae936626d00c984e4691186891f5bc16"]\' -p ra@active')
     # SAVANNA
     # Depends on all previous protocol features
-    retry(args.chan + 'push action eosio activate \'["cbe0fafc8fcc6cc998395e9b6de6ebd94644467b1b4a97ec126005df07013c52"]\' -p ra@active')
+    retry(args.humanity + 'push action eosio activate \'["cbe0fafc8fcc6cc998395e9b6de6ebd94644467b1b4a97ec126005df07013c52"]\' -p ra@active')
     sleep(1)
 
     # install ra.system latest version
-    retry(args.chan + 'set contract eosio ' + args.core_contracts_dir + '/ra.system/')
+    retry(args.humanity + 'set contract eosio ' + args.core_contracts_dir + '/ra.system/')
 
     # install vaulta system contracts if defined otherwise skip
     if args.vaulta_contracts_dir:
         # setpriv is only available after ra.system is installed
-        run(args.chan + 'push action eosio setpriv' + jsonArg(['ra.msig', 1]) + ' -p ra@active')
-        run(args.chan + 'push action eosio setpriv' + jsonArg(['core.vaulta', 1]) + ' -p ra@active')
-        run(args.chan + 'set account permission core.vaulta active' + ' --add-code ' + '-p core.vaulta@active')
+        run(args.humanity + 'push action eosio setpriv' + jsonArg(['ra.msig', 1]) + ' -p ra@active')
+        run(args.humanity + 'push action eosio setpriv' + jsonArg(['core.vaulta', 1]) + ' -p ra@active')
+        run(args.humanity + 'set account permission core.vaulta active' + ' --add-code ' + '-p core.vaulta@active')
         sleep(1)
-        retry(args.chan + 'set contract core.vaulta ' + args.vaulta_contracts_dir + ' system.wasm' + ' system.abi' + ' -p core.vaulta@active')
+        retry(args.humanity + 'set contract core.vaulta ' + args.vaulta_contracts_dir + ' system.wasm' + ' system.abi' + ' -p core.vaulta@active')
         sleep(3)
 
 def stepInitSystemContract():
-    run(args.chan + 'push action eosio init' + jsonArg(['0', '4,' + args.symbol]) + ' -p ra@active')
+    run(args.humanity + 'push action eosio init' + jsonArg(['0', '4,' + args.symbol]) + ' -p ra@active')
     sleep(1)
-    
+
 def stepIssueAToken():
     # issue tokens
     if args.vaulta_contracts_dir:
-        run(args.chan + 'push action core.vaulta init' + jsonArg(['10000000000.0000 A']) + ' -p core.vaulta')
+        run(args.humanity + 'push action core.vaulta init' + jsonArg(['10000000000.0000 A']) + ' -p core.vaulta')
         sleep(1)
-    
+
 def stepCreateStakedAccounts():
     createStakedAccounts(0, len(accounts))
 def stepRegProducers():
@@ -424,10 +424,10 @@ def stepLog():
 
 parser = argparse.ArgumentParser()
 
-# r reg fin keys 
-# f SVN chan --url $ENDPOINT push action eosio switchtosvnn '{}' -p eosio
+# r reg fin keys
+# f SVN humanity --url $ENDPOINT push action eosio switchtosvnn '{}' -p eosio
 commands = [
-    ('w', 'wallet',             stepStartWallet,            True,    "Start keyd, create wallet, fill with keys"),
+    ('w', 'wallet',             stepStartWallet,            True,    "Start humanity-keyd, create wallet, fill with keys"),
     ('b', 'boot',               stepStartBoot,              True,    "Start boot node"),
     ('s', 'sys',                createSystemAccounts,       True,    "Create system accounts (eosio.*)"),
     ('c', 'contracts',          stepInstallSystemContracts, True,    "Install system contracts (token, msig)"),
@@ -449,9 +449,9 @@ commands = [
 
 parser.add_argument('--public-key', metavar='', help="Vaulta Public Key", default='PUB_K1_8Znrtgwt8TfpmbVpTKvA2oB8Nqey625CLN8bCN3TEbgx8k4hnL', dest="public_key")
 parser.add_argument('--private-Key', metavar='', help="Vaulta Private Key", default='5K463ynhZoCDDa4RDcr63cUwWLTnKqmdcoTKTHBjqoKfv4u5V7p', dest="private_key")
-parser.add_argument('--chan', metavar='', help="Chan command", default='../../build/programs/chan/chan --wallet-url http://127.0.0.1:6666 ')
-parser.add_argument('--channeld', metavar='', help="Path to channeld binary", default='../../build/programs/channeld/channeld')
-parser.add_argument('--keyd', metavar='', help="Path to keyd binary", default='../../build/programs/keyd/keyd')
+parser.add_argument('--humanity', metavar='', help="Humanity command", default='../../build/programs/humanity/humanity --wallet-url http://127.0.0.1:6666 ')
+parser.add_argument('--humanityd', metavar='', help="Path to humanityd binary", default='../../build/programs/humanityd/humanityd')
+parser.add_argument('--humanity-keyd', metavar='', help="Path to humanity-keyd binary", default='../../build/programs/humanity-keyd/humanity-keyd')
 parser.add_argument('--core-contracts-dir', metavar='', help="Path to latest core & system contracts directory", default='../../build/contracts/')
 parser.add_argument('--vaulta-contracts-dir', metavar='', help="Path to latest vaulta contracts directory")
 parser.add_argument('--nodes-dir', metavar='', help="Path to nodes directory", default='./nodes/')
@@ -471,7 +471,7 @@ parser.add_argument('--num-voters', metavar='', help="Number of voters", type=in
 parser.add_argument('--num-senders', metavar='', help="Number of users to transfer funds randomly", type=int, default=10)
 parser.add_argument('--producer-sync-delay', metavar='', help="Time (s) to sleep to allow producers to sync", type=int, default=80)
 parser.add_argument('-a', '--all', action='store_true', help="Do everything marked with (*)")
-parser.add_argument('-H', '--http-port', type=int, default=8000, metavar='', help='HTTP port for chan')
+parser.add_argument('-H', '--http-port', type=int, default=8000, metavar='', help='HTTP port for humanity')
 
 for (flag, command, function, inAll, help) in commands:
     prefix = ''
@@ -481,11 +481,11 @@ for (flag, command, function, inAll, help) in commands:
         parser.add_argument('-' + flag, '--' + command, action='store_true', help=help, dest=command)
     else:
         parser.add_argument('--' + command, action='store_true', help=help, dest=command)
-        
+
 args = parser.parse_args()
 
-# Leave a space in front of --url in case the user types chan alone
-args.chan += ' --url http://127.0.0.1:%d ' % args.http_port
+# Leave a space in front of --url in case the user types humanity alone
+args.humanity += ' --url http://127.0.0.1:%d ' % args.http_port
 
 logFile = open(args.log_path, 'a')
 

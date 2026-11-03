@@ -277,7 +277,7 @@ void chain_plugin::set_program_options(options_description& cli, options_descrip
          ("blocks-archive-dir", bpo::value<std::filesystem::path>(),
           "the location of the blocks archive directory (absolute path or relative to blocks dir).\n"
           "If the value is empty, blocks files beyond the retained limit will be deleted.\n"
-          "All files in the archive directory are completely under user's control, i.e. they won't be accessed by channeld anymore.")
+          "All files in the archive directory are completely under user's control, i.e. they won't be accessed by humanityd anymore.")
          ("state-dir", bpo::value<std::filesystem::path>()->default_value(config::default_state_dir_name),
           "the location of the state directory (absolute path or relative to application data dir)")
          ("finalizers-dir", bpo::value<std::filesystem::path>()->default_value(config::default_finalizers_dir_name),
@@ -498,9 +498,9 @@ void chain_plugin_impl::plugin_initialize(const variables_map& options) {
       ilog("initializing chain plugin");
 
       try {
-         genesis_state gs; // Check if CHANNEL_ROOT_KEY is bad
+         genesis_state gs; // Check if HUMANITY_ROOT_KEY is bad
       } catch ( const std::exception& ) {
-         elog( "CHANNEL_ROOT_KEY ('${root_key}') is invalid. Recompile with a valid public key.",
+         elog( "HUMANITY_ROOT_KEY ('${root_key}') is invalid. Recompile with a valid public key.",
                ("root_key", genesis_state::eosio_root_key));
          throw;
       }
@@ -712,7 +712,7 @@ void chain_plugin_impl::plugin_initialize(const variables_map& options) {
                                                                  : std::filesystem::path("");
          if (retained_dir.is_relative())
             retained_dir = std::filesystem::path{blocks_dir}/retained_dir;
-            
+
          chain_config->blog = eosio::chain::partitioned_blocklog_config{
             .retained_dir = retained_dir,
             .archive_dir  = options.count("blocks-archive-dir") ? options.at("blocks-archive-dir").as<std::filesystem::path>()
@@ -735,18 +735,18 @@ void chain_plugin_impl::plugin_initialize(const variables_map& options) {
          }
       }
 
-      
+
 
       if( options.count( "extract-genesis-json" ) || options.at( "print-genesis-json" ).as<bool>()) {
          std::optional<genesis_state> gs;
-         
+
          gs = block_log::extract_genesis_state( blocks_dir, retained_dir );
          EOS_ASSERT( gs,
                      plugin_config_exception,
                      "Block log at '${path}' does not contain a genesis state, it only has the chain-id.",
                      ("path", (blocks_dir / "blocks.log").generic_string())
          );
-         
+
 
          if( options.at( "print-genesis-json" ).as<bool>()) {
             ilog( "Genesis JSON:\n${genesis}", ("genesis", json::to_pretty_string( *gs )));
@@ -843,7 +843,7 @@ void chain_plugin_impl::plugin_initialize(const variables_map& options) {
 
          auto chain_context = block_log::extract_chain_context( blocks_dir, retained_dir );
          std::optional<genesis_state> block_log_genesis;
-         std::optional<chain_id_type> block_log_chain_id;  
+         std::optional<chain_id_type> block_log_chain_id;
 
          if (chain_context) {
             std::visit(overloaded {
@@ -853,7 +853,7 @@ void chain_plugin_impl::plugin_initialize(const variables_map& options) {
                },
                [&](const chain_id_type& id) {
                   block_log_chain_id = id;
-               } 
+               }
             }, *chain_context);
 
             if( chain_id ) {
@@ -1105,7 +1105,7 @@ void chain_plugin_impl::plugin_initialize(const variables_map& options) {
 
          irreversible_block_channel.publish( priority::low, t );
       } );
-      
+
       applied_transaction_connection = chain->applied_transaction().connect(
             [this]( std::tuple<const transaction_trace_ptr&, const packed_transaction_ptr&> t ) {
                const auto& [ trace, ptrx ] = t;
@@ -1276,7 +1276,7 @@ void chain_plugin_impl::log_guard_exception(const chain::guard_exception&e ) {
 void chain_plugin_impl::handle_guard_exception(const chain::guard_exception& e) {
    log_guard_exception(e);
 
-   elog("database chain::guard_exception, quitting..."); // log string searched for in: tests/channeld_under_min_avail_ram.py
+   elog("database chain::guard_exception, quitting..."); // log string searched for in: tests/humanityd_under_min_avail_ram.py
    // quit the app
    app().quit();
 }
@@ -1287,13 +1287,13 @@ void chain_plugin::handle_guard_exception(const chain::guard_exception& e) {
 
 void chain_apis::api_base::handle_db_exhaustion() {
    elog("database memory exhausted: increase chain-state-db-size-mb");
-   //return 1 -- it's what programs/channeld/main.cpp considers "BAD_ALLOC"
+   //return 1 -- it's what programs/humanityd/main.cpp considers "BAD_ALLOC"
    std::_Exit(1);
 }
 
 void chain_apis::api_base::handle_bad_alloc() {
    elog("std::bad_alloc - memory exhausted");
-   //return -2 -- it's what programs/channeld/main.cpp reports for std::exception
+   //return -2 -- it's what programs/humanityd/main.cpp reports for std::exception
    std::_Exit(-2);
 }
 
@@ -1319,7 +1319,7 @@ get_info_db::get_info_results read_only::get_info(const read_only::get_info_para
 
 read_only::get_transaction_status_results
 read_only::get_transaction_status(const read_only::get_transaction_status_params& param, const fc::time_point&) const {
-   EOS_ASSERT(trx_finality_status_proc, unsupported_feature, "Transaction Status Interface not enabled.  To enable, configure channeld with '--transaction-finality-status-max-storage-size-gb <size>'.");
+   EOS_ASSERT(trx_finality_status_proc, unsupported_feature, "Transaction Status Interface not enabled.  To enable, configure humanityd with '--transaction-finality-status-max-storage-size-gb <size>'.");
 
    trx_finality_status_processing::chain_state ch_state = trx_finality_status_proc->get_chain_state();
 
@@ -2520,7 +2520,7 @@ read_only::get_account_return_t read_only::get_account( const get_account_params
    };
 
    http_params_t http_params;
-   
+
    if( abi_def abi; abi_serializer::to_abi(code_account.abi, abi) ) {
 
       const auto token_code = "ra.token"_n;
@@ -2558,18 +2558,18 @@ read_only::get_account_return_t read_only::get_account( const get_account_params
          }
          return {};
       };
-      
+
       http_params.total_resources          = lookup_object("userres"_n, params.account_name);
       http_params.self_delegated_bandwidth = lookup_object("delband"_n, params.account_name);
       http_params.refund_request           = lookup_object("refunds"_n, params.account_name);
       http_params.voter_info               = lookup_object("voters"_n, config::system_account_name);
       http_params.rex_info                 = lookup_object("rexbal"_n, config::system_account_name);
-      
+
       return [http_params = std::move(http_params), result = std::move(result), abi=std::move(abi), shorten_abi_errors=shorten_abi_errors,
               abi_serializer_max_time=abi_serializer_max_time]() mutable ->  chain::t_or_exception<read_only::get_account_results> {
          auto yield = [&]() { return abi_serializer::create_yield_function(abi_serializer_max_time); };
          abi_serializer abis(std::move(abi), yield());
-         
+
          if (http_params.total_resources)
             result.total_resources = abis.binary_to_variant("user_resources", *http_params.total_resources, yield(), shorten_abi_errors);
          if (http_params.self_delegated_bandwidth)

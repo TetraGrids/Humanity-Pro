@@ -11,7 +11,7 @@ from pathlib import Path
 ###############################################################
 # validate-dirty-db
 #
-# Test for validating the dirty db flag sticks repeated channeld restart attempts
+# Test for validating the dirty db flag sticks repeated humanityd restart attempts
 #
 ###############################################################
 
@@ -35,24 +35,24 @@ seed=1
 Utils.Debug=debug
 testSuccessful=False
 
-def runChanneldAndGetOutput(myTimeout=3, channeldLogPath=f"{Utils.TestLogRoot}"):
-    """Startup channeld, wait for timeout (before forced shutdown) and collect output. Stdout, stderr and return code are returned in a dictionary."""
-    Print("Launching channeld process.")
-    cmd=f"programs/channeld/channeld --config-dir etc/eosio/node_bios --data-dir {channeldLogPath}/node_bios --verbose-http-errors --http-validate-host=false --resource-monitor-not-shutdown-on-threshold-exceeded"
+def runHumanitydAndGetOutput(myTimeout=3, humanitydLogPath=f"{Utils.TestLogRoot}"):
+    """Startup humanityd, wait for timeout (before forced shutdown) and collect output. Stdout, stderr and return code are returned in a dictionary."""
+    Print("Launching humanityd process.")
+    cmd=f"programs/humanityd/humanityd --config-dir etc/eosio/node_bios --data-dir {humanitydLogPath}/node_bios --verbose-http-errors --http-validate-host=false --resource-monitor-not-shutdown-on-threshold-exceeded"
     Print("cmd: %s" % (cmd))
     proc=subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if debug: Print("Channeld process launched.")
+    if debug: Print("Humanityd process launched.")
 
     output={}
     try:
-        if debug: Print("Setting channeld process timeout.")
+        if debug: Print("Setting humanityd process timeout.")
         outs,errs = proc.communicate(timeout=myTimeout)
-        if debug: Print("Channeld process has exited.")
+        if debug: Print("Humanityd process has exited.")
         output["stdout"] = outs.decode("utf-8")
         output["stderr"] = errs.decode("utf-8")
         output["returncode"] = proc.returncode
     except (subprocess.TimeoutExpired) as _:
-        Print("ERROR: Channeld is running beyond the defined wait time. Hard killing channeld instance.")
+        Print("ERROR: Humanityd is running beyond the defined wait time. Hard killing humanityd instance.")
         proc.send_signal(signal.SIGKILL)
         return (False, None)
 
@@ -81,16 +81,16 @@ try:
         node.kill(signal.SIGKILL)
     cluster.biosNode.kill(signal.SIGKILL)
 
-    Print("Restart channeld repeatedly to ensure dirty database flag sticks.")
+    Print("Restart humanityd repeatedly to ensure dirty database flag sticks.")
     timeout=6
 
     for i in range(1,4):
         Print("Attempt %d." % (i))
-        ret = runChanneldAndGetOutput(timeout, cluster.channeldLogPath)
+        ret = runHumanitydAndGetOutput(timeout, cluster.humanitydLogPath)
         assert(ret)
         assert(isinstance(ret, tuple))
         if not ret[0]:
-            errorExit("Failed to startup channeld successfully on try number %d" % (i))
+            errorExit("Failed to startup humanityd successfully on try number %d" % (i))
         assert(ret[1])
         assert(isinstance(ret[1], dict))
         # pylint: disable=unsubscriptable-object

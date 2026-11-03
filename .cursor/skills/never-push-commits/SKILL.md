@@ -1,7 +1,7 @@
 ---
 name: never-push-commits
 description: >-
-  Never git-push commits for the user of The Channel. Use whenever committing,
+  Never git-push commits for the user of Humanity Pro. Use whenever committing,
   tagging, gh, git push, origin, or publishing is considered.
 ---
 

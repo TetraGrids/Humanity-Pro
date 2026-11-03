@@ -4,10 +4,10 @@
  * AWS KMS-backed signature provider -- provider machinery of `signature_provider_kms_plugin`, installed at
  * `eosio/signature_provider_kms_plugin/kms_signature_provider.hpp`.
  *
- * This implements the `KMS:<key-ref>` spec grammar -- a third form alongside the built-in `KEY:` and `KEYD:` -- where
+ * This implements the `KMS:<key-ref>` spec grammar -- a third form alongside the built-in `KEY:` and `HUMANITY-KEYD:` -- where
  * the signing key never leaves AWS. The manager plugin never links this code, so it carries no compile-time dependency
  * on the AWS SDK; `KMS:` support is enabled per binary+config with `plugin = eosio::signature_provider_kms_plugin`
- * (channeld links the plugin; enablement is the operator's choice). A host application that does not use the plugin can
+ * (humanityd links the plugin; enablement is the operator's choice). A host application that does not use the plugin can
  * instead link this code and call
  *   plugin.register_spec_handler("KMS", &eosio::sigprov::kms::create_kms_provider);
  * from `main()` before `app().initialize(...)`.

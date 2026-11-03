@@ -43,12 +43,12 @@ try:
 
     cluster.setWalletMgr(walletMgr)
 
-    specificExtraChanneldArgs={}
-    specificExtraChanneldArgs[0]=f' --block-log-retain-blocks 0 '
-    specificExtraChanneldArgs[1]=f' --block-log-retain-blocks 10 '
+    specificExtraHumanitydArgs={}
+    specificExtraHumanitydArgs[0]=f' --block-log-retain-blocks 0 '
+    specificExtraHumanitydArgs[1]=f' --block-log-retain-blocks 10 '
 
     Print("Stand up cluster")
-    if cluster.launch(pnodes=pnodes, totalNodes=total_nodes, activateIF=activateIF, specificExtraChanneldArgs=specificExtraChanneldArgs) is False:
+    if cluster.launch(pnodes=pnodes, totalNodes=total_nodes, activateIF=activateIF, specificExtraHumanitydArgs=specificExtraHumanitydArgs) is False:
         errorExit("Failed to stand up eos cluster.")
 
     Print ("Wait for Cluster stabilization")

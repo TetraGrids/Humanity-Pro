@@ -39,7 +39,7 @@ string(APPEND CPACK_PACKAGE_FILE_NAME "-${CMAKE_SYSTEM_PROCESSOR}")
 
 set(CPACK_PACKAGE_CONTACT "Tetra Grids")
 set(CPACK_PACKAGE_VENDOR "Tetra Grids")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The Channel: the human-first blockchain protocol, derived from Spring 2.0 with Savanna consensus")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Humanity Pro: the human-first blockchain protocol, derived from Spring 2.0 with Savanna consensus")
 set(CPACK_COMPONENT_BASE_DESCRIPTION "daemon and CLI tools including ${NODE_EXECUTABLE_NAME}, ${CLI_CLIENT_EXECUTABLE_NAME}, and ${KEY_STORE_EXECUTABLE_NAME}")
 set(CPACK_COMPONENT_DEV_DESCRIPTION "headers and libraries for native contract unit testing")
 set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/TetraGrids/Humanity-Pro")
@@ -51,11 +51,11 @@ set(CPACK_DEBIAN_PACKAGE_CONFLICTS "eosio, mandel, leap, spring, vaulta")
 set(CPACK_RPM_PACKAGE_CONFLICTS "eosio, mandel, leap, spring, vaulta")
 
 set(CPACK_COMPONENTS_ALL "base")
-if(ENABLE_CHANNEL_DEV_DEB)
+if(ENABLE_HUMANITY_PRO_DEV_DEB)
    list(APPEND CPACK_COMPONENTS_ALL "dev")
 endif()
 
-#enable per component packages for .deb; ensure main package is just "the-channel", not "the-channel-base", and make the dev package have "the-channel-dev" at the front not the back
+#enable per component packages for .deb; ensure main package is just "humanity-pro", not "humanity-pro-base", and make the dev package have "humanity-pro-dev" at the front not the back
 set(CPACK_DEB_COMPONENT_INSTALL ON)
 set(CPACK_DEBIAN_BASE_PACKAGE_NAME "${CMAKE_PROJECT_NAME}")
 set(CPACK_DEBIAN_BASE_FILE_NAME "${CPACK_DEBIAN_FILE_NAME}.deb")

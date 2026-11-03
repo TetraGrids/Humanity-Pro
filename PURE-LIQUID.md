@@ -1,14 +1,14 @@
 # Pure Liquid
 
-**Companion to [The Channel](./WHITEPAPER.md)**
+**Companion to [Humanity Pro](./WHITEPAPER.md)**
 
-Douglas Butner, AKA Gudasol (🜛)  
-Tetra Grids, LLC (⟁)  
+Douglas Butner, AKA Gudasol (🜛)
+Tetra Grids, LLC (⟁)
 Maryland, United States
 
 v1.0.1
 
-[The Channel](./WHITEPAPER.md) is the protocol. This paper is the money: how a token can be turned back into what it claimed to be, and how holding it can pay you for *use*.
+[Humanity Pro](./WHITEPAPER.md) is the protocol. This paper is the money: how a token can be turned back into what it claimed to be, and how holding it can pay you for *use*.
 
 > If the reserve can walk away, it is not a reserve.
 
@@ -18,7 +18,7 @@ v1.0.1
 
 Most “backed” tokens fail a child’s test. Can I sell this for the thing on the label? Does anyone get paid because the token *moved*, or only because a story was told?
 
-We ran the answer in public. A community project on XPR became the number one volume community project on Antelope, and the number one locked stablecoin liquidity on that network. The live documentation of that work is [flex.report](https://flex.report). **The Channel** makes that pattern native.
+We ran the answer in public. A community project on XPR became the number one volume community project on Antelope, and the number one locked stablecoin liquidity on that network. The live documentation of that work is [flex.report](https://flex.report). **Humanity Pro** makes that pattern native.
 
 I will define every term before I lean on it.
 
@@ -83,7 +83,7 @@ Payouts are smoothed so one click does not empty the pool. Inventory still sitti
 
 **Inheritance** means you can point a fraction of that stream at another account, with a memo, without giving away the stack. Time, again. A grandchild can receive a flow.
 
-Half of these fees, together with half of the fees from **systemic pools** (protocol-owned ranged vaults that stay on), pay the people **The Channel** owes: producers and approved work. The other half is holder income and a deeper vault. Volume is the engine. Bots pay the tax. Holders who stay keep the better side.
+Half of these fees, together with half of the fees from **systemic pools** (protocol-owned ranged vaults that stay on), pay the people **Humanity Pro** owes: producers and approved work. The other half is holder income and a deeper vault. Volume is the engine. Bots pay the tax. Holders who stay keep the better side.
 
 This is interest in the only honest sense. It is not interest on a loan that created the money you must repay.
 
@@ -97,7 +97,7 @@ The stream in the previous section is **Flex token technology**: tax into a pool
 
 ## 7. Two versions of every bridged asset
 
-When an asset is brought onto **The Channel**, it is not one ticker with a story.
+When an asset is brought onto **Humanity Pro**, it is not one ticker with a story.
 
 **Version A: Bridged.** The coins remain under the native chain’s consensus. Here you hold a claim. You unlock by the rules of that claim.
 
@@ -120,16 +120,16 @@ They sit beside the Pure Liquid twins. Together they are the guarantee. If you h
 ## 9. What holders get
 
 - **Liquidity for redemption** of the underlying, as strong as the lock and the depth of the range.
-- A **stream** in any listed token on The Channel.
+- A **stream** in any listed token on Humanity Pro.
 - Operators paid from the same volume (the half that is backpay). The game is not “print to pay the machines.”
 
-[The Channel](./WHITEPAPER.md) is consensus, RA, identity, recovery, Tetra. This paper is the vault and the stream.
+[Humanity Pro](./WHITEPAPER.md) is consensus, RA, identity, recovery, Tetra. This paper is the vault and the stream.
 
 ---
 
 ## References
 
-- [The Channel](./WHITEPAPER.md)
+- [Humanity Pro](./WHITEPAPER.md)
 - [Uniswap v3 Core](https://uniswap.org/whitepaper-v3.pdf)
 - [THORChain: Continuous Liquidity Pools](https://docs.thorchain.org/technical-documentation/thorchain-finance/continuous-liquidity-pools)
 - [Web 4 Manifesto](https://github.com/dougbutner/web-4) (2020)

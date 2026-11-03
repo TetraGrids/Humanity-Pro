@@ -1,8 +1,8 @@
 # Genesis Files
 
-## The Channel
+## Humanity Pro
 
-`channel_genesis.json` is the reference genesis for a Channel devnet, using the default build-time `CHANNEL_ROOT_KEY`. Production deployments should generate their own root key and pass `-DCHANNEL_ROOT_KEY` at build time.
+`humanity_genesis.json` is the reference genesis for a Humanity Pro devnet, using the default build-time `HUMANITY_ROOT_KEY`. Production deployments should generate their own root key and pass `-DHUMANITY_ROOT_KEY` at build time.
 
 ## Historical reference geneses
 

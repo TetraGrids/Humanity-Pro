@@ -47,7 +47,7 @@ namespace crypto {
          public_key( const public_key& ) = default;
          public_key& operator= (const public_key& ) = default;
 
-         /// Recover public key from a The Channel transaction signature
+         /// Recover public key from a Humanity Pro transaction signature
          static public_key recover( const signature& c, const sha256& digest );
 
          /// Convenience constructor equivalent to recover(c, digest)
@@ -69,7 +69,7 @@ namespace crypto {
          std::string to_legacy_string(const fc::yield_function_t& yield) const;
 
          /**
-          * The Channel native string form.
+          * Humanity Pro native string form.
           * For k1/r1/wa this is the base58check PUB_<TYPE>_ form; for em the
           * hex form (PUB_EM_ prefix included when include_prefix is true);
           * for ed the Solana-native base58 form (PUB_ED_ prefix included when

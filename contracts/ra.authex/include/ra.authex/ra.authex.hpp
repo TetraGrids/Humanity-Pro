@@ -13,9 +13,9 @@ namespace eosio {
    using std::vector;
 
    /**
-    * External-key registry. A Channel account attests that it controls a key
+    * External-key registry. A Humanity Pro account attests that it controls a key
     * or address on another chain (EVM, SVM, ...). This does not grant signing
-    * authority on The Channel; EM/ED keys sign Channel transactions directly
+    * authority on Humanity Pro; EM/ED keys sign Humanity Pro transactions directly
     * once they are on an account permission.
     *
     * Unsigned `createlink` is a self-attested address string. `linksig` also
@@ -32,7 +32,7 @@ namespace eosio {
             name          chain;
             std::string   address;
             time_point    created;
-            vector<char>  packedkey; // fc-packed Channel pubkey; empty for unsigned v1 links
+            vector<char>  packedkey; // fc-packed Humanity Pro pubkey; empty for unsigned v1 links
 
             uint64_t primary_key() const { return id; }
             uint64_t by_account() const { return account.value; }
@@ -62,7 +62,7 @@ namespace eosio {
          [[eosio::action]]
          void adminlink( const name& account, const name& chain, const std::string& address );
 
-         /// Channel account auth plus recover_key of
+         /// Humanity Pro account auth plus recover_key of
          /// `"<pubkey>|<account>|<chain>|<nonce>|createlink auth"`.
          [[eosio::action]]
          void linksig( const name& account, const name& chain, const std::string& address,

@@ -61,7 +61,7 @@ namespace fc::crypto {
       return std::visit([](const auto& key) { return key.valid(); }, _storage);
    }
 
-   // output in pre The Channel-2.0 format: RA, PUB_R1, PUB_WA (em/ed have no legacy form)
+   // output in pre Humanity Pro-2.0 format: RA, PUB_R1, PUB_WA (em/ed have no legacy form)
    std::string public_key::to_legacy_string(const fc::yield_function_t& yield) const
    {
       auto which = _storage.index();
@@ -78,7 +78,7 @@ namespace fc::crypto {
       }
    }
 
-   // The Channel 2.0+ native form: PUB_K1, PUB_R1, PUB_WA, PUB_EM (hex), PUB_ED (base58)
+   // Humanity Pro 2.0+ native form: PUB_K1, PUB_R1, PUB_WA, PUB_EM (hex), PUB_ED (base58)
    std::string public_key::to_string(const fc::yield_function_t& yield, bool include_prefix) const
    {
       switch (type()) {

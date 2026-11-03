@@ -1,6 +1,6 @@
 # Roundtables
 
-Implementation notes from Channel roundtables. Each meeting is **one markdown file** in **exactly one** stage folder.
+Implementation notes from Humanity Pro roundtables. Each meeting is **one markdown file** in **exactly one** stage folder.
 
 ## For you (how to run this)
 
@@ -12,7 +12,7 @@ Implementation notes from Channel roundtables. Each meeting is **one markdown fi
 Load these when coding from a prompt:
 
 - `@antelope-dev-style` — `ra.*` contract C++
-- `@antelope-core-dev` — `channeld` / runtime / feature flags
+- `@antelope-core-dev` — `humanityd` / runtime / feature flags
 - `@cmake-contract-builds` — new contract source files
 - `@never-push` — do not push commits
 

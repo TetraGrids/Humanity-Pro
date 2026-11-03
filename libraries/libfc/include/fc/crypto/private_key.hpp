@@ -73,7 +73,7 @@ namespace fc { namespace crypto {
          explicit private_key(const std::string& base58str);
          static private_key from_string(const std::string& str, key_type type = key_type::unknown);
 
-         // The Channel native string form always carries the PVT_<TYPE>_ prefix.
+         // Humanity Pro native string form always carries the PVT_<TYPE>_ prefix.
          std::string to_string(const fc::yield_function_t& yield) const;
 
          template<typename... Args>

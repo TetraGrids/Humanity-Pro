@@ -243,8 +243,8 @@ sysio::provider_spec_result create_ssm_provider_with_fetcher(fc::crypto::chain_k
    // network round-trip. Mirrors the plugin's `KEY:` taxonomy: sui is a known
    // type pending implementation; anything else is an invalid enum value.
    switch (key_type) {
-   case chain_key_type_channel:
-   case chain_key_type_channel_bls:
+   case chain_key_type_humanity:
+   case chain_key_type_humanity_bls:
    case chain_key_type_ethereum:
    case chain_key_type_solana:
       break;

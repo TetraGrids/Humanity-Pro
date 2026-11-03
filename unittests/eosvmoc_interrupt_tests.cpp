@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE( wasm_interrupt_test ) { try {
    if( t.get_config().wasm_runtime == wasm_interface::vm_type::eos_vm_oc ) {
       // eos_vm_oc wasm_runtime does not tier-up and completes compile before continuing execution.
       // A completely different test with different constraints would be needed to test with eos_vm_oc.
-      // Since non-tier-up is not a normal valid channeld runtime, just skip this test for eos_vm_oc.
+      // Since non-tier-up is not a normal valid humanityd runtime, just skip this test for eos_vm_oc.
       return;
    }
    t.execute_setup_policy( setup_policy::full );

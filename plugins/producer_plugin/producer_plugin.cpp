@@ -622,7 +622,7 @@ public:
                                const fc::exception_ptr&      except_ptr,
                                uint32_t                      billed_cpu_us,
                                bool                          is_transient);
-   
+
    void        add_greylist_accounts(const producer_plugin::greylist_params& params) {
       EOS_ASSERT(params.accounts.size() > 0, chain::invalid_http_request, "At least one account is required");
 
@@ -1129,11 +1129,11 @@ public:
          }
 
          exhausted = pr.block_exhausted;
-         
+
          if ( !in_producing_mode() && pr.trx_exhausted )
             exhausted = true;  // report transaction exhausted if trx was exhausted in non-producing mode (so we will restart
                                // a speculative block to retry it immediately, instead of waiting to receive a new block)
-         
+
       } catch (const guard_exception& e) {
          chain_plugin::handle_guard_exception(e);
       } catch (boost::interprocess::bad_alloc&) {
@@ -1359,7 +1359,7 @@ if( options.count(op_name) ) { \
 }
 
 void producer_plugin_impl::plugin_initialize(const boost::program_options::variables_map& options)
-{ 
+{
    chain_plug = app().find_plugin<chain_plugin>();
    EOS_ASSERT(chain_plug, plugin_config_exception, "chain_plugin not found" );
    _options = &options;
@@ -1373,17 +1373,17 @@ void producer_plugin_impl::plugin_initialize(const boost::program_options::varia
    // (populated from its own `signature-provider` option during its initialize, which ran before ours).
    {
       auto& sig_mgr = app().get_plugin<signature_provider_manager_plugin>();
-      auto channel_providers = sig_mgr.query_providers(std::nullopt, fc::crypto::chain_kind_channel, std::nullopt);
-      if (channel_providers.empty()) {
+      auto humanity_providers = sig_mgr.query_providers(std::nullopt, fc::crypto::chain_kind_humanity, std::nullopt);
+      if (humanity_providers.empty()) {
          // preserve the historical out-of-box behavior: a fresh node gets the well-known development key
          auto default_priv_key = private_key_type::regenerate<fc::ecc::private_key_shim>(fc::sha256::hash(std::string("nathan")));
          auto spec = fc::crypto::to_signature_provider_spec(
-            "default", fc::crypto::chain_kind_channel, fc::crypto::chain_key_type_channel,
+            "default", fc::crypto::chain_kind_humanity, fc::crypto::chain_key_type_humanity,
             default_priv_key.get_public_key().to_string({}), "KEY:" + default_priv_key.to_string({}));
          sig_mgr.create_provider(spec);
-         channel_providers = sig_mgr.query_providers(std::nullopt, fc::crypto::chain_kind_channel, std::nullopt);
+         humanity_providers = sig_mgr.query_providers(std::nullopt, fc::crypto::chain_kind_humanity, std::nullopt);
       }
-      for (const auto& provider : channel_providers) {
+      for (const auto& provider : humanity_providers) {
          // manager sign_fn is (digest)->sig; producer's signature_provider_type is (digest, require_canonical)->sig.
          // Canonicality is enforced internally per key type (and is meaningless for EM/ED), so the flag is ignored.
          _signature_providers[provider->public_key] =
@@ -1882,7 +1882,7 @@ producer_plugin::schedule_snapshot(const chain::snapshot_scheduler::snapshot_req
 
    // missing start/end is set to head block num, missing end to UINT32_MAX
    chain::snapshot_scheduler::snapshot_request_information sri = {
-      .block_spacing   = srp.block_spacing ? *srp.block_spacing : 0, 
+      .block_spacing   = srp.block_spacing ? *srp.block_spacing : 0,
       .start_block_num = srp.start_block_num ? *srp.start_block_num : head_block_num + 1,
       .end_block_num   = srp.end_block_num ? *srp.end_block_num : std::numeric_limits<uint32_t>::max(),
       .snapshot_description = srp.snapshot_description ? *srp.snapshot_description : ""

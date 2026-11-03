@@ -6,7 +6,7 @@ namespace fc::crypto {
 
 private_key from_native_string_to_private_key(chain_key_type_t key_type, const std::string& private_key_str) {
    switch (key_type) {
-   case chain_key_type_channel:
+   case chain_key_type_humanity:
       return private_key(parse_unknown_private_key_str(private_key_str));
    case chain_key_type_ethereum:
       return from_native_string_to_private_key<chain_key_type_ethereum>(private_key_str);
@@ -21,7 +21,7 @@ private_key from_native_string_to_private_key(chain_key_type_t key_type, const s
 
 public_key from_native_string_to_public_key(chain_key_type_t key_type, const std::string& public_key_str) {
    switch (key_type) {
-   case chain_key_type_channel:
+   case chain_key_type_humanity:
       return public_key(parse_unknown_public_key_str(public_key_str));
    case chain_key_type_ethereum:
       return from_native_string_to_public_key<chain_key_type_ethereum>(public_key_str);

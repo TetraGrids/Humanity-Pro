@@ -14,14 +14,14 @@ DEFAULT_ENDPOINT = "127.0.0.1:8000"
 # Create New Key
 def create_key():
     result = subprocess.run(
-        ["chan", "create", "key", "--r1", "--to-console"],
+        ["humanity", "create", "key", "--r1", "--to-console"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True
     )
 
     if result.returncode != 0:
-        raise RuntimeError(f"chan create key failed:\n{result.stderr}")
+        raise RuntimeError(f"humanity create key failed:\n{result.stderr}")
 
     # Match both keys
     private_key_match = re.search(r"Private key: ([A-Za-z0-9_]+)", result.stdout)
@@ -35,10 +35,10 @@ def create_key():
 
     return public_key, private_key
 
-# Check Channeld has account
+# Check Humanityd has account
 def check_user_exists(account_name, endpoint):
     result = subprocess.run(
-        ["chan", "--url", endpoint, "get", "account", account_name],
+        ["humanity", "--url", endpoint, "get", "account", account_name],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
@@ -47,12 +47,12 @@ def check_user_exists(account_name, endpoint):
 # Return all the keys in wallet
 def get_wallet_keys():
     result = subprocess.run(
-        "chan wallet keys list | jq",
+        "humanity wallet keys list | jq",
         shell=True,
         capture_output=True,
         text=True
     )
-    
+
     try:
         return json.loads(result.stdout)
     except json.JSONDecodeError as e:
@@ -69,26 +69,26 @@ def get_keys_for_user(account_name, user_accounts):
 # Add A Key Pair to the Default Wallet
 def import_key(priv_key):
     import_key_command = [
-        "chan",
+        "humanity",
         "wallet", "import", "--private-key",priv_key
     ]
 
     result = subprocess.run(import_key_command,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
     if result.returncode != 0:
-        raise RuntimeError(f"chan wallet import failed:\n{result.stderr}")
+        raise RuntimeError(f"humanity wallet import failed:\n{result.stderr}")
 
 ############### SESSION SCOPE ###########################
 @pytest.fixture(scope="session")
 def currency_symbol():
     return CURRENCY_SYMBOL
-    
+
 @pytest.fixture(scope="session")
 def endpoint():
     value = os.environ.get("ENDPOINT")
     if not value:
         print(f"[pytest] Warning: env variable ENDPOINT not set. Using default: {DEFAULT_ENDPOINT}")
     return value or DEFAULT_ENDPOINT
-    
+
 @pytest.fixture(scope="session")
 def user_accounts():
     with open("accounts.json") as f:
@@ -98,22 +98,22 @@ def user_accounts():
 ############## TESTS ####################################
 
 ##
-# test transfer SYS between accounts 
+# test transfer SYS between accounts
 ##
 @pytest.mark.parametrize("from_account,to_account", [
     ("useraaaaaljm", "useraaaaalla"),
 ])
-def test_chan_transfer_currency(
+def test_humanity_transfer_currency(
     from_account,
     to_account,
     endpoint,
     user_accounts,
     currency_symbol):
     assert endpoint, "ENDPOINT variable must be set."
-    
+
     # get transaction signing key for from account user
     sign_pub_key, sign_priv_key = get_keys_for_user(from_account, user_accounts)
-    # check if key is already in wallet 
+    # check if key is already in wallet
     wallet_pub_keys = get_wallet_keys()
     # import key if it is not in wallet
     if not sign_pub_key in wallet_pub_keys:
@@ -126,8 +126,8 @@ def test_chan_transfer_currency(
         "memo": "init"
     }
 
-    chan_command = [
-        "chan",
+    humanity_command = [
+        "humanity",
         "-u", endpoint,
         "push", "action",
         "ra.token",
@@ -137,7 +137,7 @@ def test_chan_transfer_currency(
     ]
 
     result = subprocess.run(
-        chan_command,
+        humanity_command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True
@@ -173,14 +173,14 @@ def test_newaccount(payer_account,endpoint,user_accounts,currency_symbol):
     for single_char in string.ascii_lowercase:
         new_account = f'testnewuser{single_char}'
         if not check_user_exists(new_account, endpoint):
-            chan_newaccount_output(payer_account,
+            humanity_newaccount_output(payer_account,
                 new_account,
                 endpoint,
                 user_accounts,
                 currency_symbol)
             break
 
-def chan_newaccount_output(
+def humanity_newaccount_output(
     payer_account,
     new_account,
     endpoint,
@@ -191,7 +191,7 @@ def chan_newaccount_output(
 
     # get transaction signing key for from account user
     sign_pub_key, sign_priv_key = get_keys_for_user(payer_account, user_accounts)
-    # check if key is already in wallet 
+    # check if key is already in wallet
     wallet_pub_keys = get_wallet_keys()
     # import key if it is not in wallet
     if not sign_pub_key in wallet_pub_keys:
@@ -202,8 +202,8 @@ def chan_newaccount_output(
     # add to Wallet
     import_key(priv)
 
-    chan_command = [
-        "chan",
+    humanity_command = [
+        "humanity",
         "-u", endpoint,
         "system", "newaccount",
         payer_account,
@@ -217,7 +217,7 @@ def chan_newaccount_output(
     ]
 
     result = subprocess.run(
-        chan_command,
+        humanity_command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True
@@ -232,18 +232,18 @@ def chan_newaccount_output(
     assert len(stdout_lines) > 20, f"Expected more than 20 lines in stdout, got {len(stdout_lines)}:\n{result.stdout}"
 
 ##
-# test swap SYS -> A between accounts 
+# test swap SYS -> A between accounts
 ##
 @pytest.mark.parametrize("from_account", [
     "useraaaaaljm",
 ])
-def test_chan_transfer_vaulta_currency(
+def test_humanity_transfer_vaulta_currency(
     from_account,
     user_accounts,
     endpoint,
     currency_symbol):
-    
-    # All system user keys already imported into wallet 
+
+    # All system user keys already imported into wallet
     to_account = "core.vaulta"
 
     transfer_data = {
@@ -253,8 +253,8 @@ def test_chan_transfer_vaulta_currency(
         "memo": "init"
     }
 
-    chan_command = [
-        "chan",
+    humanity_command = [
+        "humanity",
         "-u", endpoint,
         "push", "action",
         "ra.token",
@@ -264,7 +264,7 @@ def test_chan_transfer_vaulta_currency(
     ]
 
     result = subprocess.run(
-        chan_command,
+        humanity_command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True

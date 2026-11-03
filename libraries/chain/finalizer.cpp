@@ -339,7 +339,7 @@ my_finalizers_t::fsi_map my_finalizers_t::load_finalizer_safety_info() {
       EOS_ASSERT(magic == fsi_t::magic, finalizer_safety_exception,
                  "bad magic number in finalizer safety persistence file: ${p}", ("p", persist_file_path));
 
-      // We can load files with older, but not files with a version higher that the running channeld understands.
+      // We can load files with older, but not files with a version higher that the running humanityd understands.
       // -----------------------------------------------------------------------------------------------------
       uint64_t file_version = 0; // current file version
       fc::raw::unpack(persist_file, file_version);
@@ -415,7 +415,7 @@ void my_finalizers_t::set_keys(const std::map<std::string, std::string>& finaliz
 // --------------------------------------------------------------------------------------------
 // Can be called either:
 //   - when transitioning to IF (before any votes are to be sent)
-//   - at channel startup, if we start at a block which is either within or past the IF transition.
+//   - at Humanity Pro startup, if we start at a block which is either within or past the IF transition.
 // In either case, we are never updating existing finalizer safety information. This is only
 // to ensure that the safety information will have defaults that ensure safety as much as
 // possible, and allow for liveness which will allow the finalizers to eventually vote.

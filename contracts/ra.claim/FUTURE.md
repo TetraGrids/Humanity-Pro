@@ -14,20 +14,20 @@ Relayer `credit` stays as the way deposits are recorded until a proving path exi
 
 ## Signed links and claims (EM / ED)
 
-Requires the `EM_ED_KEYS` protocol feature (already in `channeld` and `scripts/launch-devnet.py`). That raises supported key types to 5 so host `recover_key` accepts EM (EIP-191) and ED (ed25519). Stock CDT `eosio::signature` still has no EM/ED alternatives; the contracts pass **fc-packed signature bytes** into the `recover_key` intrinsic.
+Requires the `EM_ED_KEYS` protocol feature (already in `humanityd` and `scripts/launch-devnet.py`). That raises supported key types to 5 so host `recover_key` accepts EM (EIP-191) and ED (ed25519). Stock CDT `eosio::signature` still has no EM/ED alternatives; the contracts pass **fc-packed signature bytes** into the `recover_key` intrinsic.
 
 ### `ra.authex::linksig`
 
-The Channel account must authorize. The same user signs this exact UTF-8 string (no extra spaces):
+Humanity Pro account must authorize. The same user signs this exact UTF-8 string (no extra spaces):
 
 ```text
 <pubkey>|<account>|<chain>|<nonce>|createlink auth
 ```
 
-- `<pubkey>` is the Channel string (`PUB_EM_0x…` or `PUB_ED_…`)
+- `<pubkey>` is Humanity Pro string (`PUB_EM_0x…` or `PUB_ED_…`)
 - `<nonce>` starts at `0` per account and increments on each successful `linksig`
 
-Digest is `sha256(message)`. Wallets must sign that **32-byte digest** the same way they sign a Channel transaction:
+Digest is `sha256(message)`. Wallets must sign that **32-byte digest** the same way they sign a Humanity Pro transaction:
 
 - **MetaMask / EM:** `personal_sign` of the 32 digest bytes (EIP-191 prefix `"\x19Ethereum Signed Message:\n32"`). Do not `personal_sign` the UTF-8 message string; that hash will not match `recover_key`.
 - **Phantom / ED:** sign the ASCII hex of the digest (64 hex characters), matching host ED recovery.
@@ -36,7 +36,7 @@ Digest is `sha256(message)`. Wallets must sign that **32-byte digest** the same 
 
 ### `ra.claim::claimsig`
 
-A deposit must already be `credit`ed. Anyone may submit `claimsig(id, sig)`; the first authorizer pays CPU. The signer is the linked EM/ED key, not the Channel account. Message:
+A deposit must already be `credit`ed. Anyone may submit `claimsig(id, sig)`; the first authorizer pays CPU. The signer is the linked EM/ED key, not Humanity Pro account. Message:
 
 ```text
 <ext_txid>|<recipient>|<quantity>|<chain>|<id>|claim auth
@@ -50,9 +50,9 @@ v1 `claim(id)` with `require_auth(recipient)` remains.
 
 ## Lazy account (claimopen)
 
-`credit` still requires the Channel account to exist. A relayer who is naming an account that does not exist yet calls `creditopen` with:
+`credit` still requires Humanity Pro account to exist. A relayer who is naming an account that does not exist yet calls `creditopen` with:
 
-- the Channel pubkey string (`PUB_EM_…` or `PUB_ED_…`)
+- Humanity Pro pubkey string (`PUB_EM_…` or `PUB_ED_…`)
 - `fc::raw::pack` of that same public key (`packedkey`)
 
 `claimopen` recovers

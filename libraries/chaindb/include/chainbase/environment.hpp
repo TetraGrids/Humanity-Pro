@@ -21,7 +21,7 @@ constexpr size_t header_size = 1024;
 // `CHAINB01` reflects changes since `EOSIODB3`.
 // `CHAINB02` adds the small size allocator
 // Spring 1.0 is compatible with `CHAINB01`.
-// The Channel 1.0 is compatible with `CHAINB02`.
+// Humanity Pro 1.0 is compatible with `CHAINB02`.
 // ---------------------------------------------
 constexpr uint64_t header_id = "CHAINB02"_u64str;
 

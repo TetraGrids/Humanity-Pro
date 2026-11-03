@@ -61,29 +61,29 @@ jobs:
           cmake -S . -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_PREFIX_PATH=/usr/lib/llvm-11 \
-            -DENABLE_CHANNEL_DEV_DEB=ON
+            -DENABLE_HUMANITY_PRO_DEV_DEB=ON
 
       - name: Build node, CLI, wallet, util
         # -j1: several translation units need ~4GB, and hosted runners have 7GB.
         run: |
           set -euo pipefail
-          cmake --build build --parallel 1 --target channeld chan keyd channel-util
+          cmake --build build --parallel 1 --target humanityd humanity humanity-keyd humanity-util
 
       - name: Version smoke
         run: |
           set -euo pipefail
-          ./build/bin/channeld --full-version
-          ./build/bin/chan version client
-          ./build/bin/keyd --full-version
-          ./build/bin/channel-util version client
+          ./build/bin/humanityd --full-version
+          ./build/bin/humanity version client
+          ./build/bin/humanity-keyd --full-version
+          ./build/bin/humanity-util version client
 
       - name: Upload binaries
         uses: actions/upload-artifact@v4
         with:
-          name: channel-binaries-ubuntu22
+          name: humanity-pro-binaries-ubuntu22
           path: |
-            build/bin/channeld
-            build/bin/chan
-            build/bin/keyd
-            build/bin/channel-util
+            build/bin/humanityd
+            build/bin/humanity
+            build/bin/humanity-keyd
+            build/bin/humanity-util
           if-no-files-found: error

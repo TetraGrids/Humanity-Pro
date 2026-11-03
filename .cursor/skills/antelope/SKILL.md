@@ -1,16 +1,16 @@
 ---
 name: antelope
 description: >-
-  Antelope / Spring / The Channel node and contract engineering. Use when
-  building channeld, chan, keyd, channel-util, ra.* contracts, tests, plugins,
+  Antelope / Spring / Humanity Pro node and contract engineering. Use when
+  building humanityd, humanity, humanity-keyd, humanity-util, ra.* contracts, tests, plugins,
   libfc, consensus, or WASM runtimes in this repo.
 ---
 
-# Antelope / Spring / The Channel
+# Antelope / Spring / Humanity Pro
 
-This tree is Spring-family Antelope node software. Binaries are **`channeld`**, **`chan`**, **`keyd`**, **`channel-util`**. Contracts are **`ra.*`** and **`flex.token`**. WASM runtimes are **`eos-vm`**, **`eos-vm-jit`**, **`eos-vm-oc`**.
+This tree is Spring-family Antelope node software. Binaries are **`humanityd`**, **`humanity`**, **`humanity-keyd`**, **`humanity-util`**. Contracts are **`ra.*`** and **`flex.token`**. WASM runtimes are **`eos-vm`**, **`eos-vm-jit`**, **`eos-vm-oc`**.
 
-Contract C++: [antelope-dev-style](../antelope-dev-style/SKILL.md). Node C++: [antelope-core-dev](../antelope-core-dev/SKILL.md). CMake for new contract files: [cmake-contract-builds](../cmake-contract-builds/SKILL.md). Never `git push`: [never-push](../never-push/SKILL.md). Meeting prompts: [roundtables](../roundtables/SKILL.md).
+Contract C++: [antelope-dev-style](../antelope-dev-style/SKILL.md). Node C++: [antelope-core-dev](../antelope-core-dev/SKILL.md). CMake for new contract files: [cmake-contract-builds](../cmake-contract-builds/SKILL.md). Never `git push`: [never-push](../never-push/SKILL.md). Meeting prompts: [roundtables](../roundtables/SKILL.md). Protocol backlog: [protocol-todos](../protocol-todos/SKILL.md).
 
 ## Code quality
 
@@ -42,7 +42,7 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
 cmake --build build -j $(nproc)
 ```
 
-Some `.cpp` files need ~4GB RAM; drop `-j` if the compiler is killed. macOS `channeld` is best-effort, not the release path.
+Some `.cpp` files need ~4GB RAM; drop `-j` if the compiler is killed. macOS `humanityd` is best-effort, not the release path.
 
 Contracts: `-DBUILD_CONTRACTS=ON` (CDT 4.1.x) or the **Compile contracts** GitHub Action.
 
@@ -70,8 +70,8 @@ Regenerate deep-mind / snapshot fixtures only when those tests use save flags an
 ## Layout
 
 - `libraries/` — libfc, chain, appbase, testing
-- `plugins/` — linked into `channeld` (`plugins/usage_pattern.md` if present)
-- `programs/` — `channeld`, `chan`, `keyd`, `channel-util`
+- `plugins/` — linked into `humanityd` (`plugins/usage_pattern.md` if present)
+- `programs/` — `humanityd`, `humanity`, `humanity-keyd`, `humanity-util`
 - `contracts/` — `ra.system`, `ra.token`, `flex.token` (`ra.pure/`), …
 - `unittests/`, `tests/`
 

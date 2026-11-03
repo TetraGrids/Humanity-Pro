@@ -54,11 +54,11 @@ class Cluster(object):
     __BiosHost="localhost"
     __BiosPort=8788
     __LauncherCmdArr=[]
-    __bootlog="channel-ignition-wd/bootlog.txt"
+    __bootlog="humanity-pro-ignition-wd/bootlog.txt"
 
     # pylint: disable=too-many-arguments
     def __init__(self, localCluster=True, host="localhost", port=8888, walletHost="localhost", walletPort=9899
-                 , defproduceraPrvtKey=None, defproducerbPrvtKey=None, staging=False, loggingLevel="debug", loggingLevelDict={}, channeldVers="", unshared=False, keepRunning=False, keepLogs=False):
+                 , defproduceraPrvtKey=None, defproducerbPrvtKey=None, staging=False, loggingLevel="debug", loggingLevelDict={}, humanitydVers="", unshared=False, keepRunning=False, keepLogs=False):
         """Cluster container.
         localCluster [True|False] Is cluster local to host.
         host: eos server host
@@ -68,9 +68,9 @@ class Cluster(object):
         defproduceraPrvtKey: Defproducera account private key
         defproducerbPrvtKey: Defproducerb account private key
         staging: [True|False] If true, don't generate new node configurations
-        loggingLevel: Logging level to apply to all channeld loggers in all nodes
-        loggingLevelDict: Dictionary of node indices and logging level to apply to all channeld loggers in that node
-        channeldVers: Channeld version string for compatibility
+        loggingLevel: Logging level to apply to all humanityd loggers in all nodes
+        loggingLevelDict: Dictionary of node indices and logging level to apply to all humanityd loggers in that node
+        humanitydVers: Humanityd version string for compatibility
         unshared: [True|False] If true, launch all processes in Linux namespace
         keepRunning: [True|False] If true, leave nodes running when Cluster is destroyed. Implies keepLogs.
         keepLogs: [True|False] If true, retain log files after cluster shuts down.
@@ -109,8 +109,8 @@ class Cluster(object):
         self.testFailed=False
         self.alternateVersionLabels=Cluster.__defaultAlternateVersionLabels()
         self.biosNode = None
-        self.channeldVers=channeldVers
-        self.channeldLogPath=Path(Utils.TestLogRoot) / Path(f'{Path(sys.argv[0]).stem}{os.getpid()}')
+        self.humanitydVers=humanitydVers
+        self.humanitydLogPath=Path(Utils.TestLogRoot) / Path(f'{Path(sys.argv[0]).stem}{os.getpid()}')
 
         self.libTestingContractsPath = Path(__file__).resolve().parents[2] / "libraries" / "testing" / "contracts"
         self.unittestsContractsPath = Path(__file__).resolve().parents[2] / "unittests" / "contracts"
@@ -164,11 +164,11 @@ class Cluster(object):
     # pylint: disable=too-many-branches
     # pylint: disable=too-many-statements
     def launch(self, pnodes=1, unstartedNodes=0, totalNodes=1, prodCount=21, topo="mesh", delay=2, onlyBios=False, dontBootstrap=False,
-               totalProducers=None, sharedProducers=0, extraChanneldArgs="", specificExtraChanneldArgs=None, specificChanneldInstances=None, onlySetProds=False,
+               totalProducers=None, sharedProducers=0, extraHumanitydArgs="", specificExtraHumanitydArgs=None, specificHumanitydInstances=None, onlySetProds=False,
                pfSetupPolicy=PFSetupPolicy.FULL, alternateVersionLabelsFile=None, associatedNodeLabels=None, loadSystemContract=True,
                activateIF=False, biosFinalizer=True,
                signatureProviderForNonProducer=False,
-               channeldLogPath=Path(Utils.TestLogRoot) / Path(f'{Path(sys.argv[0]).stem}{os.getpid()}'), genesisPath=None,
+               humanitydLogPath=Path(Utils.TestLogRoot) / Path(f'{Path(sys.argv[0]).stem}{os.getpid()}'), genesisPath=None,
                maximumP2pPerHost=0, maximumClients=25, prodsEnableTraceApi=True):
         """Launch cluster.
         pnodes: producer nodes count
@@ -181,11 +181,11 @@ class Cluster(object):
           delay 0 exposes a bootstrap bug where producer handover may have a large gap confusing nodes and bringing system to a halt.
         onlyBios: When true, only loads the bios contract (and not more full bootstrapping).
         dontBootstrap: When true, don't do any bootstrapping at all. (even bios is not uploaded)
-        extraChanneldArgs: string of arguments to pass through to each channeld instance (via --channeld flag on launcher)
-        specificExtraChanneldArgs: dictionary of arguments to pass to a specific node (via --specific-num and
-                                 --specific-channeld flags on launcher), example: { "5" : "--plugin eosio::test_control_api_plugin" }
-        specificChanneldInstances: dictionary of paths to launch specific channeld binaries (via --spcfc-inst-num and
-                                 --spcfc_inst_channeld flags to launcher), example: { "4" : "bin/channeld"}
+        extraHumanitydArgs: string of arguments to pass through to each humanityd instance (via --humanityd flag on launcher)
+        specificExtraHumanitydArgs: dictionary of arguments to pass to a specific node (via --specific-num and
+                                 --specific-humanityd flags on launcher), example: { "5" : "--plugin eosio::test_control_api_plugin" }
+        specificHumanitydInstances: dictionary of paths to launch specific humanityd binaries (via --spcfc-inst-num and
+                                 --spcfc_inst_humanityd flags to launcher), example: { "4" : "bin/humanityd"}
         onlySetProds: Stop the bootstrap process after setting the producers
         pfSetupPolicy: determine the protocol feature setup policy (none, preactivate_feature_only, or full)
         alternateVersionLabelsFile: Supply an alternate version labels file to use with associatedNodeLabels.
@@ -241,7 +241,7 @@ class Cluster(object):
 
         tries = 30
         while not Utils.arePortsAvailable(set(range(self.port, self.port+totalNodes+1))):
-            Utils.Print("ERROR: Another process is listening on channeld default port. wait...")
+            Utils.Print("ERROR: Another process is listening on humanityd default port. wait...")
             if tries == 0:
                 return False
             tries = tries - 1
@@ -253,70 +253,70 @@ class Cluster(object):
               f'--logging-level-map {loggingLevelDictString}')
         argsArr=args.split()
         argsArr.append("--config-dir")
-        argsArr.append(str(channeldLogPath))
+        argsArr.append(str(humanitydLogPath))
         argsArr.append("--data-dir")
-        argsArr.append(str(channeldLogPath))
+        argsArr.append(str(humanitydLogPath))
         if self.staging:
             argsArr.append("--nogen")
-        channeldArgs=""
-        if "--vote-threads" not in extraChanneldArgs:
-            channeldArgs += " --vote-threads 4"
-        if "--max-transaction-time" not in extraChanneldArgs:
-            channeldArgs += " --max-transaction-time -1"
-        if "--abi-serializer-max-time-ms" not in extraChanneldArgs:
-            channeldArgs += " --abi-serializer-max-time-ms 990000"
-        if "--p2p-max-nodes-per-host" not in extraChanneldArgs:
-            channeldArgs += f" --p2p-max-nodes-per-host {maximumP2pPerHost}"
-        if "--max-clients" not in extraChanneldArgs:
-            channeldArgs += f" --max-clients {maximumClients}"
-        if "--connection-cleanup-period" not in extraChanneldArgs:
+        humanitydArgs=""
+        if "--vote-threads" not in extraHumanitydArgs:
+            humanitydArgs += " --vote-threads 4"
+        if "--max-transaction-time" not in extraHumanitydArgs:
+            humanitydArgs += " --max-transaction-time -1"
+        if "--abi-serializer-max-time-ms" not in extraHumanitydArgs:
+            humanitydArgs += " --abi-serializer-max-time-ms 990000"
+        if "--p2p-max-nodes-per-host" not in extraHumanitydArgs:
+            humanitydArgs += f" --p2p-max-nodes-per-host {maximumP2pPerHost}"
+        if "--max-clients" not in extraHumanitydArgs:
+            humanitydArgs += f" --max-clients {maximumClients}"
+        if "--connection-cleanup-period" not in extraHumanitydArgs:
             # Quicker retry, default is 30s, since many tests launch multiple nodes at the same time
-            channeldArgs += f" --connection-cleanup-period 15"
-        if Utils.Debug and "--contracts-console" not in extraChanneldArgs:
-            channeldArgs += " --contracts-console"
+            humanitydArgs += f" --connection-cleanup-period 15"
+        if Utils.Debug and "--contracts-console" not in extraHumanitydArgs:
+            humanitydArgs += " --contracts-console"
         if PFSetupPolicy.hasPreactivateFeature(pfSetupPolicy):
-            channeldArgs += " --plugin eosio::producer_api_plugin"
+            humanitydArgs += " --plugin eosio::producer_api_plugin"
         if prodsEnableTraceApi:
-            channeldArgs += " --plugin eosio::trace_api_plugin "
-        if extraChanneldArgs.find("--trace-rpc-abi") == -1:
-            channeldArgs += " --trace-no-abis "
+            humanitydArgs += " --plugin eosio::trace_api_plugin "
+        if extraHumanitydArgs.find("--trace-rpc-abi") == -1:
+            humanitydArgs += " --trace-no-abis "
         httpMaxResponseTimeSet = False
-        if specificExtraChanneldArgs is not None:
-            assert(isinstance(specificExtraChanneldArgs, dict))
-            for nodeNum,arg in specificExtraChanneldArgs.items():
+        if specificExtraHumanitydArgs is not None:
+            assert(isinstance(specificExtraHumanitydArgs, dict))
+            for nodeNum,arg in specificExtraHumanitydArgs.items():
                 assert(isinstance(nodeNum, (str,int)))
                 assert(isinstance(arg, str))
                 if not len(arg):
                     continue
                 argsArr.append("--specific-num")
                 argsArr.append(str(nodeNum))
-                argsArr.append("--specific-channeld")
+                argsArr.append("--specific-humanityd")
                 if arg.find("--http-max-response-time-ms") != -1:
                     httpMaxResponseTimeSet = True
                 if arg[0] != "'" and arg[-1] != "'":
                     argsArr.append("'" + arg + "'")
                 else:
                     argsArr.append(arg)
-        if specificChanneldInstances is not None:
-            assert(isinstance(specificChanneldInstances, dict))
-            for nodeNum,arg in specificChanneldInstances.items():
+        if specificHumanitydInstances is not None:
+            assert(isinstance(specificHumanitydInstances, dict))
+            for nodeNum,arg in specificHumanitydInstances.items():
                 assert(isinstance(nodeNum, (str,int)))
                 assert(isinstance(arg, str))
                 argsArr.append("--spcfc-inst-num")
                 argsArr.append(str(nodeNum))
-                argsArr.append("--spcfc-inst-channeld")
+                argsArr.append("--spcfc-inst-humanityd")
                 argsArr.append(arg)
 
-        if not httpMaxResponseTimeSet and extraChanneldArgs.find("--http-max-response-time-ms") == -1:
-            extraChanneldArgs+=" --http-max-response-time-ms 990000 "
+        if not httpMaxResponseTimeSet and extraHumanitydArgs.find("--http-max-response-time-ms") == -1:
+            extraHumanitydArgs+=" --http-max-response-time-ms 990000 "
 
-        if extraChanneldArgs is not None:
-            assert(isinstance(extraChanneldArgs, str))
-            channeldArgs += extraChanneldArgs
+        if extraHumanitydArgs is not None:
+            assert(isinstance(extraHumanitydArgs, str))
+            humanitydArgs += extraHumanitydArgs
 
-        if channeldArgs:
-            argsArr.append("--channeld")
-            argsArr.append(channeldArgs)
+        if humanitydArgs:
+            argsArr.append("--humanityd")
+            argsArr.append(humanitydArgs)
 
         if genesisPath is None:
             argsArr.append("--max-block-cpu-usage")
@@ -336,7 +336,7 @@ class Cluster(object):
                     Utils.errorExit("associatedNodeLabels passed in indicates label %s for node num %s, but it was not identified in %s" % (label, nodeNum, alternateVersionLabelsFile))
                 argsArr.append("--spcfc-inst-num")
                 argsArr.append(str(nodeNum))
-                argsArr.append("--spcfc-inst-channeld")
+                argsArr.append("--spcfc-inst-humanityd")
                 argsArr.append(path)
 
         # must be last cmdArr.append before subprocess.call, so that everything is on the command line
@@ -346,7 +346,7 @@ class Cluster(object):
             shapeFile=shapeFilePrefix+".json"
             cmdArrForOutput=copy.deepcopy(argsArr)
             cmdArrForOutput.append("--output")
-            cmdArrForOutput.append(str(channeldLogPath / shapeFile))
+            cmdArrForOutput.append(str(humanitydLogPath / shapeFile))
             cmdArrForOutput.append("--shape")
             cmdArrForOutput.append("line")
             s=" ".join(cmdArrForOutput)
@@ -354,8 +354,8 @@ class Cluster(object):
             bridgeLauncher.define_network()
             bridgeLauncher.generate()
 
-            Utils.Print(f"opening {topo} shape file: {channeldLogPath / shapeFile}")
-            f = open(channeldLogPath / shapeFile, "r")
+            Utils.Print(f"opening {topo} shape file: {humanitydLogPath / shapeFile}")
+            f = open(humanitydLogPath / shapeFile, "r")
             shapeFileJsonStr = f.read()
             f.close()
             shapeFileObject = json.loads(shapeFileJsonStr)
@@ -459,7 +459,7 @@ class Cluster(object):
             nodeNum = instance.index
             node = Node(self.host, self.port + nodeNum, nodeNum, Path(instance.data_dir_name),
                         Path(instance.config_dir_name), eosdcmd, unstarted=instance.dont_start,
-                        launch_time=launcher.launch_time, walletMgr=self.walletMgr, channeldVers=self.channeldVers)
+                        launch_time=launcher.launch_time, walletMgr=self.walletMgr, humanitydVers=self.humanitydVers)
             node.keys = instance.keys
             node.isProducer = len(instance.producers) > 0
             node.producerName = instance.producers[0] if node.isProducer else None
@@ -536,7 +536,7 @@ class Cluster(object):
         port=Cluster.__BiosPort if onlyBios else self.port
         host=Cluster.__BiosHost if onlyBios else self.host
         nodeNum="bios" if onlyBios else 0
-        node=Node(host, port, nodeNum, walletMgr=self.walletMgr, channeldVers=self.channeldVers)
+        node=Node(host, port, nodeNum, walletMgr=self.walletMgr, humanitydVers=self.humanitydVers)
         if Utils.Debug: Utils.Print("Node: %s", str(node))
 
         node.checkPulse(exitOnError=True)
@@ -575,7 +575,7 @@ class Cluster(object):
         for n in nArr:
             port=n["port"]
             host=n["host"]
-            node=Node(host, port, nodeId=len(nodes), walletMgr=self.walletMgr, channeldVers=self.channeldVers)
+            node=Node(host, port, nodeId=len(nodes), walletMgr=self.walletMgr, humanitydVers=self.humanitydVers)
             if Utils.Debug: Utils.Print("Node:", node)
 
             node.checkPulse(exitOnError=True)
@@ -1397,7 +1397,7 @@ class Cluster(object):
                 Cluster.dumpErrorDetailImpl(fileName)
 
     def shutdown(self):
-        """Shut down all channeld instances launched by this Cluster."""
+        """Shut down all humanityd instances launched by this Cluster."""
         if not self.keepRunning:
             Utils.Print('Cluster shutting down.')
             for node in self.nodes:
@@ -1414,7 +1414,7 @@ class Cluster(object):
         self.cleanup()
 
     def bounce(self, nodes, silent=True):
-        """Bounces channeld instances as indicated by parameter nodes.
+        """Bounces humanityd instances as indicated by parameter nodes.
         nodes should take the form of a comma-separated list as accepted by the launcher --bounce command (e.g. '00' or '00,01')"""
         cmdArr = Cluster.__LauncherCmdArr.copy()
         cmdArr.append("--bounce")
@@ -1427,7 +1427,7 @@ class Cluster(object):
         return True
 
     def down(self, nodes, silent=True):
-        """Brings down channeld instances as indicated by parameter nodes.
+        """Brings down humanityd instances as indicated by parameter nodes.
         nodes should take the form of a comma-separated list as accepted by the launcher --bounce command (e.g. '00' or '00,01')"""
         cmdArr = Cluster.__LauncherCmdArr.copy()
         cmdArr.append("--down")
@@ -1525,7 +1525,7 @@ class Cluster(object):
         with open(startFile, 'r') as file:
             cmd=file.read()
             Utils.Print("unstarted local node cmd: %s" % (cmd))
-        instance=Node(self.host, port=self.port+nodeId, nodeId=nodeId, pid=None, cmd=cmd, walletMgr=self.walletMgr, channeldVers=self.channeldVers)
+        instance=Node(self.host, port=self.port+nodeId, nodeId=nodeId, pid=None, cmd=cmd, walletMgr=self.walletMgr, humanitydVers=self.humanitydVers)
         if Utils.Debug: Utils.Print("Unstarted Node>", instance)
         return instance
 

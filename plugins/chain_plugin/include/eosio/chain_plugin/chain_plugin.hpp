@@ -118,7 +118,7 @@ template<>
 string convert_to_string(const float128_t& source, const string& key_type, const string& encode_type, const string& desc);
 
 class read_write;
-   
+
 class api_base {
 public:
    static constexpr uint32_t max_return_items = 1000;
@@ -137,7 +137,7 @@ protected:
    template<class API, class Result>
    static void send_transaction_gen(API& api, send_transaction_params_t params, chain::plugin_interface::next_function<Result> next);
 };
-   
+
 class read_only : public api_base {
    const controller& db;
    const std::optional<get_info_db>& gidb;
@@ -148,7 +148,7 @@ class read_only : public api_base {
    bool  shorten_abi_errors = true;
    const trx_finality_status_processing* trx_finality_status_proc;
    friend class api_base;
-   
+
 public:
    static const string KEYi64;
 
@@ -236,8 +236,8 @@ public:
       int64_t used = 0;
       int64_t available = 0;
       int64_t max = 0;
-      std::optional<chain::block_timestamp_type> last_usage_update_time;    // optional for backward channeld support
-      std::optional<int64_t> current_used;  // optional for backward channeld support
+      std::optional<chain::block_timestamp_type> last_usage_update_time;    // optional for backward humanityd support
+      std::optional<int64_t> current_used;  // optional for backward humanityd support
       void set( const eosio::chain::resource_limits::account_resource_limit& arl)
       {
          used = arl.used;
@@ -428,7 +428,7 @@ public:
    };
 
    using get_table_rows_return_t = std::function<chain::t_or_exception<get_table_rows_result>()>;
-   
+
    get_table_rows_return_t get_table_rows( const get_table_rows_params& params, const fc::time_point& deadline )const;
 
    struct get_table_by_scope_params {
@@ -533,7 +533,7 @@ public:
    get_scheduled_transactions_result get_scheduled_transactions( const get_scheduled_transactions_params& params, const fc::time_point& deadline ) const;
    struct compute_transaction_results {
        chain::transaction_id_type  transaction_id;
-       fc::variant                 processed; // "processed" is expected JSON for trxs in chan
+       fc::variant                 processed; // "processed" is expected JSON for trxs in humanity
     };
 
    struct compute_transaction_params {
@@ -595,9 +595,9 @@ public:
          std::string next_key;
          vector<std::pair<vector<char>, name>> rows;
       };
-      
+
       http_params_t http_params { p.table, shorten_abi_errors, p.json, p.show_payer && *p.show_payer, false  };
-         
+
       const auto& d = db.db();
 
       name scope{ convert_to_type<uint64_t>(p.scope, "scope") };
@@ -730,9 +730,9 @@ public:
          std::string next_key;
          vector<std::pair<vector<char>, name>> rows;
       };
-      
+
       http_params_t http_params { p.table, shorten_abi_errors, p.json, p.show_payer && *p.show_payer, false  };
-         
+
       const auto& d = db.db();
 
       uint64_t scope = convert_to_type<uint64_t>(p.scope, "scope");
@@ -793,7 +793,7 @@ public:
             walk_table_row_range( lower, upper );
          }
       }
-      
+
       // not enforcing the deadline for that second processing part (the serialization), as it is not taking place
       // on the main thread, but in the http thread pool.
       return [p = std::move(http_params), abi=std::move(abi), abi_serializer_max_time=abi_serializer_max_time]() mutable ->
@@ -849,7 +849,7 @@ class read_write : public api_base {
    const fc::microseconds http_max_response_time;
    const bool api_accept_transactions;
    friend class api_base;
-   
+
 public:
    read_write(controller& db, std::optional<trx_retry_db>& trx_retry,
               const fc::microseconds& abi_serializer_max_time, const fc::microseconds& http_max_response_time,
@@ -870,7 +870,7 @@ public:
    using push_transaction_params = fc::variant_object;
    struct push_transaction_results {
       chain::transaction_id_type  transaction_id;
-      fc::variant                 processed; // "processed" is expected JSON for trxs in chan
+      fc::variant                 processed; // "processed" is expected JSON for trxs in humanity
    };
    void push_transaction(const push_transaction_params& params, chain::plugin_interface::next_function<push_transaction_results> next);
 

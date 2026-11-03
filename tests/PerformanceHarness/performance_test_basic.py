@@ -14,7 +14,7 @@ from pathlib import Path, PurePath
 sys.path.append(str(PurePath(PurePath(Path(__file__).absolute()).parent).parent))
 
 from .log_reader import blockData, trxData, chainData, scrapeTrxGenTrxSentDataLogs, JsonReportHandler, analyzeLogResults, TpsTestConfig, ArtifactPaths, LogAnalysis
-from .ChanneldPluginArgs import ChainPluginArgs, HttpPluginArgs, NetPluginArgs, ProducerPluginArgs, ResourceMonitorPluginArgs, SignatureProviderPluginArgs, StateHistoryPluginArgs, TraceApiPluginArgs
+from .HumanitydPluginArgs import ChainPluginArgs, HttpPluginArgs, NetPluginArgs, ProducerPluginArgs, ResourceMonitorPluginArgs, SignatureProviderPluginArgs, StateHistoryPluginArgs, TraceApiPluginArgs
 from TestHarness import Account, Cluster, TestHelper, Utils, WalletMgr, TransactionGeneratorsLauncher, TpsTrxGensConfig
 from TestHarness.TestHelper import AppArgs
 from dataclasses import dataclass, asdict, field
@@ -65,7 +65,7 @@ class PerformanceTestBasic:
     @dataclass
     class ClusterConfig:
         @dataclass
-        class ExtraChanneldArgs:
+        class ExtraHumanitydArgs:
 
             chainPluginArgs: ChainPluginArgs = field(default_factory=ChainPluginArgs)
             httpPluginArgs: HttpPluginArgs = field(default_factory=HttpPluginArgs)
@@ -95,7 +95,7 @@ class PerformanceTestBasic:
         validationNodeCount: int = 1
         apiNodeCount: int = 0
         dontKill: bool = False # leave_running
-        extraChanneldArgs: ExtraChanneldArgs = field(default_factory=ExtraChanneldArgs)
+        extraHumanitydArgs: ExtraHumanitydArgs = field(default_factory=ExtraHumanitydArgs)
         specifiedContract: SpecifiedContract = field(default_factory=SpecifiedContract)
         genesisPath: Path = Path("tests")/"PerformanceHarness"/"genesis.json"
         maximumP2pPerHost: int = 5000
@@ -104,8 +104,8 @@ class PerformanceTestBasic:
         loggingLevel: str = "info"
         loggingDict: dict = field(default_factory=lambda: { "bios": "off" })
         prodsEnableTraceApi: bool = False
-        channeldVers: str = ""
-        specificExtraChanneldArgs: dict = field(default_factory=dict)
+        humanitydVers: str = ""
+        specificExtraHumanitydArgs: dict = field(default_factory=dict)
         _totalNodes: int = 2
         _pNodes: int = 1
         _producerNodeIds: list = field(default_factory=list)
@@ -123,24 +123,24 @@ class PerformanceTestBasic:
             self._apiNodeIds = list(range(self.producerNodeCount + self.validationNodeCount, self.producerNodeCount + self.validationNodeCount + self.validationNodeCount))
 
             def configureValidationNodes():
-                validationNodeSpecificChanneldStr = ""
-                validationNodeSpecificChanneldStr += '--p2p-accept-transactions false '
+                validationNodeSpecificHumanitydStr = ""
+                validationNodeSpecificHumanitydStr += '--p2p-accept-transactions false '
                 #If prodsEnableTraceApi, then Cluster configures all nodes with trace_api_plugin so no need to duplicate here
                 if not self.prodsEnableTraceApi:
-                    validationNodeSpecificChanneldStr += "--plugin eosio::trace_api_plugin "
+                    validationNodeSpecificHumanitydStr += "--plugin eosio::trace_api_plugin "
                 if self.nonProdsEosVmOcEnable:
-                    validationNodeSpecificChanneldStr += "--eos-vm-oc-enable all "
-                if validationNodeSpecificChanneldStr:
-                    self.specificExtraChanneldArgs.update({f"{nodeId}" : validationNodeSpecificChanneldStr for nodeId in self._validationNodeIds})
+                    validationNodeSpecificHumanitydStr += "--eos-vm-oc-enable all "
+                if validationNodeSpecificHumanitydStr:
+                    self.specificExtraHumanitydArgs.update({f"{nodeId}" : validationNodeSpecificHumanitydStr for nodeId in self._validationNodeIds})
 
             def configureApiNodes():
-                apiNodeSpecificChanneldStr = ""
-                apiNodeSpecificChanneldStr += "--p2p-accept-transactions false "
-                apiNodeSpecificChanneldStr += "--plugin eosio::chain_api_plugin "
-                apiNodeSpecificChanneldStr += "--plugin eosio::net_api_plugin "
-                apiNodeSpecificChanneldStr += f"--read-only-threads {self.apiNodesReadOnlyThreadCount} "
-                if apiNodeSpecificChanneldStr:
-                    self.specificExtraChanneldArgs.update({f"{nodeId}" : apiNodeSpecificChanneldStr for nodeId in self._apiNodeIds})
+                apiNodeSpecificHumanitydStr = ""
+                apiNodeSpecificHumanitydStr += "--p2p-accept-transactions false "
+                apiNodeSpecificHumanitydStr += "--plugin eosio::chain_api_plugin "
+                apiNodeSpecificHumanitydStr += "--plugin eosio::net_api_plugin "
+                apiNodeSpecificHumanitydStr += f"--read-only-threads {self.apiNodesReadOnlyThreadCount} "
+                if apiNodeSpecificHumanitydStr:
+                    self.specificExtraHumanitydArgs.update({f"{nodeId}" : apiNodeSpecificHumanitydStr for nodeId in self._apiNodeIds})
 
             if self.validationNodeCount > 0:
                 configureValidationNodes()
@@ -216,13 +216,13 @@ class PerformanceTestBasic:
         self.producerNodeId = self.clusterConfig._producerNodeIds[0]
         self.validationNodeId = self.clusterConfig._validationNodeIds[0]
         pid = os.getpid()
-        self.channeldLogDir =  Path(self.loggingConfig.logDirPath)/"var"/f"{Utils.DataRoot}{Utils.PID}"
-        self.channeldLogPath = self.channeldLogDir/f"node_{str(self.validationNodeId).zfill(2)}"/"stderr.txt"
+        self.humanitydLogDir =  Path(self.loggingConfig.logDirPath)/"var"/f"{Utils.DataRoot}{Utils.PID}"
+        self.humanitydLogPath = self.humanitydLogDir/f"node_{str(self.validationNodeId).zfill(2)}"/"stderr.txt"
 
         # Setup cluster and its wallet manager
         self.walletMgr=WalletMgr(True, port=7899)
         self.cluster=Cluster(loggingLevel=self.clusterConfig.loggingLevel, loggingLevelDict=self.clusterConfig.loggingDict,
-                             channeldVers=self.clusterConfig.channeldVers,unshared=self.testHelperConfig.unshared,
+                             humanitydVers=self.clusterConfig.humanitydVers,unshared=self.testHelperConfig.unshared,
                              keepRunning=self.clusterConfig.dontKill, keepLogs=self.clusterConfig.keepLogs)
         self.cluster.setWalletMgr(self.walletMgr)
 
@@ -343,9 +343,9 @@ class PerformanceTestBasic:
             genesisPath=self.clusterConfig.genesisPath,
             maximumP2pPerHost=self.clusterConfig.maximumP2pPerHost,
             maximumClients=self.clusterConfig.maximumClients,
-            extraChanneldArgs=str(self.clusterConfig.extraChanneldArgs),
+            extraHumanitydArgs=str(self.clusterConfig.extraHumanitydArgs),
             prodsEnableTraceApi=self.clusterConfig.prodsEnableTraceApi,
-            specificExtraChanneldArgs=self.clusterConfig.specificExtraChanneldArgs
+            specificExtraHumanitydArgs=self.clusterConfig.specificExtraHumanitydArgs
             )
 
     def setupWalletAndAccounts(self, accountCnt: int=2, accountNames: list=None):
@@ -501,9 +501,9 @@ class PerformanceTestBasic:
 
     def captureLowLevelArtifacts(self):
         try:
-            shutil.move(f"{self.cluster.channeldLogPath}", f"{self.varLogsDirPath}")
+            shutil.move(f"{self.cluster.humanitydLogPath}", f"{self.varLogsDirPath}")
         except Exception as e:
-            print(f"Failed to move '{self.cluster.channeldLogPath}' to '{self.varLogsDirPath}': {type(e)}: {e}")
+            print(f"Failed to move '{self.cluster.humanitydLogPath}' to '{self.varLogsDirPath}': {type(e)}: {e}")
 
     def createReport(self, logAnalysis: LogAnalysis, tpsTestConfig: TpsTestConfig, argsDict: dict, testResult: PerfTestBasicResult) -> dict:
         report = {}
@@ -543,12 +543,12 @@ class PerformanceTestBasic:
         report['args'] =  argsDict
         report['args']['userTrxData'] = self.userTrxDataDict if self.ptbConfig.userTrxDataFile is not None else "NOT CONFIGURED"
         report['env'] = {'system': system(), 'os': os.name, 'release': release(), 'logical_cpu_count': os.cpu_count()}
-        report['channeldVersion'] = self.clusterConfig.channeldVers
+        report['humanitydVersion'] = self.clusterConfig.humanitydVers
         return report
 
     def analyzeResultsAndReport(self, testResult: PtbTpsTestResult):
         args = self.prepArgs()
-        artifactsLocate = ArtifactPaths(channeldLogDir=self.channeldLogDir, channeldLogPath=self.channeldLogPath, trxGenLogDirPath=self.trxGenLogDirPath, blockTrxDataPath=self.blockTrxDataPath,
+        artifactsLocate = ArtifactPaths(humanitydLogDir=self.humanitydLogDir, humanitydLogPath=self.humanitydLogPath, trxGenLogDirPath=self.trxGenLogDirPath, blockTrxDataPath=self.blockTrxDataPath,
                                                    blockDataPath=self.blockDataPath, transactionMetricsDataPath=self.transactionMetricsDataPath)
         tpsTestConfig = TpsTestConfig(targetTps=self.ptbConfig.targetTps, testDurationSec=self.ptbConfig.testTrxGenDurationSec, tpsLimitPerGenerator=self.ptbConfig.tpsLimitPerGenerator,
                                                  numBlocksToPrune=self.ptbConfig.numAddlBlocksToPrune, numTrxGensUsed=testResult.numGeneratorsUsed, targetTpsPerGenList=testResult.targetTpsPerGenList,
@@ -658,18 +658,18 @@ class PerformanceTestBasic:
         httpPluginArgs = HttpPluginArgs(httpMaxBytesInFlightMb=args.http_max_bytes_in_flight_mb, httpMaxInFlightRequests=args.http_max_in_flight_requests,
                                         httpMaxResponseTimeMs=args.http_max_response_time_ms, httpThreads=args.http_threads)
         netPluginArgs = NetPluginArgs(netThreads=args.net_threads, maxClients=0)
-        channeldVers=Utils.getChanneldVersion()
+        humanitydVers=Utils.getHumanitydVersion()
         resourceMonitorPluginArgs = ResourceMonitorPluginArgs(resourceMonitorNotShutdownOnThresholdExceeded=True)
-        ENA = PerformanceTestBasic.ClusterConfig.ExtraChanneldArgs
-        extraChanneldArgs = ENA(chainPluginArgs=chainPluginArgs, httpPluginArgs=httpPluginArgs, producerPluginArgs=producerPluginArgs, netPluginArgs=netPluginArgs,
+        ENA = PerformanceTestBasic.ClusterConfig.ExtraHumanitydArgs
+        extraHumanitydArgs = ENA(chainPluginArgs=chainPluginArgs, httpPluginArgs=httpPluginArgs, producerPluginArgs=producerPluginArgs, netPluginArgs=netPluginArgs,
                             resourceMonitorPluginArgs=resourceMonitorPluginArgs)
         SC = PerformanceTestBasic.ClusterConfig.SpecifiedContract
         specifiedContract=SC(contractDir=args.contract_dir, wasmFile=args.wasm_file, abiFile=args.abi_file, account=Account(args.account_name))
         return PerformanceTestBasic.ClusterConfig(dontKill=args.leave_running, keepLogs=not args.del_perf_logs,
                                                             producerNodeCount=args.producer_nodes, validationNodeCount=args.validation_nodes, apiNodeCount=args.api_nodes,
-                                                            genesisPath=args.genesis, prodsEnableTraceApi=args.prods_enable_trace_api, extraChanneldArgs=extraChanneldArgs,
+                                                            genesisPath=args.genesis, prodsEnableTraceApi=args.prods_enable_trace_api, extraHumanitydArgs=extraHumanitydArgs,
                                                             specifiedContract=specifiedContract, loggingLevel=args.cluster_log_lvl,
-                                                            channeldVers=channeldVers, nonProdsEosVmOcEnable=args.non_prods_eos_vm_oc_enable,
+                                                            humanitydVers=humanitydVers, nonProdsEosVmOcEnable=args.non_prods_eos_vm_oc_enable,
                                                             apiNodesReadOnlyThreadCount=args.api_nodes_read_only_threads)
 
 class PtbArgumentsHandler(object):

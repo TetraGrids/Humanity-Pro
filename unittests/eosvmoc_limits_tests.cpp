@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE( vm_limit ) { try {
    limit_not_violated_test(eosvmoc_config);
 } FC_LOG_AND_RETHROW() }
 
-//make sure vm_limit is populated for a default constructed config (what channeld will use)
+//make sure vm_limit is populated for a default constructed config (what humanityd will use)
 BOOST_AUTO_TEST_CASE( check_config_default_vm_limit ) { try {
    eosvmoc::config eosvmoc_config;
 
@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE( generated_code_size_limit ) { try {
    // Generated code size can vary based on the version of LLVM in use. Since this test
    // isn't intended to detect minute differences or regressions, give the range a wide
    // berth to work on. As a single data point, LLVM11 used in reproducible builds during
-   // The Channel 1.0 timeframe was 36856
+   // Humanity Pro 1.0 timeframe was 36856
    eosvmoc_config.non_whitelisted_limits.generated_code_size_limit = 20*1024;
    limit_violated_test(eosvmoc_config, "test", true);
    limit_violated_test(eosvmoc_config, "ra.token", false); // whitelisted account, no exception

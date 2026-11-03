@@ -9,7 +9,7 @@
 namespace fc::crypto {
 using signature_provider_id_t  = std::variant<std::string, fc::crypto::public_key>;
 
-/// The Channel default signing function (sha256 digest)
+/// Humanity Pro default signing function (sha256 digest)
 //  NOTE: Really this is a 256-bit hash value, that is either a sha256 hash or keccak256 hash
 //        the choice was made earlier to treat the payload as a 256-bit hash and changing all
 //        of the plumbing was considered out of scope.
@@ -61,7 +61,7 @@ struct signature_provider_t  {
 
    std::optional<fc::crypto::private_key> private_key;
 
-   /// The Channel default signing (always set for all key types)
+   /// Humanity Pro default signing (always set for all key types)
    sign_fn        sign;
 
    /// One-shot guard for the remote-signer self-verify in
@@ -76,7 +76,7 @@ using signature_provider_ptr = std::shared_ptr<signature_provider_t>;
  *
  * Runtime counterpart of the compile-time `from_native_string_to_private_key<ChainKeyType>()`
  * templates in `fc/crypto/key_serdes.hpp`, covering the chain key types with an implemented
- * native form: `chain_key_type_channel` (WIF / `PVT_` forms), `chain_key_type_ethereum` (`0x...` hex), and `chain_key_type_solana`
+ * native form: `chain_key_type_humanity` (WIF / `PVT_` forms), `chain_key_type_ethereum` (`0x...` hex), and `chain_key_type_solana`
  * (base58).
  *
  * @param key_type        chain key type selecting the native string format

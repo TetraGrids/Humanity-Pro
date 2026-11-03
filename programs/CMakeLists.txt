@@ -1,4 +1,4 @@
-add_subdirectory( channeld )
-add_subdirectory( chan )
-add_subdirectory( keyd )
-add_subdirectory( channel-util )
+add_subdirectory( humanityd )
+add_subdirectory( humanity )
+add_subdirectory( humanity-keyd )
+add_subdirectory( humanity-util )

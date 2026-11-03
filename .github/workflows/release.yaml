@@ -13,20 +13,20 @@ jobs:
       packages: write
       actions: read
     steps:
-      - name: Get ubuntu22 the-channel-dev.deb
+      - name: Get ubuntu22 humanity-pro-dev.deb
         uses: AntelopeIO/asset-artifact-download-action@v3
         with:
           owner: ${{github.repository_owner}}
           repo: ${{github.event.repository.name}}
-          file: 'the-channel-dev.*amd64.deb'
+          file: 'humanity-pro-dev.*amd64.deb'
           target: ${{github.sha}}
-          artifact-name: the-channel-dev-ubuntu22-amd64
+          artifact-name: humanity-pro-dev-ubuntu22-amd64
           wait-for-exact-target: true
       - name: Create Dockerfile
         run: |
           cat <<EOF > Dockerfile
           FROM scratch
-          LABEL org.opencontainers.image.description="A collection of experimental The Channel binary packages"
+          LABEL org.opencontainers.image.description="A collection of experimental Humanity Pro binary packages"
           COPY *.deb /
           EOF
       - name: Login to ghcr
@@ -36,9 +36,9 @@ jobs:
           username: ${{github.repository_owner}}
           password: ${{github.token}}
       - run: echo "REPOSITORY_OWNER_LOWER=${GITHUB_REPOSITORY_OWNER,,}" >> "${GITHUB_ENV}"
-      - name: Build and push the-channel-experimental-binaries
+      - name: Build and push humanity-pro-experimental-binaries
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ghcr.io/${{env.REPOSITORY_OWNER_LOWER}}/the-channel-experimental-binaries:${{github.ref_name}}
+          tags: ghcr.io/${{env.REPOSITORY_OWNER_LOWER}}/humanity-pro-experimental-binaries:${{github.ref_name}}
           context: .

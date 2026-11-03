@@ -741,10 +741,10 @@ namespace eosio::chain {
 
       // write out current version which is always max_supported_version
       // version == 1 -> legacy
-      // version == 2 -> The Channel 1.0.0
+      // version == 2 -> Humanity Pro 1.0.0
       //                 (two possible fork_db, one containing `block_state_legacy`, one containing `block_state`)
-      //                  unsupported by The Channel 1.0.1 and above
-      // version == 3 -> The Channel 1.0.1 updated block_header_state (core with policy gen #)
+      //                  unsupported by Humanity Pro 1.0.1 and above
+      // version == 3 -> Humanity Pro 1.0.1 updated block_header_state (core with policy gen #)
       //                 (two possible fork_db, one containing `block_state_legacy`, one containing `block_state`)
       // ---------------------------------------------------------------------------------------------------------
       fc::raw::pack( out, max_supported_version );
@@ -790,7 +790,7 @@ namespace eosio::chain {
             uint32_t version = 0;
             fc::raw::unpack( ds, version );
             EOS_ASSERT( version != 2, fork_database_exception,
-                        "Version 2 of fork_database (created by The Channel 1.0.0) is not supported" );
+                        "Version 2 of fork_database (created by Humanity Pro 1.0.0) is not supported" );
             EOS_ASSERT( version >= fork_database::min_supported_version && version <= fork_database::max_supported_version,
                         fork_database_exception,
                        "Unsupported version of fork database file '${filename}'. "
@@ -875,7 +875,7 @@ namespace eosio::chain {
    // do class instantiations
    template class fork_database_t<block_state_legacy_ptr>;
    template class fork_database_t<block_state_ptr>;
-   
+
    template struct fork_database_impl<block_state_legacy_ptr>;
    template struct fork_database_impl<block_state_ptr>;
 

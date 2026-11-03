@@ -73,12 +73,12 @@ struct finality_core
    // Invariants:
    // 1. links.empty() == false
    // 2. last_final_block_num() <= links.front().source_block_num <= latest_qc_claim().block_num
-   // 3. If refs.empty() == true, then (links.size() == 1) and 
+   // 3. If refs.empty() == true, then (links.size() == 1) and
    //                                  (links.back().target_block_num == links.back().source_block_num == last_final_block_num())
    // 4. If refs.empty() == false, then refs.front().block_num() == links.front().target_block_num == last_final_block_num()
    // 5. If refs.empty() == false, then refs.back().block_num() + 1 == links.back().source_block_num == current_block_num()
    // 6. If refs.size() > 1, then:
-   //       For i = 0 to refs.size() - 2: 
+   //       For i = 0 to refs.size() - 2:
    //          (refs[i].block_num() + 1 == refs[i+1].block_num()) and (refs[i].timestamp < refs[i+1].timestamp)
    // 7. If links.size() > 1, then:
    //       For i = 0 to links.size() - 2:
@@ -193,8 +193,8 @@ struct finality_core
    finality_core next(const block_ref& current_block, const qc_claim_t& most_recent_ancestor_with_qc) const;
 
    // should match the serialization provided by FC_REFLECT below, except that for compatibility with
-   // The Channel 1.0.0 consensus we do not pack the two new members of `block_ref` which were added in
-   // The Channel 1.0.1 (the finalizer policy generations)
+   // Humanity Pro 1.0.0 consensus we do not pack the two new members of `block_ref` which were added in
+   // Humanity Pro 1.0.1 (the finalizer policy generations)
    // ------------------------------------------------------------------------------------------------
    template<typename Stream>
    void pack_for_digest(Stream& s) const {

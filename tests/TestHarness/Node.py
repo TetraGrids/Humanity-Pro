@@ -16,7 +16,7 @@ from dataclasses import InitVar, dataclass, field, is_dataclass, asdict
 from datetime import datetime
 from datetime import timedelta
 from .core_symbol import CORE_SYMBOL
-from .queries import ChanneldQueries, BlockType
+from .queries import HumanitydQueries, BlockType
 from .transactions import Transactions
 from .accounts import Account
 from .testUtils import Utils
@@ -39,7 +39,7 @@ class Node(Transactions):
 
     # pylint: disable=too-many-instance-attributes
     # pylint: disable=too-many-arguments
-    def __init__(self, host, port, nodeId: int, data_dir: Path, config_dir: Path, cmd: List[str], unstarted=False, launch_time=None, walletMgr=None, channeldVers=""):
+    def __init__(self, host, port, nodeId: int, data_dir: Path, config_dir: Path, cmd: List[str], unstarted=False, launch_time=None, walletMgr=None, humanitydVers=""):
         super().__init__(host, port, walletMgr)
         assert isinstance(data_dir, Path), 'data_dir must be a Path instance'
         assert isinstance(config_dir, Path), 'config_dir must be a Path instance'
@@ -71,7 +71,7 @@ class Node(Transactions):
         self.transCache={}
         self.missingTransaction=False
         self.lastTrackedTransactionId=None
-        self.channeldVers=channeldVers
+        self.humanitydVers=humanitydVers
         self.data_dir=data_dir
         self.config_dir=config_dir
         self.launch_time=launch_time
@@ -214,7 +214,7 @@ class Node(Transactions):
     def waitForTransBlockIfNeeded(self, trans, waitForTransBlock, exitOnError=False):
         if not waitForTransBlock:
             return trans
-        transId=ChanneldQueries.getTransId(trans)
+        transId=HumanitydQueries.getTransId(trans)
         if not self.waitForTransactionInBlock(transId, exitOnError=exitOnError):
             if exitOnError:
                 Utils.cmdError("transaction with id %s never made it into a block" % (transId))
@@ -419,9 +419,9 @@ class Node(Transactions):
         return Utils.waitForBoolWithArg(didNodeExitGracefully, self.popenProc, timeout, sleepTime=1)
 
     # pylint: disable=too-many-locals
-    # If channeldPath is equal to None, it will use the existing channeld path
+    # If humanitydPath is equal to None, it will use the existing humanityd path
     def relaunch(self, chainArg=None, newChain=False, skipGenesis=True, timeout=Utils.systemWaitTimeout,
-                 addSwapFlags=None, rmArgs=None, channeldPath=None, waitForTerm=False):
+                 addSwapFlags=None, rmArgs=None, humanitydPath=None, waitForTerm=False):
 
         assert(self.pid is None)
         assert(self.killed)
@@ -429,7 +429,7 @@ class Node(Transactions):
         if Utils.Debug: Utils.Print(f"Launching node process, Id: {self.nodeId}")
 
         cmdArr=self.cmd[:]
-        if channeldPath: cmdArr[0] = channeldPath
+        if humanitydPath: cmdArr[0] = humanitydPath
         toAddOrSwap=copy.deepcopy(addSwapFlags) if addSwapFlags is not None else {}
         if rmArgs is not None:
             for v in shlex.split(rmArgs):
@@ -561,11 +561,11 @@ class Node(Transactions):
             if Utils.Debug: Utils.Print("  cmd returned transaction: %s" % (trans))
             return
 
-        if ignoreNonTrans and not ChanneldQueries.isTrans(trans):
+        if ignoreNonTrans and not HumanitydQueries.isTrans(trans):
             if Utils.Debug: Utils.Print("  cmd returned a non-transaction: %s" % (trans))
             return
 
-        transId=ChanneldQueries.getTransId(trans)
+        transId=HumanitydQueries.getTransId(trans)
         self.lastTrackedTransactionId=transId
         if transId in self.transCache.keys():
             replaceMsg="replacing previous trans=\n%s" % json.dumps(self.transCache[transId], indent=2, sort_keys=True)
@@ -573,8 +573,8 @@ class Node(Transactions):
             replaceMsg=""
 
         if Utils.Debug and reportStatus:
-            status=ChanneldQueries.getTransStatus(trans)
-            blockNum=ChanneldQueries.getTransBlockNum(trans)
+            status=HumanitydQueries.getTransStatus(trans)
+            blockNum=HumanitydQueries.getTransBlockNum(trans)
             Utils.Print("  cmd returned transaction id: %s, status: %s, (possible) block num: %s %s" % (transId, status, blockNum, replaceMsg))
         elif Utils.Debug:
             Utils.Print("  cmd returned transaction id: %s %s" % (transId, replaceMsg))
@@ -621,7 +621,7 @@ class Node(Transactions):
 
     def scheduleSnapshot(self):
         return self.processUrllibRequest("producer", "schedule_snapshot")
-    
+
     def scheduleSnapshotAt(self, sbn):
         param = { "start_block_num": sbn, "end_block_num": sbn }
         return self.processUrllibRequest("producer", "schedule_snapshot", param)

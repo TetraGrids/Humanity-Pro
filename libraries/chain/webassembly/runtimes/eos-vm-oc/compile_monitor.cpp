@@ -36,7 +36,7 @@ static void copy_memfd_contents_to_pointer(void* dst, int fd) {
 struct compile_monitor_session {
    compile_monitor_session(boost::asio::io_context& context, local::datagram_protocol::socket&& n, wrapped_fd&& c, wrapped_fd& t) :
       _ctx(context),
-      _channeld_instance_socket(std::move(n)),
+      _humanityd_instance_socket(std::move(n)),
       _cache_fd(std::move(c)),
       _trampoline_socket(t) {
 
@@ -46,21 +46,21 @@ struct compile_monitor_session {
       _code_mapping = (char*)mmap(nullptr, _code_size, PROT_READ|PROT_WRITE, MAP_SHARED, _cache_fd, 0);
       FC_ASSERT(_code_mapping != MAP_FAILED, "failed to mmap cache file");
       _allocator = reinterpret_cast<allocator_t*>(_code_mapping);
-      
-      read_message_from_channeld();
+
+      read_message_from_humanityd();
    }
 
    ~compile_monitor_session() {
       munmap(_code_mapping, _code_size);
    }
-   
-   void read_message_from_channeld() {
-      _channeld_instance_socket.async_wait(local::datagram_protocol::socket::wait_read, [this](auto ec) {
+
+   void read_message_from_humanityd() {
+      _humanityd_instance_socket.async_wait(local::datagram_protocol::socket::wait_read, [this](auto ec) {
          if(ec) {
             connection_dead_signal();
             return;
          }
-         auto [success, message, fds] = read_message_with_fds(_channeld_instance_socket);
+         auto [success, message, fds] = read_message_with_fds(_humanityd_instance_socket);
          if(!success) {
             connection_dead_signal();
             return;
@@ -86,7 +86,7 @@ struct compile_monitor_session {
             }
          }, message);
 
-         read_message_from_channeld();
+         read_message_from_humanityd();
       });
    }
 
@@ -101,7 +101,7 @@ struct compile_monitor_session {
       eosvmoc_message trampoline_compile_request = msg;
       if(write_message_with_fds(_trampoline_socket, trampoline_compile_request, fds_pass_to_trampoline) == false) {
          wasm_compilation_result_message reply{msg.code, compilation_result_unknownfailure{}, _allocator->get_free_memory(), msg.queued_time};
-         write_message_with_fds(_channeld_instance_socket, reply);
+         write_message_with_fds(_humanityd_instance_socket, reply);
          return;
       }
 
@@ -123,7 +123,7 @@ struct compile_monitor_session {
          auto [success, message, fds] = read_message_with_fds(socket);
 
          wasm_compilation_result_message reply{code, compilation_result_unknownfailure{}, _allocator->get_free_memory(), fc::time_point{}};
-         
+
          void* code_ptr = nullptr;
          void* mem_ptr = nullptr;
          try {
@@ -163,7 +163,7 @@ struct compile_monitor_session {
             _allocator->deallocate(mem_ptr);
          }
 
-         write_message_with_fds(_channeld_instance_socket, reply);
+         write_message_with_fds(_humanityd_instance_socket, reply);
 
          //either way, we are done
          boost::asio::post(_ctx, [this, current_compile_it]() {
@@ -177,7 +177,7 @@ struct compile_monitor_session {
 
 private:
    boost::asio::io_context& _ctx;
-   local::datagram_protocol::socket _channeld_instance_socket;
+   local::datagram_protocol::socket _humanityd_instance_socket;
    wrapped_fd  _cache_fd;
    wrapped_fd& _trampoline_socket;
 
@@ -189,20 +189,20 @@ private:
 };
 
 struct compile_monitor {
-   compile_monitor(boost::asio::io_context& ctx, local::datagram_protocol::socket&& n, wrapped_fd&& t) : _channeld_socket(std::move(n)), _trampoline_socket(std::move(t)) {
+   compile_monitor(boost::asio::io_context& ctx, local::datagram_protocol::socket&& n, wrapped_fd&& t) : _humanityd_socket(std::move(n)), _trampoline_socket(std::move(t)) {
       //the only duty of compile_monitor is to create a compile_monitor_session when a code_cache instance
-      // in channeld wants one
+      // in humanityd wants one
       wait_for_new_incomming_session(ctx);
    }
 
    void wait_for_new_incomming_session(boost::asio::io_context& ctx) {
-      _channeld_socket.async_wait(boost::asio::local::datagram_protocol::socket::wait_read, [this, &ctx](auto ec) {
+      _humanityd_socket.async_wait(boost::asio::local::datagram_protocol::socket::wait_read, [this, &ctx](auto ec) {
          if(ec) {
             ctx.stop();
             return;
          }
-         auto [success, message, fds] = read_message_with_fds(_channeld_socket);
-         if(!success) {   //failure reading indicates that channeld has shut down
+         auto [success, message, fds] = read_message_with_fds(_humanityd_socket);
+         if(!success) {   //failure reading indicates that humanityd has shut down
             ctx.stop();
             return;
          }
@@ -219,31 +219,31 @@ struct compile_monitor {
                   _compile_sessions.erase(it);
                });
             });
-            write_message_with_fds(_channeld_socket, initalize_response_message());
+            write_message_with_fds(_humanityd_socket, initalize_response_message());
          }
          catch(const std::exception& e) {
-            write_message_with_fds(_channeld_socket, initalize_response_message{e.what()});
+            write_message_with_fds(_humanityd_socket, initalize_response_message{e.what()});
          }
          catch(...) {
-            write_message_with_fds(_channeld_socket, initalize_response_message{"Failed to create compile process"});
+            write_message_with_fds(_humanityd_socket, initalize_response_message{"Failed to create compile process"});
          }
 
          wait_for_new_incomming_session(ctx);
       });
    }
 
-   local::datagram_protocol::socket _channeld_socket;
+   local::datagram_protocol::socket _humanityd_socket;
    wrapped_fd _trampoline_socket;
 
    std::list<compile_monitor_session> _compile_sessions;
 };
 
-void launch_compile_monitor(int channeld_fd) {
+void launch_compile_monitor(int humanityd_fd) {
    prctl(PR_SET_NAME, "oc-monitor");
    prctl(PR_SET_PDEATHSIG, SIGKILL);
 
    //first off, let's disable shutdown signals to us; we want all shutdown indicators to come from
-   // channeld shutting us down
+   // humanityd shutting us down
    sigset_t set;
    sigemptyset(&set);
    sigaddset(&set, SIGHUP);
@@ -269,15 +269,15 @@ void launch_compile_monitor(int channeld_fd) {
 
    {
       boost::asio::io_context ctx;
-      boost::asio::local::datagram_protocol::socket channeld_socket(ctx);
-      channeld_socket.assign(boost::asio::local::datagram_protocol(), channeld_fd);
+      boost::asio::local::datagram_protocol::socket humanityd_socket(ctx);
+      humanityd_socket.assign(boost::asio::local::datagram_protocol(), humanityd_fd);
       wrapped_fd trampoline_socket(socks[0]);
-      compile_monitor monitor(ctx, std::move(channeld_socket), std::move(trampoline_socket));
+      compile_monitor monitor(ctx, std::move(humanityd_socket), std::move(trampoline_socket));
       ctx.run();
       if(monitor._compile_sessions.size())
          std::cerr << "ERROR: EOS VM OC compiler monitor exiting with active sessions" << std::endl;
    }
-   
+
    _exit(0);
 }
 

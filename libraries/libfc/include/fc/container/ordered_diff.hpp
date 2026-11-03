@@ -12,7 +12,7 @@ namespace fc {
  * @class ordered_diff
  * @brief Provides ability to generate and apply diff of containers of type T
  *
- * NOTE: Part of The Channel Consensus. Used for finalizer and proposer policies.
+ * NOTE: Part of Humanity Pro Consensus. Used for finalizer and proposer policies.
  *
  * Example use:
  *    std::vector<char> source = { 'a', 'b', 'f', 'c', 'd' };

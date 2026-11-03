@@ -19,11 +19,11 @@
 #include <type_traits>
 #include <unordered_set>
 
-#ifdef CHANNEL_RAM_AND_NAMEBID_FEES_TO_REX
-#undef CHANNEL_RAM_AND_NAMEBID_FEES_TO_REX
+#ifdef HUMANITY_PRO_RAM_AND_NAMEBID_FEES_TO_REX
+#undef HUMANITY_PRO_RAM_AND_NAMEBID_FEES_TO_REX
 #endif
 // REX is disabled. RAM and namebid fees go to ra.fees, never to a REX pool.
-#define CHANNEL_RAM_AND_NAMEBID_FEES_TO_REX 0
+#define HUMANITY_PRO_RAM_AND_NAMEBID_FEES_TO_REX 0
 
 namespace rasystem {
 
@@ -1271,7 +1271,7 @@ namespace rasystem {
           */
          [[eosio::action]]
          void setrexmature(const std::optional<uint32_t> num_of_maturity_buckets, const std::optional<bool> sell_matured_rex, const std::optional<bool> buy_rex_to_savings );
-         
+
          /**
           * Donatetorex action, donates funds to REX, increases REX pool return buckets
           * Executes inline transfer from payer to system contract of tokens will be executed.

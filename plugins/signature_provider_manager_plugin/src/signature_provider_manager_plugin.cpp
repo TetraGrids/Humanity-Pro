@@ -21,7 +21,7 @@
 
 namespace eosio {
 namespace {
-constexpr auto option_name_keyd_timeout = "signature-provider-keyd-timeout";
+constexpr auto option_name_humanity_keyd_timeout = "signature-provider-humanity-keyd-timeout";
 
 /// The appbase option that lists enabled plugins (`--plugin` on the command line, `plugin =` in the config file). The
 /// manager reads it to learn which optional provider plugins are enabled; it is the same key appbase itself uses to
@@ -31,7 +31,7 @@ constexpr std::string_view option_name_plugin = "plugin";
 /// The two built-in `<provider-type>:` schemes, handled directly by this plugin (never through the handler registries,
 /// never registrable).
 constexpr std::string_view scheme_key  = "KEY";
-constexpr std::string_view scheme_keyd = "KEYD";
+constexpr std::string_view scheme_humanity_keyd = "HUMANITY-KEYD";
 
 std::filesystem::path default_signature_provider_spec_file() {
    return app().config_dir() / "default_signature_providers.json";
@@ -80,7 +80,7 @@ void register_scheme_handler(std::string_view scheme, spec_handler handler, std:
    // every provider plugin uses, so an empty or built-in registration -- both programmer errors -- must fail as loudly
    // here as there rather than being silently accepted.
    FC_ASSERT(!scheme.empty(), "signature-provider scheme must not be empty");
-   FC_ASSERT(scheme != scheme_key && scheme != scheme_keyd,
+   FC_ASSERT(scheme != scheme_key && scheme != scheme_humanity_keyd,
              "Cannot register built-in signature-provider scheme \"${scheme}\"", ("scheme", std::string(scheme)));
    FC_ASSERT(static_cast<bool>(handler), "signature-provider handler for \"${scheme}\" must not be empty",
              ("scheme", std::string(scheme)));
@@ -114,9 +114,9 @@ class signature_provider_manager_plugin_impl {
 
 public:
    /**
-    * `keyd` request timeout
+    * `humanity-keyd` request timeout
     */
-   fc::microseconds _keyd_provider_timeout_us;
+   fc::microseconds _humanity_keyd_provider_timeout_us;
 
    /**
     * Record which optional provider plugins the operator enabled, parsed from the `plugin` option exactly as appbase's
@@ -124,7 +124,7 @@ public:
     * Gates the process-wide `sigprov` handler registry: an extension scheme is honored only when its owning plugin is
     * enabled.
     *
-    * This is the enablement path channeld uses: provider plugins are `register_plugin<>`'d (available but off by default)
+    * This is the enablement path humanityd uses: provider plugins are `register_plugin<>`'d (available but off by default)
     * and turned on with a `plugin =` line, never placed in appbase's `initialize<>` autostart set. appbase does not
     * expose that autostart list at manager-initialize time, so autostart-based enablement (embedders only) is
     * intentionally out of scope here; the gate error names the `plugin =` remedy, which is the supported way to enable
@@ -142,24 +142,24 @@ public:
       }
    }
 
-   fc::crypto::sign_fn make_keyd_signature_provider(const std::string& url_str, const chain::public_key_type& pubkey) const {
-      fc::url keyd_url;
+   fc::crypto::sign_fn make_humanity_keyd_signature_provider(const std::string& url_str, const chain::public_key_type& pubkey) const {
+      fc::url humanity_keyd_url;
       if (boost::algorithm::starts_with(url_str, "unix://"))
          // send the entire string after unix:// to http_plugin. It'll auto-detect which part
          //  is the unix socket path, and which part is the url to hit on the server
-         keyd_url = fc::url("unix", url_str.substr(7), fc::ostring(), fc::ostring(), fc::ostring(), fc::ostring(),
+         humanity_keyd_url = fc::url("unix", url_str.substr(7), fc::ostring(), fc::ostring(), fc::ostring(), fc::ostring(),
                             fc::ovariant_object(), std::optional<uint16_t>());
       else
-         keyd_url = fc::url(url_str);
+         humanity_keyd_url = fc::url(url_str);
 
-      return [to = _keyd_provider_timeout_us, keyd_url, pubkey](const chain::digest_type& digest) {
+      return [to = _humanity_keyd_provider_timeout_us, humanity_keyd_url, pubkey](const chain::digest_type& digest) {
          fc::variant params;
          fc::to_variant(std::make_pair(digest, pubkey), params);
          auto deadline = to.count() >= 0 ? fc::time_point::now() + to : fc::time_point::maximum();
          return app()
                 .get_plugin<http_client_plugin>()
                 .get_client()
-                .post_sync(keyd_url, params, deadline)
+                .post_sync(humanity_keyd_url, params, deadline)
                 .as<chain::signature_type>();
       };
    }
@@ -184,7 +184,7 @@ public:
          chain::private_key_type privkey;
 
          switch (key_type) {
-         case chain_key_type_channel:
+         case chain_key_type_humanity:
          case chain_key_type_ethereum:
          case chain_key_type_solana: {
             // Runtime dispatch over the per-type native parsers lives in libfc (fc/crypto/signature_provider.cpp) so
@@ -192,7 +192,7 @@ public:
             privkey = from_native_string_to_private_key(key_type, spec_data);
             break;
          }
-         case chain_key_type_channel_bls: {
+         case chain_key_type_humanity_bls: {
             // BLS finalizer keys are handled by producer_plugin's `finalizer-provider` option, not this plugin.
             FC_THROW_EXCEPTION(chain::plugin_config_exception,
                                "BLS keys are configured via producer_plugin's finalizer-provider option, not signature-provider");
@@ -214,8 +214,8 @@ public:
          return {.signer = fc::crypto::make_local_sign_fn(privkey), .private_key = privkey};
       }
 
-      if (spec_type_str == scheme_keyd) {
-         return {.signer = make_keyd_signature_provider(spec_data, public_key)};
+      if (spec_type_str == scheme_humanity_keyd) {
+         return {.signer = make_humanity_keyd_signature_provider(spec_data, public_key)};
       }
 
       // Any other scheme resolves through a registered handler, from one of two sources. First, `_spec_handlers`:
@@ -237,7 +237,7 @@ public:
       }
 
       EOS_THROW(chain::plugin_config_exception,
-                "Unknown provider type \"${scheme}\". Built-in types are KEY and KEYD; additional types "
+                "Unknown provider type \"${scheme}\". Built-in types are KEY and HUMANITY-KEYD; additional types "
                 "(e.g. KMS, SSM) are provided by optional signature-provider plugins (enable with "
                 "`plugin = ...`) -- no plugin in this binary provides \"${scheme}\".",
                 ("scheme", spec_type_str));
@@ -401,7 +401,7 @@ public:
    }
 
    void register_default_signature_providers(const std::vector<fc::crypto::chain_key_type_t>& key_types) {
-      static constexpr std::array supported_key_types = {fc::crypto::chain_key_type_channel};
+      static constexpr std::array supported_key_types = {fc::crypto::chain_key_type_humanity};
 
       // Initialize-phase API: called from chain_plugin's plugin_initialize, and appbase runs plugin initializes
       // sequentially on the main thread, so the check-then-create sequence below needs no synchronization.
@@ -418,12 +418,12 @@ public:
 
          // create anonymous key
          auto key_name = std::string(fc::crypto::chain_key_type_reflector::to_string(key_type)) + "-default";
-         FC_ASSERT(key_type == fc::crypto::chain_key_type_channel, "Unsupported key type: ${t}",
+         FC_ASSERT(key_type == fc::crypto::chain_key_type_humanity, "Unsupported key type: ${t}",
                    ("t", static_cast<uint8_t>(key_type)));
          fc::crypto::private_key privkey = fc::crypto::private_key::generate(fc::crypto::private_key::key_type::k1);
          auto pub_key_str = privkey.get_public_key().to_string({});
          auto spec = fc::crypto::to_signature_provider_spec(key_name,
-                                                            fc::crypto::chain_kind_channel,
+                                                            fc::crypto::chain_kind_humanity,
                                                             key_type,
                                                             pub_key_str,
                                                             "KEY:" + privkey.to_string({}));
@@ -520,7 +520,7 @@ public:
       chain::public_key_type pubkey;
 
       switch (key_type) {
-      case chain_key_type_channel:
+      case chain_key_type_humanity:
       case chain_key_type_ethereum:
       case chain_key_type_solana: {
          // Runtime dispatch lives in libfc (fc/crypto/signature_provider.cpp); the sui / unknown arms stay here for the
@@ -528,7 +528,7 @@ public:
          pubkey = from_native_string_to_public_key(key_type, public_key_text);
          break;
       }
-      case chain_key_type_channel_bls: {
+      case chain_key_type_humanity_bls: {
          FC_THROW_EXCEPTION(chain::plugin_config_exception,
                             "BLS keys are configured via producer_plugin's finalizer-provider option, not signature-provider");
       }
@@ -562,14 +562,14 @@ public:
    /**
     * Register a `<provider-type>:` scheme handler directly on this instance.
     *
-    * Built-in `KEY` and `KEYD` are not registrable. Each non-built-in scheme may be registered at most once. This is
+    * Built-in `KEY` and `HUMANITY-KEYD` are not registrable. Each non-built-in scheme may be registered at most once. This is
     * the explicit host-application / test path: a handler registered here is ungated (no `--plugin` check). Provider
     * PLUGINS do not use this -- they register in the process-wide `sigprov` registry from their constructor, which the
     * manager gates on the `--plugin` enable list.
     */
    void register_spec_handler(std::string scheme, eosio::spec_handler handler) {
       FC_ASSERT(!scheme.empty(), "spec handler scheme must not be empty");
-      FC_ASSERT(scheme != scheme_key && scheme != scheme_keyd,
+      FC_ASSERT(scheme != scheme_key && scheme != scheme_humanity_keyd,
                 "Cannot override built-in spec handler \"${scheme}\"", ("scheme", scheme));
       FC_ASSERT(static_cast<bool>(handler),
                 "spec handler for \"${scheme}\" must not be empty", ("scheme", scheme));
@@ -689,13 +689,13 @@ void signature_provider_manager_plugin::assert_pre_startup(std::string_view oper
 
 void signature_provider_manager_plugin::set_program_options(options_description&, options_description& cfg) {
    cfg.add_options()(
-      option_name_keyd_timeout, boost::program_options::value<int32_t>()->default_value(5),
-      "Limits the maximum time (in milliseconds) that is allowed for sending requests to a keyd provider for signing");
+      option_name_humanity_keyd_timeout, boost::program_options::value<int32_t>()->default_value(5),
+      "Limits the maximum time (in milliseconds) that is allowed for sending requests to a humanity-keyd provider for signing");
    cfg.add_options()(
       "signature-provider", boost::program_options::value<std::vector<std::string>>()->multitoken(),
       "Signature provider spec formatted as (check docs for details): "
       "`<name>,<chain-kind>,<key-type>,<public-key>,<private-key-provider-spec>`. "
-      "Provider types KEY:<private-key> and KEYD:<url> are built in; additional "
+      "Provider types KEY:<private-key> and HUMANITY-KEYD:<url> are built in; additional "
       "schemes are provided by optional signature-provider plugins, enabled with a "
       "`plugin =` line: `plugin = eosio::signature_provider_ssm_plugin` for "
       "SSM:[<region>:]<parameter-name> (key fetched once from AWS SSM Parameter Store "
@@ -710,15 +710,15 @@ const char* signature_provider_manager_plugin::signature_provider_help_text() co
       "Where:\n"
       "<name>,<chain-kind>,<key-type>,<public-key>,<private-key-provider-spec>\n"
       "   <name>                 name to use when referencing this provider, if empty then auto-assigned\n\n"
-      "   <chain-kind>           chain where the key will be used (channel, ethereum, solana)\n\n"
-      "   <key-type>             key format to parse (channel, ethereum, solana)\n\n"
+      "   <chain-kind>           chain where the key will be used (humanity, ethereum, solana)\n\n"
+      "   <key-type>             key format to parse (humanity, ethereum, solana)\n\n"
       "   <public-key>           is a string form of a valid <key-type>\n\n"
       "   <provider-spec>        is a string in the form <provider-type>:<data>\n\n"
-      "       <provider-type>    KEY and KEYD are built in. Additional types are provided\n"
+      "       <provider-type>    KEY and HUMANITY-KEYD are built in. Additional types are provided\n"
       "                          by optional signature-provider plugins (enable with\n"
       "                          `plugin = ...`).\n\n"
       "       KEY:<private-key>  is a string containing a private key of the key-type specified\n\n"
-      "       KEYD:<url>         is the URL where keyd is available and the appropriate wallet(s) are unlocked\n\n"
+      "       HUMANITY-KEYD:<url>         is the URL where humanity-keyd is available and the appropriate wallet(s) are unlocked\n\n"
       "       SSM:<param-ref>    fetches the private key once at startup from AWS SSM Parameter\n"
       "                          Store (SecureString) and signs locally; <param-ref> is\n"
       "                          [<region>:]<parameter-name> or a full parameter ARN. Enable with\n"
@@ -733,8 +733,8 @@ const char* signature_provider_manager_plugin::signature_provider_help_text() co
 }
 
 void signature_provider_manager_plugin::plugin_initialize(const variables_map& options) {
-   if (options.contains(option_name_keyd_timeout))
-      my->_keyd_provider_timeout_us = fc::milliseconds(options.at(option_name_keyd_timeout).as<int32_t>());
+   if (options.contains(option_name_humanity_keyd_timeout))
+      my->_humanity_keyd_provider_timeout_us = fc::milliseconds(options.at(option_name_humanity_keyd_timeout).as<int32_t>());
 
    // Record which optional provider plugins the operator enabled, so an extension scheme (SSM/KMS) is honored only when
    // its plugin is enabled.

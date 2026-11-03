@@ -1,0 +1,3479 @@
+{
+  "updated": "2026-11-03T01:07:06Z",
+  "root": {
+    "id": "humanity-pro",
+    "name": "Humanity Pro",
+    "kind": "platform",
+    "path": "",
+    "summary": "Humanity Pro is the human-first blockchain platform for creating and deploying smart contracts and distributed applications, built by Tetra Grids on the Spring 2.0 (Antelope) core.",
+    "contains": [
+      {
+        "id": "program:humanity",
+        "kind": "program",
+        "name": "humanity",
+        "summary": "humanity is a command line tool that interfaces with the REST API exposed by humanityd."
+      },
+      {
+        "id": "program:humanity-keyd",
+        "kind": "program",
+        "name": "humanity-keyd",
+        "summary": "humanity-keyd is a key manager service daemon for storing private keys and signing digital messages."
+      },
+      {
+        "id": "program:humanity-util",
+        "kind": "program",
+        "name": "humanity-util",
+        "summary": "This section contains documentation for additional utilities that complement or extend humanityd and potentially other Antelope software:"
+      },
+      {
+        "id": "program:humanityd",
+        "kind": "program",
+        "name": "humanityd",
+        "summary": "humanityd is the core service daemon that runs on every Antelope node."
+      },
+      {
+        "id": "contract:flex.token",
+        "kind": "contract",
+        "name": "flex.token",
+        "summary": "Actions: forge, mint, smelt, transfer, open, close, reflect, setconfig, renounce, addpool\u2026"
+      },
+      {
+        "id": "contract:powup.results",
+        "kind": "contract",
+        "name": "powup.results",
+        "summary": "The action powupresult is a no-op."
+      },
+      {
+        "id": "contract:ra.authex",
+        "kind": "contract",
+        "name": "ra.authex",
+        "summary": "External-key registry."
+      },
+      {
+        "id": "contract:ra.bios",
+        "kind": "contract",
+        "name": "ra.bios",
+        "summary": "The ra.bios is the first sample of system contract provided by block.one through the EOSIO platform."
+      },
+      {
+        "id": "contract:ra.boot",
+        "kind": "contract",
+        "name": "ra.boot",
+        "summary": "ra.boot is a extremely minimalistic system contract that only supports the native actions and an activate action that allows activating desired protocol features prior to deploying a system contract with more features such as ra.bios or ra.system."
+      },
+      {
+        "id": "contract:ra.bpay",
+        "kind": "contract",
+        "name": "ra.bpay",
+        "summary": "The ra.bpay contract handles system bpay distribution."
+      },
+      {
+        "id": "contract:ra.claim",
+        "kind": "contract",
+        "name": "ra.claim",
+        "summary": "Simple deposit-there / claim-here unlock."
+      },
+      {
+        "id": "contract:ra.fees",
+        "kind": "contract",
+        "name": "ra.fees",
+        "summary": "The ra.fees smart contract collects system fees (RAM, namebid, powerup)."
+      },
+      {
+        "id": "contract:ra.msig",
+        "kind": "contract",
+        "name": "ra.msig",
+        "summary": "The ra.msig system contract allows for creation of proposed transactions which require authorization from a list of accounts, approval of the proposed transactions by those accounts required to approve it, and finally, it also allows the execution of the approved transactions on the blockchain."
+      },
+      {
+        "id": "contract:ra.org",
+        "kind": "contract",
+        "name": "ra.org",
+        "summary": "Org backpay."
+      },
+      {
+        "id": "contract:ra.resources",
+        "kind": "contract",
+        "name": "ra.resources",
+        "summary": "XPR-style CPU/NET subscription rental."
+      },
+      {
+        "id": "contract:ra.system",
+        "kind": "contract",
+        "name": "ra.system",
+        "summary": "The ra.system smart contract is provided by block.one as a sample system contract, and it defines the structures and actions needed for blockchain's core functionality."
+      },
+      {
+        "id": "contract:ra.token",
+        "kind": "contract",
+        "name": "ra.token",
+        "summary": "The ra.token sample system contract defines the structures and actions that allow users to create, issue, and manage tokens for EOSIO based blockchains."
+      },
+      {
+        "id": "contract:ra.wrap",
+        "kind": "contract",
+        "name": "ra.wrap",
+        "summary": "The ra.wrap system contract allows block producers to bypass authorization checks or run privileged actions with 15/21 producer approval and thus simplifies block producers superuser actions."
+      },
+      {
+        "id": "contract:rex.results",
+        "kind": "contract",
+        "name": "rex.results",
+        "summary": "The actions buyresult, sellresult, rentresult, and orderresult of rex.results are all no-ops."
+      },
+      {
+        "id": "plugin:chain_api_plugin",
+        "kind": "plugin",
+        "name": "chain_api_plugin",
+        "summary": "The chain_api_plugin exposes functionality from the chain_plugin to the RPC API interface managed by the http_plugin."
+      },
+      {
+        "id": "plugin:chain_plugin",
+        "kind": "plugin",
+        "name": "chain_plugin",
+        "summary": "The chain_plugin is a core plugin required to process and aggregate chain data on an Antelope node."
+      },
+      {
+        "id": "plugin:db_size_api_plugin",
+        "kind": "plugin",
+        "name": "db_size_api_plugin",
+        "summary": "The db_size_api_plugin retrieves analytics about the blockchain."
+      },
+      {
+        "id": "plugin:http_client_plugin",
+        "kind": "plugin",
+        "name": "http_client_plugin",
+        "summary": "Plugin http_client_plugin."
+      },
+      {
+        "id": "plugin:http_plugin",
+        "kind": "plugin",
+        "name": "http_plugin",
+        "summary": "The http_plugin is a core plugin supported by both humanityd and humanity-keyd."
+      },
+      {
+        "id": "plugin:net_api_plugin",
+        "kind": "plugin",
+        "name": "net_api_plugin",
+        "summary": "The net_api_plugin exposes functionality from the net_plugin to the RPC API interface managed by the http_plugin."
+      },
+      {
+        "id": "plugin:net_plugin",
+        "kind": "plugin",
+        "name": "net_plugin",
+        "summary": "The net_plugin provides an authenticated p2p protocol to persistently synchronize nodes."
+      },
+      {
+        "id": "plugin:producer_api_plugin",
+        "kind": "plugin",
+        "name": "producer_api_plugin",
+        "summary": "The producer_api_plugin exposes a number of endpoints for the producer_plugin to the RPC API interface managed by the http_plugin."
+      },
+      {
+        "id": "plugin:producer_plugin",
+        "kind": "plugin",
+        "name": "producer_plugin",
+        "summary": "The producer_plugin loads functionality required for a node to produce blocks."
+      },
+      {
+        "id": "plugin:prometheus_plugin",
+        "kind": "plugin",
+        "name": "prometheus_plugin",
+        "summary": "Plugin prometheus_plugin."
+      },
+      {
+        "id": "plugin:resource_monitor_plugin",
+        "kind": "plugin",
+        "name": "resource_monitor_plugin",
+        "summary": "The resource_monitor_plugin monitors space usage in the computing system where humanityd is running."
+      },
+      {
+        "id": "plugin:signature_provider_kms_plugin",
+        "kind": "plugin",
+        "name": "signature_provider_kms_plugin",
+        "summary": "Provides the KMS:<key-ref> signature-provider scheme: every signature is a remote AWS KMS Sign call, so the private key never exists on the host or in process memory."
+      },
+      {
+        "id": "plugin:signature_provider_manager_plugin",
+        "kind": "plugin",
+        "name": "signature_provider_manager_plugin",
+        "summary": "Plugin responsible for managing signature providers."
+      },
+      {
+        "id": "plugin:signature_provider_plugin",
+        "kind": "plugin",
+        "name": "signature_provider_plugin",
+        "summary": "Plugin signature_provider_plugin."
+      },
+      {
+        "id": "plugin:signature_provider_ssm_plugin",
+        "kind": "plugin",
+        "name": "signature_provider_ssm_plugin",
+        "summary": "Provides the SSM:<param-ref> signature-provider scheme: the private key is fetched once from AWS SSM Parameter Store (a KMS-encrypted SecureString) while this plugin initializes, and signing is local thereafter -- KEY: semantics without the key material ever appearing in config files, so it suits every signing path inc"
+      },
+      {
+        "id": "plugin:state_history_plugin",
+        "kind": "plugin",
+        "name": "state_history_plugin",
+        "summary": "The state_history_plugin is useful for capturing historical data about the blockchain state."
+      },
+      {
+        "id": "plugin:template_plugin",
+        "kind": "plugin",
+        "name": "template_plugin",
+        "summary": "This is a template plugin, intended to serve as a starting point for making new plugins"
+      },
+      {
+        "id": "plugin:test_control_api_plugin",
+        "kind": "plugin",
+        "name": "test_control_api_plugin",
+        "summary": "The test_control_api_plugin allows to send a control message to the test_control_plugin telling the plugin to shut down the humanityd instance when reaching a particular block."
+      },
+      {
+        "id": "plugin:test_control_plugin",
+        "kind": "plugin",
+        "name": "test_control_plugin",
+        "summary": "The test_control_plugin is designed to cause a graceful shutdown when reaching a particular block in a sequence of blocks produced by a specific block producer."
+      },
+      {
+        "id": "plugin:trace_api_plugin",
+        "kind": "plugin",
+        "name": "trace_api_plugin",
+        "summary": "The trace_api_plugin provides a consumer-focused long-term API for retrieving retired actions and related metadata from a specified block."
+      },
+      {
+        "id": "plugin:trace_api_rpc_plugin",
+        "kind": "plugin",
+        "name": "trace_api_rpc_plugin",
+        "summary": "Plugin that only runs the RPC"
+      },
+      {
+        "id": "plugin:wallet_api_plugin",
+        "kind": "plugin",
+        "name": "wallet_api_plugin",
+        "summary": "The wallet_api_plugin exposes functionality from the wallet_plugin to the RPC API interface managed by the http_plugin."
+      },
+      {
+        "id": "plugin:wallet_plugin",
+        "kind": "plugin",
+        "name": "wallet_plugin",
+        "summary": "The wallet_plugin adds access to wallet functionality from a node."
+      }
+    ]
+  },
+  "groups": [
+    {
+      "id": "programs",
+      "name": "Programs",
+      "color": "#22c55e",
+      "nodes": [
+        {
+          "id": "program:humanityd",
+          "name": "humanityd",
+          "kind": "program",
+          "path": "programs/humanityd",
+          "summary": "humanityd is the core service daemon that runs on every Antelope node.",
+          "contains": [
+            {
+              "id": "plugin:chain_api_plugin",
+              "kind": "plugin",
+              "name": "chain_api_plugin",
+              "summary": "The chain_api_plugin exposes functionality from the chain_plugin to the RPC API interface managed by the http_plugin."
+            },
+            {
+              "id": "plugin:chain_plugin",
+              "kind": "plugin",
+              "name": "chain_plugin",
+              "summary": "The chain_plugin is a core plugin required to process and aggregate chain data on an Antelope node."
+            },
+            {
+              "id": "plugin:db_size_api_plugin",
+              "kind": "plugin",
+              "name": "db_size_api_plugin",
+              "summary": "The db_size_api_plugin retrieves analytics about the blockchain."
+            },
+            {
+              "id": "plugin:http_client_plugin",
+              "kind": "plugin",
+              "name": "http_client_plugin",
+              "summary": "Plugin http_client_plugin."
+            },
+            {
+              "id": "plugin:http_plugin",
+              "kind": "plugin",
+              "name": "http_plugin",
+              "summary": "The http_plugin is a core plugin supported by both humanityd and humanity-keyd."
+            },
+            {
+              "id": "plugin:net_api_plugin",
+              "kind": "plugin",
+              "name": "net_api_plugin",
+              "summary": "The net_api_plugin exposes functionality from the net_plugin to the RPC API interface managed by the http_plugin."
+            },
+            {
+              "id": "plugin:net_plugin",
+              "kind": "plugin",
+              "name": "net_plugin",
+              "summary": "The net_plugin provides an authenticated p2p protocol to persistently synchronize nodes."
+            },
+            {
+              "id": "plugin:producer_api_plugin",
+              "kind": "plugin",
+              "name": "producer_api_plugin",
+              "summary": "The producer_api_plugin exposes a number of endpoints for the producer_plugin to the RPC API interface managed by the http_plugin."
+            },
+            {
+              "id": "plugin:producer_plugin",
+              "kind": "plugin",
+              "name": "producer_plugin",
+              "summary": "The producer_plugin loads functionality required for a node to produce blocks."
+            },
+            {
+              "id": "plugin:prometheus_plugin",
+              "kind": "plugin",
+              "name": "prometheus_plugin",
+              "summary": "Plugin prometheus_plugin."
+            },
+            {
+              "id": "plugin:resource_monitor_plugin",
+              "kind": "plugin",
+              "name": "resource_monitor_plugin",
+              "summary": "The resource_monitor_plugin monitors space usage in the computing system where humanityd is running."
+            },
+            {
+              "id": "plugin:state_history_plugin",
+              "kind": "plugin",
+              "name": "state_history_plugin",
+              "summary": "The state_history_plugin is useful for capturing historical data about the blockchain state."
+            },
+            {
+              "id": "plugin:test_control_api_plugin",
+              "kind": "plugin",
+              "name": "test_control_api_plugin",
+              "summary": "The test_control_api_plugin allows to send a control message to the test_control_plugin telling the plugin to shut down the humanityd instance when reaching a particular block."
+            },
+            {
+              "id": "plugin:test_control_plugin",
+              "kind": "plugin",
+              "name": "test_control_plugin",
+              "summary": "The test_control_plugin is designed to cause a graceful shutdown when reaching a particular block in a sequence of blocks produced by a specific block producer."
+            },
+            {
+              "id": "plugin:trace_api_plugin",
+              "kind": "plugin",
+              "name": "trace_api_plugin",
+              "summary": "The trace_api_plugin provides a consumer-focused long-term API for retrieving retired actions and related metadata from a specified block."
+            }
+          ]
+        },
+        {
+          "id": "program:humanity",
+          "name": "humanity",
+          "kind": "program",
+          "path": "programs/humanity",
+          "summary": "humanity is a command line tool that interfaces with the REST API exposed by humanityd.",
+          "contains": [
+            {
+              "id": "program:humanity-keyd",
+              "kind": "program",
+              "name": "humanity-keyd",
+              "summary": "humanity-keyd is a key manager service daemon for storing private keys and signing digital messages."
+            },
+            {
+              "id": "program:humanityd",
+              "kind": "program",
+              "name": "humanityd",
+              "summary": "humanityd is the core service daemon that runs on every Antelope node."
+            },
+            {
+              "id": "plugin:chain_api_plugin",
+              "kind": "plugin",
+              "name": "chain_api_plugin",
+              "summary": "The chain_api_plugin exposes functionality from the chain_plugin to the RPC API interface managed by the http_plugin."
+            },
+            {
+              "id": "plugin:chain_plugin",
+              "kind": "plugin",
+              "name": "chain_plugin",
+              "summary": "The chain_plugin is a core plugin required to process and aggregate chain data on an Antelope node."
+            },
+            {
+              "id": "plugin:http_plugin",
+              "kind": "plugin",
+              "name": "http_plugin",
+              "summary": "The http_plugin is a core plugin supported by both humanityd and humanity-keyd."
+            },
+            {
+              "id": "plugin:producer_plugin",
+              "kind": "plugin",
+              "name": "producer_plugin",
+              "summary": "The producer_plugin loads functionality required for a node to produce blocks."
+            }
+          ]
+        },
+        {
+          "id": "program:humanity-keyd",
+          "name": "humanity-keyd",
+          "kind": "program",
+          "path": "programs/humanity-keyd",
+          "summary": "humanity-keyd is a key manager service daemon for storing private keys and signing digital messages.",
+          "contains": [
+            {
+              "id": "plugin:http_plugin",
+              "kind": "plugin",
+              "name": "http_plugin",
+              "summary": "The http_plugin is a core plugin supported by both humanityd and humanity-keyd."
+            },
+            {
+              "id": "plugin:wallet_api_plugin",
+              "kind": "plugin",
+              "name": "wallet_api_plugin",
+              "summary": "The wallet_api_plugin exposes functionality from the wallet_plugin to the RPC API interface managed by the http_plugin."
+            },
+            {
+              "id": "plugin:wallet_plugin",
+              "kind": "plugin",
+              "name": "wallet_plugin",
+              "summary": "The wallet_plugin adds access to wallet functionality from a node."
+            }
+          ]
+        },
+        {
+          "id": "program:humanity-util",
+          "name": "humanity-util",
+          "kind": "program",
+          "path": "programs/humanity-util",
+          "summary": "This section contains documentation for additional utilities that complement or extend humanityd and potentially other Antelope software:",
+          "contains": [
+            {
+              "id": "plugin:chain_plugin",
+              "kind": "plugin",
+              "name": "chain_plugin",
+              "summary": "The chain_plugin is a core plugin required to process and aggregate chain data on an Antelope node."
+            },
+            {
+              "id": "plugin:producer_plugin",
+              "kind": "plugin",
+              "name": "producer_plugin",
+              "summary": "The producer_plugin loads functionality required for a node to produce blocks."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contracts",
+      "name": "Contracts",
+      "color": "#8b5cf6",
+      "nodes": [
+        {
+          "id": "contract:flex.token",
+          "name": "flex.token",
+          "kind": "contract",
+          "path": "contracts/ra.pure",
+          "summary": "Actions: forge, mint, smelt, transfer, open, close, reflect, setconfig, renounce, addpool\u2026",
+          "contains": [
+            {
+              "id": "",
+              "kind": "action",
+              "name": "addpool",
+              "summary": "addpool"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "close",
+              "summary": "close"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "collectpool",
+              "summary": "Collect fees from a locked protocol position."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "forge",
+              "summary": "forge"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "inheritance",
+              "summary": "inheritance"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "inheritmemo",
+              "summary": "inheritmemo"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "interestoken",
+              "summary": "interestoken"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "mint",
+              "summary": "mint"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "open",
+              "summary": "open"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "openpool",
+              "summary": "Create an Alcor pool for a protocol vault."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "reflect",
+              "summary": "reflect"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "renounce",
+              "summary": "renounce"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "seedpool",
+              "summary": "Deposit, add a locked range, and record the Alcor pool id."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setconfig",
+              "summary": "setconfig"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setexempt",
+              "summary": "Accounts that skip the reflection tax (the swap account always skips)."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setswap",
+              "summary": "DEX account that owns protocol ranged vaults."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "smelt",
+              "summary": "smelt"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "transfer",
+              "summary": "transfer"
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "accounts",
+              "summary": "Fields: balance."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "exempts",
+              "summary": "Fields: account."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "flexers",
+              "summary": "Fields: owner, balance, is_banned, flextoken, tree, tree_rate, custom_memo."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "flexpools",
+              "summary": "Fields: id, token_symbol, token_contract, pool_ids."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "settings",
+              "summary": "Fields: token_symbol, start_key, limit, reflection_rate, burn_rate, project_rate, project_account."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "stat",
+              "summary": "Fields: supply, max_supply, issuer, reflection_pool, burn_pool, project_pool."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "swapcfg",
+              "summary": "Fields: swap."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "vaults",
+              "summary": "Fields: id, alcor_pool_id, swap, token_a, token_b, fee, tick_lower, tick_upper, unlock_time, seeded."
+            },
+            {
+              "id": "",
+              "kind": "notify",
+              "name": "handle_transfer",
+              "summary": "*::transfer"
+            },
+            {
+              "id": "",
+              "kind": "interface",
+              "name": "alcor-exchange",
+              "summary": "Headers under contracts/ra.pure/alcor-exchange for the external alcorswap contract."
+            }
+          ]
+        },
+        {
+          "id": "contract:powup.results",
+          "name": "powup.results",
+          "kind": "contract",
+          "path": "contracts/ra.system",
+          "summary": "The action powupresult is a no-op.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "action",
+              "name": "powupresult",
+              "summary": "powupresult action."
+            }
+          ]
+        },
+        {
+          "id": "contract:ra.authex",
+          "name": "ra.authex",
+          "kind": "contract",
+          "path": "contracts/ra.authex",
+          "summary": "External-key registry.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "action",
+              "name": "adminlink",
+              "summary": "adminlink"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "bridgelink",
+              "summary": "`ra.claim` records the key it just installed on a new account."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "createlink",
+              "summary": "createlink"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "linksig",
+              "summary": "Humanity Pro account auth plus recover_key of `\"<pubkey>|<account>|<chain>|<nonce>|createlink auth\"`."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "unlink",
+              "summary": "unlink"
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "links",
+              "summary": "Fields: id, account, chain, address, created, packedkey."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "nonces",
+              "summary": "Fields: account, next_nonce."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "state",
+              "summary": "Fields: next_id."
+            }
+          ]
+        },
+        {
+          "id": "contract:ra.bios",
+          "name": "ra.bios",
+          "kind": "contract",
+          "path": "contracts/ra.bios",
+          "summary": "The ra.bios is the first sample of system contract provided by block.one through the EOSIO platform.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "action",
+              "name": "activate",
+              "summary": "Activate action, activates a protocol feature"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "canceldelay",
+              "summary": "Cancel delay action cancels a deferred transaction."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "deleteauth",
+              "summary": "Delete authorization action deletes the authorization for an account's permission."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "linkauth",
+              "summary": "Link authorization action assigns a specific action from a contract to a permission you have created."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "newaccount",
+              "summary": "New account action, called after a new account is created."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "onerror",
+              "summary": "On error action, notification of this action is delivered to the sender of a deferred transaction when an objective error occurs while executing the deferred transaction."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "reqactivated",
+              "summary": "Require activated action, asserts that a protocol feature has been activated"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "reqauth",
+              "summary": "Require authorization action, checks if the account name from passed in as param has authorization to access current action, that is, if it is listed in the action\u2019s allowed permissions vector."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setabi",
+              "summary": "Set abi action sets the abi for contract identified by account name."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setalimits",
+              "summary": "Sets the resource limits of an account"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setcode",
+              "summary": "Set code action sets the contract code for an account."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setfinalizer",
+              "summary": "Propose new finalizer policy that, unless superseded by a later finalizer policy, will eventually become the active finalizer policy."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setparams",
+              "summary": "Set params action, sets the blockchain parameters."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setpriv",
+              "summary": "Set privilege action allows to set privilege status for an account (turn it on/off)."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setprods",
+              "summary": "Set producers action, sets a new list of active producers, by proposing a schedule change, once the block that contains the proposal becomes irreversible, the schedule is promoted to \"pending\" automatically."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "unlinkauth",
+              "summary": "Unlink authorization action it's doing the reverse of linkauth action, by unlinking the given action."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "updateauth",
+              "summary": "Update authorization action updates pemission for an account."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "abihash",
+              "summary": "Fields: owner, hash."
+            }
+          ]
+        },
+        {
+          "id": "contract:ra.boot",
+          "name": "ra.boot",
+          "kind": "contract",
+          "path": "contracts/ra.boot",
+          "summary": "ra.boot is a extremely minimalistic system contract that only supports the native actions and an activate action that allows activating desired protocol features prior to deploying a system contract with more features such as ra.bios or ra.system.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "action",
+              "name": "activate",
+              "summary": "Activates a protocol feature."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "canceldelay",
+              "summary": "Cancel delay action."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "deleteauth",
+              "summary": "Delete authorization action."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "linkauth",
+              "summary": "Link authorization action."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "newaccount",
+              "summary": "New account action"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "onerror",
+              "summary": "On error action."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "reqactivated",
+              "summary": "Asserts that a protocol feature has been activated."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setabi",
+              "summary": "Set abi for contract."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setcode",
+              "summary": "Set code action."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "unlinkauth",
+              "summary": "Unlink authorization action."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "updateauth",
+              "summary": "Update authorization action."
+            }
+          ]
+        },
+        {
+          "id": "contract:ra.bpay",
+          "name": "ra.bpay",
+          "kind": "contract",
+          "path": "contracts/ra.bpay",
+          "summary": "The ra.bpay contract handles system bpay distribution.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "action",
+              "name": "claimrewards",
+              "summary": "Claim rewards for a block producer."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "rewards",
+              "summary": "[ { \"owner\": \"alice\", \"quantity\": \"8.800 EOS\" } ]"
+            },
+            {
+              "id": "",
+              "kind": "notify",
+              "name": "on_transfer",
+              "summary": "ra.token::transfer"
+            }
+          ]
+        },
+        {
+          "id": "contract:ra.claim",
+          "name": "ra.claim",
+          "kind": "contract",
+          "path": "contracts/ra.claim",
+          "summary": "Simple deposit-there / claim-here unlock.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "action",
+              "name": "addrelayer",
+              "summary": "addrelayer"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "cfgclaim",
+              "summary": "cfgclaim"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "claim",
+              "summary": "claim"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "claimopen",
+              "summary": "Create `recipient` with the credited key and pay the deposit minus `ram_fee`."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "claimsig",
+              "summary": "Pay a credited deposit using recover_key of `\"<ext_txid>|<recipient>|<quantity>|<chain>|<id>|claim auth\"`."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "credit",
+              "summary": "credit"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "creditopen",
+              "summary": "Credit a deposit for a Humanity Pro name that does not exist yet."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "rmrelayer",
+              "summary": "rmrelayer"
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "cfg",
+              "summary": "RAM taken out of a lazy claim."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "deposits",
+              "summary": "Fields: id, ext_txid, chain, recipient, quantity, claimed, created, pubkey, packedkey."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "relayers",
+              "summary": "Fields: account."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "state",
+              "summary": "Fields: next_id."
+            }
+          ]
+        },
+        {
+          "id": "contract:ra.fees",
+          "name": "ra.fees",
+          "kind": "contract",
+          "path": "contracts/ra.fees",
+          "summary": "The ra.fees smart contract collects system fees (RAM, namebid, powerup).",
+          "contains": [
+            {
+              "id": "",
+              "kind": "action",
+              "name": "noop",
+              "summary": "noop"
+            },
+            {
+              "id": "",
+              "kind": "notify",
+              "name": "on_transfer",
+              "summary": "ra.token::transfer"
+            }
+          ]
+        },
+        {
+          "id": "contract:ra.msig",
+          "name": "ra.msig",
+          "kind": "contract",
+          "path": "contracts/ra.msig",
+          "summary": "The ra.msig system contract allows for creation of proposed transactions which require authorization from a list of accounts, approval of the proposed transactions by those accounts required to approve it, and finally, it also allows the execution of the approved transactions on the blockchain.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "action",
+              "name": "approve",
+              "summary": "Approve action approves an existing proposal."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "cancel",
+              "summary": "Cancel action cancels an existing proposal."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "exec",
+              "summary": "Exec action allows an executer account to execute a proposal."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "invalidate",
+              "summary": "Invalidate action allows an account to invalidate itself, that is, its name is added to the invalidations table and this table will be cross referenced when exec is performed."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "propose",
+              "summary": "Propose action, creates a proposal containing one transaction."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "unapprove",
+              "summary": "Unapprove action revokes an existing proposal."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "approvals",
+              "summary": "Fields: proposal_name, requested_approvals, provided_approvals."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "approvals2",
+              "summary": "Fields: version, proposal_name, requested_approvals, provided_approvals."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "invals",
+              "summary": "Fields: account, last_invalidation_time."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "proposal",
+              "summary": "Fields: proposal_name, packed_transaction, earliest_exec_time."
+            }
+          ]
+        },
+        {
+          "id": "contract:ra.org",
+          "name": "ra.org",
+          "kind": "contract",
+          "path": "contracts/ra.org",
+          "summary": "Org backpay.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "action",
+              "name": "addadmin",
+              "summary": "addadmin"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "addrole",
+              "summary": "addrole"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "closeperiod",
+              "summary": "closeperiod"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "editrole",
+              "summary": "editrole"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "grantrole",
+              "summary": "grantrole"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "review",
+              "summary": "review"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "revokerole",
+              "summary": "revokerole"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "rmadmin",
+              "summary": "rmadmin"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setconfig",
+              "summary": "setconfig"
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "accounts",
+              "summary": "Fields: owner, owed."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "admins",
+              "summary": "Fields: account."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "config",
+              "summary": "Fields: buck_contract, buck, open_days, grace_days, next_role_id, next_seat_id."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "periods",
+              "summary": "Fields: yyyymm."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "reviews",
+              "summary": "Fields: id, role_id, worker, reviewer, kind, rating, proof."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "roles",
+              "summary": "Fields: id, kpi_name, kpi_type, base_salary, bucket_salary, boost, review_role."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "seats",
+              "summary": "Fields: id, role_id, worker, granted."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "stat",
+              "summary": "Fields: owed, paid."
+            },
+            {
+              "id": "",
+              "kind": "notify",
+              "name": "on_transfer",
+              "summary": "*::transfer"
+            }
+          ]
+        },
+        {
+          "id": "contract:ra.resources",
+          "name": "ra.resources",
+          "kind": "contract",
+          "path": "contracts/ra.resources",
+          "summary": "XPR-style CPU/NET subscription rental.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "action",
+              "name": "addplan",
+              "summary": "addplan"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "buyplan",
+              "summary": "buyplan"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "claimrefund",
+              "summary": "claimrefund"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "process",
+              "summary": "process"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "rmplan",
+              "summary": "rmplan"
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "plans",
+              "summary": "Fields: id, cpu_weight, net_weight, duration_sec, price, label."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "state",
+              "summary": "Fields: available, delegated, next_plan_id."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "subs",
+              "summary": "Fields: account, plan_id, expires, cpu_weight, net_weight."
+            },
+            {
+              "id": "",
+              "kind": "notify",
+              "name": "on_transfer",
+              "summary": "ra.token::transfer"
+            }
+          ]
+        },
+        {
+          "id": "contract:ra.system",
+          "name": "ra.system",
+          "kind": "contract",
+          "path": "contracts/ra.system",
+          "summary": "The ra.system smart contract is provided by block.one as a sample system contract, and it defines the structures and actions needed for blockchain's core functionality.",
+          "contains": [
+            {
+              "id": "contract:powup.results",
+              "kind": "contract",
+              "name": "powup.results",
+              "summary": "The action powupresult is a no-op."
+            },
+            {
+              "id": "contract:rex.results",
+              "kind": "contract",
+              "name": "rex.results",
+              "summary": "The actions buyresult, sellresult, rentresult, and orderresult of rex.results are all no-ops."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "actfinkey",
+              "summary": "Action to activate a finalizer key."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "activate",
+              "summary": "The activate action, activates a protocol feature"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "adminsetapp",
+              "summary": "Privileged create/update of an application row."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "bidname",
+              "summary": "Bid name action, allows an account bidder to place a bid for a name newname."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "bidrefund",
+              "summary": "Bid refund action, allows the account bidder to get back the amount it bid so far on a newname name."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "buyrex",
+              "summary": "Buyrex action, buys REX in exchange for tokens taken out of user's REX fund by transferring core tokens from user REX fund and converts them to REX stake."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "canceldelay",
+              "summary": "Cancel delay action cancels a deferred transaction."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "cfgpowerup",
+              "summary": "Configure the power market."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "claimrewards",
+              "summary": "Claim rewards action, claims block producing and vote rewards."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "closerex",
+              "summary": "Closerex action, deletes owner records from REX tables and frees used RAM."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "cnclrexorder",
+              "summary": "Cnclrexorder action, cancels unfilled REX sell order by owner if one exists."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "consolidate",
+              "summary": "Consolidate action, consolidates REX maturity buckets into one bucket that can be sold after {num_of_maturity_buckets} days starting from the end of the day."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "defcpuloan",
+              "summary": "Defcpuloan action, withdraws tokens from the fund of a specific CPU loan and adds them to REX fund."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "defnetloan",
+              "summary": "Defnetloan action, withdraws tokens from the fund of a specific NET loan and adds them to REX fund."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "delegatebw",
+              "summary": "Delegate bandwidth and/or cpu action."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "deleteapp",
+              "summary": "Remove an application registration."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "deleteauth",
+              "summary": "Delete authorization action deletes the authorization for an account's permission."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "delfinkey",
+              "summary": "Action to delete a finalizer key."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "delschedule",
+              "summary": "Delete the schedule for pre-determined annual rate changes."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "deposit",
+              "summary": "Deposit to REX fund action."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "donatetorex",
+              "summary": "Donatetorex action, donates funds to REX, increases REX pool return buckets Executes inline transfer from payer to system contract of tokens will be executed."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "execschedule",
+              "summary": "Executes the next schedule for pre-determined annual rate changes."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "fundcpuloan",
+              "summary": "Fundcpuloan action, transfers tokens from REX fund to the fund of a specific CPU loan in order to be used for loan renewal at expiry."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "fundnetloan",
+              "summary": "Fundnetloan action, transfers tokens from REX fund to the fund of a specific NET loan in order to be used for loan renewal at expiry."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "init",
+              "summary": "The Init action initializes the system contract for a version and a symbol."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "limitauthchg",
+              "summary": "limitauthchg opts into or out of restrictions on updateauth, deleteauth, linkauth, and unlinkauth."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "linkauth",
+              "summary": "Link authorization action assigns a specific action from a contract to a permission you have created."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "logbuyram",
+              "summary": "Logging for buyram & buyrambytes action"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "loginwithapp",
+              "summary": "Create or replace a permission on user named app, parented at parent, with a single key."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "logramchange",
+              "summary": "Logging for ram changes"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "logsellram",
+              "summary": "Logging for sellram action"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "logsystemfee",
+              "summary": "Logging for actions resulting in system fees."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "mvfrsavings",
+              "summary": "Mvfrsavings action, moves a specified amount of REX out of savings bucket."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "mvtosavings",
+              "summary": "Mvtosavings action, moves a specified amount of REX into savings bucket."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "newaccount",
+              "summary": "New account action is called after a new account is created."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "newapp",
+              "summary": "Register an application account so users can create a per-app permission."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "onblock",
+              "summary": "On block action."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "onerror",
+              "summary": "On error action, notification of this action is delivered to the sender of a deferred transaction when an objective error occurs while executing the deferred transaction."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "powerup",
+              "summary": "Powerup NET and CPU resources by percentage"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "powerupexec",
+              "summary": "Process power queue and update state."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "ramlimitset",
+              "summary": "Grant extra purchased-RAM quota on top of the age cap (XPR ramlimitset)."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "refund",
+              "summary": "Refund action, this action is called after the delegation-period to claim all pending unstaked tokens belonging to owner."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "regfinkey",
+              "summary": "Action to register a finalizer key by a registered producer."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "regproducer",
+              "summary": "Register producer action, indicates that a particular account wishes to become a producer, this action will create a producer_config and a producer_info object for producer scope in producers tables."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "regproducer2",
+              "summary": "Register producer action, indicates that a particular account wishes to become a producer, this action will create a producer_config and a producer_info object for producer scope in producers tables."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "regproxy",
+              "summary": "Register proxy action, sets proxy account as proxy."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "rentcpu",
+              "summary": "Rentcpu action, uses payment to rent as many SYS tokens as possible as determined by market price and stake them for CPU for the benefit of receiver, after 30 days the rented core delegation of CPU will expire."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "rentnet",
+              "summary": "Rentnet action, uses payment to rent as many SYS tokens as possible as determined by market price and stake them for NET for the benefit of receiver, after 30 days the rented core delegation of NET will expire."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "rexexec",
+              "summary": "Rexexec action, processes max CPU loans, max NET loans, and max queued sellrex orders."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "rmvproducer",
+              "summary": "Remove producer action, deactivates a producer by name, if not found asserts."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "sellrex",
+              "summary": "Sellrex action, sells REX in exchange for core tokens by converting REX stake back into core tokens at current exchange rate."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setabi",
+              "summary": "Set abi action sets the contract abi for an account."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setacctcpu",
+              "summary": "Set account CPU limits action, which sets the CPU limits of an account"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setacctnet",
+              "summary": "Set account NET limits action, which sets the NET limits of an account"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setacctram",
+              "summary": "Set account RAM limits action, which sets the RAM limits of an account"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setalimits",
+              "summary": "Set account limits action sets the resource limits of an account"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setcode",
+              "summary": "Set code action sets the contract code for an account."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setinflation",
+              "summary": "Change the annual inflation rate of the core token supply and specify how the new issued tokens will be distributed based on the following structure."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setparams",
+              "summary": "Set the blockchain parameters."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setpayfactor",
+              "summary": "Change how inflated or vested tokens will be distributed based on the following structure."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setpriv",
+              "summary": "Set privilege status for an account."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setram",
+              "summary": "Set ram action sets the ram supply."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setramoption",
+              "summary": "Set the fixed RAM price, per-user cap, and fee percent."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setramrate",
+              "summary": "Set ram rate action, sets the rate of increase of RAM in bytes per block."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setrex",
+              "summary": "Setrex action, sets total_rent balance of REX pool to the passed value."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setrexmature",
+              "summary": "Facilitates the modification of REX maturity buckets"
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setschedule",
+              "summary": "Set the schedule for pre-determined annual rate changes."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "switchtosvnn",
+              "summary": "Action to permanently transition to Savanna consensus."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "undelegatebw",
+              "summary": "Undelegate bandwidth action, decreases the total tokens delegated by from to receiver and/or frees the memory associated with the delegation if there is nothing left to delegate."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "unlinkauth",
+              "summary": "Unlink authorization action it's doing the reverse of linkauth action, by unlinking the given action."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "unregprod",
+              "summary": "Unregister producer action, deactivates the block producer with account name producer."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "unstaketorex",
+              "summary": "Unstaketorex action, uses staked core tokens to buy REX."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "unvest",
+              "summary": "Facilitates the removal of vested staked tokens from an account, ensuring that these tokens are reallocated to the system's pool."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "updateauth",
+              "summary": "Update authorization action updates permission for an account."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "updaterex",
+              "summary": "Updaterex action, updates REX owner vote weight to current value of held REX tokens."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "updtrevision",
+              "summary": "Update revision action, updates the current revision."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "voteproducer",
+              "summary": "Vote producer action, votes for a set of producers."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "voteupdate",
+              "summary": "Update the vote weight for the producers or proxy voter_name currently votes for."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "wasmcfg",
+              "summary": "Sets the WebAssembly limits."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "withdraw",
+              "summary": "Withdraw from REX fund action, withdraws core tokens from user REX fund."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "abihash",
+              "summary": "abi_hash is the structure underlying the abihash table and consists of: - owner: the account owner of the contract's abi - hash: is the sha256 hash of the abi/binary"
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "apps",
+              "summary": "Registered application."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "bidrefunds",
+              "summary": "A bid refund, which is defined by: - the `bidder` account name owning the refund - the `amount` to be refunded"
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "cpuloan",
+              "summary": "`rex_loan` structure underlying the `rex_cpu_loan_table` and `rex_net_loan_table`."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "delband",
+              "summary": "Every user 'from' has a scope/table that uses every recipient 'to' as the primary key."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "finalizers",
+              "summary": "finalizer_info stores information about a finalizer."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "finkeyidgen",
+              "summary": "A single entry storing next available finalizer key_id to make sure key_id in finalizers_table will never be reused."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "finkeys",
+              "summary": "finalizer_key_info stores information about a finalizer key."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "global",
+              "summary": "Defines new global state parameters."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "global2",
+              "summary": "Defines new global state parameters added after version 1.0"
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "global3",
+              "summary": "Defines new global state parameters added after version 1.3.0"
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "global4",
+              "summary": "Defines new global state parameters to store inflation rate and distribution"
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "globalram",
+              "summary": "Fixed-price RAM configuration."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "lastpropfins",
+              "summary": "A single entry storing information about last proposed finalizers."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "namebids",
+              "summary": "A name bid, which consists of: - a `newname` name that the bid is for - a `high_bidder` account name that is the one with the highest bid so far - the `high_bid` which is amount of highest bid - and `last_bid_time` which is the time of the highest bid"
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "powup.order",
+              "summary": "Fields: version, id, owner, net_weight, cpu_weight, expires."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "powup.state",
+              "summary": "Fields: default_powerup_days, version, net, cpu, powerup_days, min_powerup_fee."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "producers",
+              "summary": "Defines `producer_info` structure to be stored in `producer_info` table, added after version 1.0"
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "producers2",
+              "summary": "Defines new producer info structure to be stored in new producer info table, added after version 1.3.0"
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "refunds",
+              "summary": "Fields: owner, request_time, net_amount, cpu_amount."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "retbuckets",
+              "summary": "`rex_return_buckets` structure underlying the rex return buckets table."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "rexbal",
+              "summary": "`rex_balance` structure underlying the rex balance table."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "rexfund",
+              "summary": "`rex_fund` structure underlying the rex fund table."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "rexmaturity",
+              "summary": "Fields: num_of_maturity_buckets, sell_matured_rex, buy_rex_to_savings."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "rexpool",
+              "summary": "`rex_pool` structure underlying the rex pool table."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "rexqueue",
+              "summary": "Fields: version, owner, rex_requested, proceeds, stake_change, order_time, is_open."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "rexretpool",
+              "summary": "`rex_return_pool` structure underlying the rex return pool table."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "schedules",
+              "summary": "Defines the schedule for pre-determined annual rate changes."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "userres",
+              "summary": "Fields: owner, net_weight, cpu_weight, ram_bytes."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "usersram",
+              "summary": "Per-account purchased RAM and cost basis."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "voters",
+              "summary": "Voter info. Voter info stores information about the voter: - `owner` the voter - `proxy` the proxy set by the voter, if any - `producers` the producers approved by this voter if no proxy set - `staked` the amount staked"
+            }
+          ]
+        },
+        {
+          "id": "contract:ra.token",
+          "name": "ra.token",
+          "kind": "contract",
+          "path": "contracts/ra.token",
+          "summary": "The ra.token sample system contract defines the structures and actions that allow users to create, issue, and manage tokens for EOSIO based blockchains.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "action",
+              "name": "close",
+              "summary": "This action is the opposite for open, it closes the account owner for token symbol."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "create",
+              "summary": "Allows issuer account to create a token in supply of maximum_supply."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "issue",
+              "summary": "This action issues to to account a quantity of tokens."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "issuefixed",
+              "summary": "Issues only the necessary tokens to bridge the gap between the current supply and the targeted total."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "open",
+              "summary": "Allows ram_payer to create an account owner with zero balance for token symbol at the expense of ram_payer."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "retire",
+              "summary": "The opposite for create action, if all validations succeed, it debits the statstable.supply amount."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "setmaxsupply",
+              "summary": "Set the maximum supply of the token."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "transfer",
+              "summary": "Allows from account to transfer to to account the quantity tokens."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "accounts",
+              "summary": "Fields: balance."
+            },
+            {
+              "id": "",
+              "kind": "table",
+              "name": "stat",
+              "summary": "Fields: supply, max_supply, issuer."
+            }
+          ]
+        },
+        {
+          "id": "contract:ra.wrap",
+          "name": "ra.wrap",
+          "kind": "contract",
+          "path": "contracts/ra.wrap",
+          "summary": "The ra.wrap system contract allows block producers to bypass authorization checks or run privileged actions with 15/21 producer approval and thus simplifies block producers superuser actions.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "action",
+              "name": "exec",
+              "summary": "Execute action."
+            }
+          ]
+        },
+        {
+          "id": "contract:rex.results",
+          "name": "rex.results",
+          "kind": "contract",
+          "path": "contracts/ra.system",
+          "summary": "The actions buyresult, sellresult, rentresult, and orderresult of rex.results are all no-ops.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "action",
+              "name": "buyresult",
+              "summary": "Buyresult action."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "orderresult",
+              "summary": "Orderresult action."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "rentresult",
+              "summary": "Rentresult action."
+            },
+            {
+              "id": "",
+              "kind": "action",
+              "name": "sellresult",
+              "summary": "Sellresult action."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "plugins",
+      "name": "Plugins",
+      "color": "#f97316",
+      "nodes": [
+        {
+          "id": "plugin:chain_api_plugin",
+          "name": "chain_api_plugin",
+          "kind": "plugin",
+          "path": "plugins/chain_api_plugin",
+          "summary": "The chain_api_plugin exposes functionality from the chain_plugin to the RPC API interface managed by the http_plugin.",
+          "contains": [
+            {
+              "id": "plugin:chain_plugin",
+              "kind": "plugin",
+              "name": "chain_plugin",
+              "summary": "The chain_plugin is a core plugin required to process and aggregate chain data on an Antelope node."
+            },
+            {
+              "id": "plugin:http_plugin",
+              "kind": "plugin",
+              "name": "http_plugin",
+              "summary": "The http_plugin is a core plugin supported by both humanityd and humanity-keyd."
+            }
+          ]
+        },
+        {
+          "id": "plugin:chain_plugin",
+          "name": "chain_plugin",
+          "kind": "plugin",
+          "path": "plugins/chain_plugin",
+          "summary": "The chain_plugin is a core plugin required to process and aggregate chain data on an Antelope node.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "option",
+              "name": "abi-serializer-max-time-ms",
+              "summary": "Override default maximum ABI serialization time allowed in ms"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "actor-blacklist",
+              "summary": "Account added to actor blacklist (may specify multiple times)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "actor-whitelist",
+              "summary": "Account added to actor whitelist (may specify multiple times)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "api-accept-transactions",
+              "summary": "Allow API transactions to be evaluated and relayed if valid."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "block-log-retain-blocks",
+              "summary": "If set to greater than 0, periodically prune the block log to store only configured number of most recent blocks."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "blocks-archive-dir",
+              "summary": "the location of the blocks archive directory (absolute path or relative to blocks dir)."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "blocks-dir",
+              "summary": "the location of the blocks directory (absolute path or relative to application data dir)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "blocks-log-stride",
+              "summary": "split the block log file when the head block number is the multiple of the stride"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "blocks-retained-dir",
+              "summary": "the location of the blocks retained directory (absolute path or relative to blocks dir)."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "chain-state-db-guard-size-mb",
+              "summary": "Safely shut down node when free space remaining in the chain state database drops below this size (in MiB)."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "chain-state-db-size-mb",
+              "summary": "Maximum size (in MiB) of the chain state database"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "chain-threads",
+              "summary": "Number of worker threads in controller thread pool"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "contract-blacklist",
+              "summary": "Contract account added to contract blacklist (may specify multiple times)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "contract-whitelist",
+              "summary": "Contract account added to contract whitelist (may specify multiple times)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "contracts-console",
+              "summary": "print contract's output to console"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "database-map-mode",
+              "summary": "Database map mode (\"mapped\", \"mapped_private\", \"heap\", or \"locked\")."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "deep-mind",
+              "summary": "print deeper information about chain operations"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "delete-all-blocks",
+              "summary": "clear chain state database and block log"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "disable-all-subjective-mitigations",
+              "summary": "Disable all subjective mitigations checks in the entire codebase."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "disable-ram-billing-notify-checks",
+              "summary": "Disable the check which subjectively fails a transaction if a contract bills more RAM to another account within the context of a notification handler (i.e. when the receiver is not the code of the action)."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "disable-replay-opts",
+              "summary": "disable optimizations that specifically target replay"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "enable-account-queries",
+              "summary": "enable queries to find accounts by various metadata."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "eos-vm-oc-cache-size-mb",
+              "summary": "Maximum size (in MiB) of the EOS VM OC code cache"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "eos-vm-oc-compile-threads",
+              "summary": "eos-vm-oc-compile-threads must be set to a non-zero value"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "eos-vm-oc-enable",
+              "summary": "Enable EOS VM OC tier-up runtime ('auto', 'all', 'none')."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "eos-vm-oc-whitelist",
+              "summary": "EOS VM OC tier-up whitelist account suffixes for tier-up runtime 'auto'."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "extract-build-info",
+              "summary": "extract build environment information as JSON, write into specified file, and exit"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "extract-genesis-json",
+              "summary": "extract genesis_state from blocks.log as JSON, write into specified file, and exit"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "finalizers-dir",
+              "summary": "the location of the finalizers safety data directory (absolute path or relative to application data dir)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "force-all-checks",
+              "summary": "do not skip any validation checks while replaying blocks (useful for replaying blocks from untrusted source)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "genesis-json",
+              "summary": "File to read Genesis State from"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "genesis-timestamp",
+              "summary": "override the initial timestamp in the Genesis State file"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "hard-replay-blockchain",
+              "summary": "clear chain state database, recover as many blocks as possible from the block log, and then replay those blocks"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "integrity-hash-on-start",
+              "summary": "Log the state integrity hash on startup"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "integrity-hash-on-stop",
+              "summary": "Log the state integrity hash on shutdown"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "key-blacklist",
+              "summary": "Public key added to blacklist of keys that should not be included in authorities (may specify multiple times)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "max-retained-block-files",
+              "summary": "the maximum number of blocks files to retain so that the blocks in those files can be queried."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "maximum-variable-signature-length",
+              "summary": "Subjectively limit the maximum length of variable components in a variable legnth signature to this size in bytes"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "p2p-accept-transactions",
+              "summary": "p2p-accept-transactions must be set to false in order to enable deep-mind logging."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "print-build-info",
+              "summary": "print build environment information to console as JSON and exit"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "print-genesis-json",
+              "summary": "extract genesis_state from blocks.log as JSON, print to console, and exit"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "producer-name",
+              "summary": "Transaction retry not allowed on producer nodes."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "profile-account",
+              "summary": "The name of an account whose code will be profiled"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "protocol-features-dir",
+              "summary": "the location of the protocol_features directory (absolute path or relative to application config dir)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "read-mode",
+              "summary": "Database read mode (\"head\", \"irreversible\", \"speculative\")."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "replay-blockchain",
+              "summary": "clear chain state database and replay all blocks"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "sender-bypass-whiteblacklist",
+              "summary": "Deferred transactions sent by accounts in this list do not have any of the subjective whitelist/blacklist checks applied to them (may specify multiple times)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "signature-cpu-billable-pct",
+              "summary": "Percentage of actual signature recovery cpu to bill."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "state-dir",
+              "summary": "the location of the state directory (absolute path or relative to application data dir)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "terminate-at-block",
+              "summary": "Stops the node after reaching the specified block number (if non-zero)."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "transaction-finality-status-failure-duration-sec",
+              "summary": "Duration (in seconds) a failed transaction's Finality Status will remain available from being first identified."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "transaction-finality-status-max-storage-size-gb",
+              "summary": "Maximum size (in GiB) allowed to be allocated for the Transaction Finality Status feature."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "transaction-finality-status-success-duration-sec",
+              "summary": "Duration (in seconds) a successful transaction's Finality Status will remain available from being first identified."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "transaction-retry-interval-sec",
+              "summary": "How often, in seconds, to resend an incoming transaction to network if not seen in a block."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "transaction-retry-max-expiration-sec",
+              "summary": "Maximum allowed transaction expiration for retry transactions, will retry transactions up to this value."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "transaction-retry-max-storage-size-gb",
+              "summary": "Maximum size (in GiB) allowed to be allocated for the Transaction Retry feature."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "truncate-at-block",
+              "summary": "Stop hard replay / block log recovery at this block number (if non-zero)."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "trusted-producer",
+              "summary": "Indicate a producer whose blocks headers signed by it will be fully validated, but transactions in those validated blocks will be trusted."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "validation-mode",
+              "summary": "Chain validation mode (\"full\" or \"light\")."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "vote-threads",
+              "summary": "Number of worker threads in vote processor thread pool."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "wasm-runtime",
+              "summary": "eos-vm-oc-forced mode is not supported."
+            }
+          ]
+        },
+        {
+          "id": "plugin:db_size_api_plugin",
+          "name": "db_size_api_plugin",
+          "kind": "plugin",
+          "path": "plugins/db_size_api_plugin",
+          "summary": "The db_size_api_plugin retrieves analytics about the blockchain.",
+          "contains": [
+            {
+              "id": "plugin:chain_plugin",
+              "kind": "plugin",
+              "name": "chain_plugin",
+              "summary": "The chain_plugin is a core plugin required to process and aggregate chain data on an Antelope node."
+            },
+            {
+              "id": "plugin:http_plugin",
+              "kind": "plugin",
+              "name": "http_plugin",
+              "summary": "The http_plugin is a core plugin supported by both humanityd and humanity-keyd."
+            }
+          ]
+        },
+        {
+          "id": "plugin:http_client_plugin",
+          "name": "http_client_plugin",
+          "kind": "plugin",
+          "path": "plugins/http_client_plugin",
+          "summary": "Plugin http_client_plugin.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "file",
+              "name": "http_client_plugin.cpp",
+              "summary": "http_client_plugin.cpp"
+            },
+            {
+              "id": "",
+              "kind": "file",
+              "name": "http_client_plugin.hpp",
+              "summary": "include/eosio/http_client_plugin/http_client_plugin.hpp"
+            }
+          ]
+        },
+        {
+          "id": "plugin:http_plugin",
+          "name": "http_plugin",
+          "kind": "plugin",
+          "path": "plugins/http_plugin",
+          "summary": "The http_plugin is a core plugin supported by both humanityd and humanity-keyd.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "option",
+              "name": "access-control-allow-credentials",
+              "summary": "configured http with Access-Control-Allow-Credentials: true"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "access-control-allow-headers",
+              "summary": "Specify the Access-Control-Allow-Headers to be returned on each request"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "access-control-allow-origin",
+              "summary": "Specify the Access-Control-Allow-Origin to be returned on each request"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "access-control-max-age",
+              "summary": "Specify the Access-Control-Max-Age to be returned on each request."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "http-alias",
+              "summary": "Additionally acceptable values for the \"Host\" header of incoming HTTP requests, can be specified multiple times."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "http-category-address",
+              "summary": "The local IP and port to listen for incoming http category connections."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "http-keep-alive",
+              "summary": "If set to false, do not keep HTTP connections alive, even if client requests."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "http-max-bytes-in-flight-mb",
+              "summary": "Maximum size in megabytes http_plugin should use for processing http requests."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "http-max-in-flight-requests",
+              "summary": "Maximum number of requests http_plugin should use for processing http requests."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "http-max-response-time-ms",
+              "summary": "Maximum time on main thread for processing a request, -1 for unlimited"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "http-server-address",
+              "summary": "The local IP and port to listen for incoming http connections; set blank to disable."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "http-threads",
+              "summary": "Number of worker threads in http thread pool"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "http-validate-host",
+              "summary": "If set to false, then any incoming \"Host\" header is considered valid"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "max-body-size",
+              "summary": "The maximum body size in bytes allowed for incoming RPC requests"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "unix-socket-path",
+              "summary": "The filename (relative to data-dir) to create a unix socket for HTTP RPC; set blank to disable."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "verbose-http-errors",
+              "summary": "Append the error log to HTTP responses"
+            }
+          ]
+        },
+        {
+          "id": "plugin:net_api_plugin",
+          "name": "net_api_plugin",
+          "kind": "plugin",
+          "path": "plugins/net_api_plugin",
+          "summary": "The net_api_plugin exposes functionality from the net_plugin to the RPC API interface managed by the http_plugin.",
+          "contains": [
+            {
+              "id": "plugin:http_plugin",
+              "kind": "plugin",
+              "name": "http_plugin",
+              "summary": "The http_plugin is a core plugin supported by both humanityd and humanity-keyd."
+            },
+            {
+              "id": "plugin:net_plugin",
+              "kind": "plugin",
+              "name": "net_plugin",
+              "summary": "The net_plugin provides an authenticated p2p protocol to persistently synchronize nodes."
+            }
+          ]
+        },
+        {
+          "id": "plugin:net_plugin",
+          "name": "net_plugin",
+          "kind": "plugin",
+          "path": "plugins/net_plugin",
+          "summary": "The net_plugin provides an authenticated p2p protocol to persistently synchronize nodes.",
+          "contains": [
+            {
+              "id": "plugin:chain_plugin",
+              "kind": "plugin",
+              "name": "chain_plugin",
+              "summary": "The chain_plugin is a core plugin required to process and aggregate chain data on an Antelope node."
+            },
+            {
+              "id": "plugin:producer_plugin",
+              "kind": "plugin",
+              "name": "producer_plugin",
+              "summary": "The producer_plugin loads functionality required for a node to produce blocks."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "agent-name",
+              "summary": "Humanity Pro {version}"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "allowed-connection",
+              "summary": "Can be 'any' or 'producers' or 'specified' or 'none'."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "connection-cleanup-period",
+              "summary": "number of seconds to wait before cleaning up dead connections"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "max-cleanup-time-msec",
+              "summary": "max connection cleanup time per cleanup call in milliseconds"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "max-clients",
+              "summary": "Maximum number of clients from which connections are accepted, use 0 for no limit"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "net-threads",
+              "summary": "Number of worker threads in net_plugin thread pool"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "p2p-accept-transactions",
+              "summary": "Allow transactions received over p2p network to be evaluated and relayed if valid."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "p2p-auto-bp-peer",
+              "summary": "The account and public p2p endpoint of a block producer node to automatically connect to when it is in producer schedule."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "p2p-bp-gossip-endpoint",
+              "summary": "The BP account, inbound connection endpoint, outbound connection IP address."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "p2p-dedup-cache-expire-time-sec",
+              "summary": "Maximum time to track transaction for duplicate optimization"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "p2p-disable-block-nack",
+              "summary": "Disable block notice and block nack."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "p2p-keepalive-interval-ms",
+              "summary": "peer heartbeat keepalive message interval in milliseconds"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "p2p-listen-endpoint",
+              "summary": "The actual host:port[:trx|:blk][:<rate-cap>] used to listen for incoming p2p connections."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "p2p-max-nodes-per-host",
+              "summary": "Maximum number of client nodes from any single IP address"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "p2p-peer-address",
+              "summary": "The public endpoint of a peer node to connect to."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "p2p-server-address",
+              "summary": "An externally accessible host:port for identifying this node."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "peer-key",
+              "summary": "Optional public key of peer allowed to connect."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "peer-log-format",
+              "summary": "Available Variables:"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "peer-private-key",
+              "summary": "Tuple of [PublicKey, WIF private key] (may specify multiple times)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "signature-provider",
+              "summary": "signature-provider of associated key required for p2p-bp-gossip-endpoint"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "sync-fetch-span",
+              "summary": "Number of blocks to retrieve in a chunk from any individual peer during synchronization"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "sync-peer-limit",
+              "summary": "Number of peers to sync from"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "use-socket-read-watermark",
+              "summary": "Enable experimental socket read watermark optimization"
+            }
+          ]
+        },
+        {
+          "id": "plugin:producer_api_plugin",
+          "name": "producer_api_plugin",
+          "kind": "plugin",
+          "path": "plugins/producer_api_plugin",
+          "summary": "The producer_api_plugin exposes a number of endpoints for the producer_plugin to the RPC API interface managed by the http_plugin.",
+          "contains": [
+            {
+              "id": "plugin:http_plugin",
+              "kind": "plugin",
+              "name": "http_plugin",
+              "summary": "The http_plugin is a core plugin supported by both humanityd and humanity-keyd."
+            },
+            {
+              "id": "plugin:producer_plugin",
+              "kind": "plugin",
+              "name": "producer_plugin",
+              "summary": "The producer_plugin loads functionality required for a node to produce blocks."
+            }
+          ]
+        },
+        {
+          "id": "plugin:producer_plugin",
+          "name": "producer_plugin",
+          "kind": "plugin",
+          "path": "plugins/producer_plugin",
+          "summary": "The producer_plugin loads functionality required for a node to produce blocks.",
+          "contains": [
+            {
+              "id": "plugin:chain_plugin",
+              "kind": "plugin",
+              "name": "chain_plugin",
+              "summary": "The chain_plugin is a core plugin required to process and aggregate chain data on an Antelope node."
+            },
+            {
+              "id": "plugin:signature_provider_manager_plugin",
+              "kind": "plugin",
+              "name": "signature_provider_manager_plugin",
+              "summary": "Plugin responsible for managing signature providers."
+            },
+            {
+              "id": "plugin:signature_provider_plugin",
+              "kind": "plugin",
+              "name": "signature_provider_plugin",
+              "summary": "Plugin signature_provider_plugin."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "disable-subjective-account-billing",
+              "summary": "Account which is excluded from subjective CPU billing"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "disable-subjective-api-billing",
+              "summary": "Disable subjective CPU billing for API transactions"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "disable-subjective-p2p-billing",
+              "summary": "Disable subjective CPU billing for P2P transactions"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "enable-stale-production",
+              "summary": "Enable block production, even if the chain is stale."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "finalizer-provider",
+              "summary": "BLS finalizer key in the form <public-key>=KEY:<private-key>; may specify multiple times"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "greylist-account",
+              "summary": "account that can not access to extended CPU/NET virtual resources"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "greylist-limit",
+              "summary": "Limit (between 1 and 1000) on the multiple that CPU/NET virtual resources can extend during low usage (only enforced subjectively; use 1000 to not enforce any limit)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "incoming-transaction-queue-size-mb",
+              "summary": "Maximum size (in MiB) of the incoming transaction queue."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "max-block-cpu-usage-threshold-us",
+              "summary": "Threshold of CPU block production to consider block full; when within threshold of max-block-cpu-usage block can be produced immediately"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "max-block-net-usage-threshold-bytes",
+              "summary": "Threshold of NET block production to consider block full; when within threshold of max-block-net-usage block can be produced immediately"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "max-irreversible-block-age",
+              "summary": "Limits the maximum age (in seconds) of the DPOS Irreversible Block for a chain this node will produce blocks on (use negative value to indicate unlimited)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "max-reversible-blocks",
+              "summary": "Maximum allowed reversible blocks beyond irreversible before block production is paused."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "max-transaction-time",
+              "summary": "Setting this value (in milliseconds) will restrict the allowed transaction execution time to a value potentially lower than the on-chain consensus max_transaction_cpu_usage value."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "pause-on-startup",
+              "summary": "Start this node in a state where production is paused"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "produce-block-offset-ms",
+              "summary": "The minimum time to reserve at the end of a production round for blocks to propagate to the next block producer."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "producer-name",
+              "summary": "ID of producer controlled by this node (e.g. inita; may specify multiple times)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "production-pause-vote-timeout-ms",
+              "summary": "Received vote timeout."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "read-only-read-window-time-us",
+              "summary": "Time in microseconds the read window lasts."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "read-only-threads",
+              "summary": "Number of worker threads in read-only execution thread pool."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "read-only-write-window-time-us",
+              "summary": "Time in microseconds the write window lasts."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "snapshots-dir",
+              "summary": "the location of the snapshots directory (absolute path or relative to application data dir)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "subjective-account-decay-time-minutes",
+              "summary": "Sets the time to return full subjective cpu for accounts"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "subjective-account-max-failures",
+              "summary": "Sets the maximum amount of failures that are allowed for a given account per window size."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "subjective-account-max-failures-window-size",
+              "summary": "Sets the window size in number of blocks for subjective-account-max-failures."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "subjective-cpu-leeway-us",
+              "summary": "Time in microseconds allowed for a transaction that starts with insufficient CPU quota to complete and cover its CPU usage."
+            }
+          ]
+        },
+        {
+          "id": "plugin:prometheus_plugin",
+          "name": "prometheus_plugin",
+          "kind": "plugin",
+          "path": "plugins/prometheus_plugin",
+          "summary": "Plugin prometheus_plugin.",
+          "contains": [
+            {
+              "id": "plugin:chain_plugin",
+              "kind": "plugin",
+              "name": "chain_plugin",
+              "summary": "The chain_plugin is a core plugin required to process and aggregate chain data on an Antelope node."
+            },
+            {
+              "id": "plugin:http_plugin",
+              "kind": "plugin",
+              "name": "http_plugin",
+              "summary": "The http_plugin is a core plugin supported by both humanityd and humanity-keyd."
+            },
+            {
+              "id": "plugin:net_plugin",
+              "kind": "plugin",
+              "name": "net_plugin",
+              "summary": "The net_plugin provides an authenticated p2p protocol to persistently synchronize nodes."
+            },
+            {
+              "id": "plugin:producer_plugin",
+              "kind": "plugin",
+              "name": "producer_plugin",
+              "summary": "The producer_plugin loads functionality required for a node to produce blocks."
+            }
+          ]
+        },
+        {
+          "id": "plugin:resource_monitor_plugin",
+          "name": "resource_monitor_plugin",
+          "kind": "plugin",
+          "path": "plugins/resource_monitor_plugin",
+          "summary": "The resource_monitor_plugin monitors space usage in the computing system where humanityd is running.",
+          "contains": [
+            {
+              "id": "plugin:chain_plugin",
+              "kind": "plugin",
+              "name": "chain_plugin",
+              "summary": "The chain_plugin is a core plugin required to process and aggregate chain data on an Antelope node."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "resource-monitor-interval-seconds",
+              "summary": "Time in seconds between two consecutive checks of resource usage."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "resource-monitor-not-shutdown-on-threshold-exceeded",
+              "summary": "Used to indicate humanityd will not shutdown when threshold is exceeded."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "resource-monitor-space-absolute-gb",
+              "summary": "Absolute threshold in gibibytes of remaining space; applied to each monitored directory."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "resource-monitor-space-threshold",
+              "summary": "Threshold in terms of percentage of used space vs total space."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "resource-monitor-warning-interval",
+              "summary": "Number of resource monitor intervals between two consecutive warnings when the threshold is hit."
+            }
+          ]
+        },
+        {
+          "id": "plugin:signature_provider_kms_plugin",
+          "name": "signature_provider_kms_plugin",
+          "kind": "plugin",
+          "path": "plugins/signature_provider_kms_plugin",
+          "summary": "Provides the KMS:<key-ref> signature-provider scheme: every signature is a remote AWS KMS Sign call, so the private key never exists on the host or in process memory.",
+          "contains": [
+            {
+              "id": "plugin:signature_provider_manager_plugin",
+              "kind": "plugin",
+              "name": "signature_provider_manager_plugin",
+              "summary": "Plugin responsible for managing signature providers."
+            }
+          ]
+        },
+        {
+          "id": "plugin:signature_provider_manager_plugin",
+          "name": "signature_provider_manager_plugin",
+          "kind": "plugin",
+          "path": "plugins/signature_provider_manager_plugin",
+          "summary": "Plugin responsible for managing signature providers.",
+          "contains": [
+            {
+              "id": "plugin:http_client_plugin",
+              "kind": "plugin",
+              "name": "http_client_plugin",
+              "summary": "Plugin http_client_plugin."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "signature-provider",
+              "summary": "Signature provider spec formatted as (check docs for details):"
+            }
+          ]
+        },
+        {
+          "id": "plugin:signature_provider_plugin",
+          "name": "signature_provider_plugin",
+          "kind": "plugin",
+          "path": "plugins/signature_provider_plugin",
+          "summary": "Plugin signature_provider_plugin.",
+          "contains": [
+            {
+              "id": "plugin:http_client_plugin",
+              "kind": "plugin",
+              "name": "http_client_plugin",
+              "summary": "Plugin http_client_plugin."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "humanity-keyd-provider-timeout",
+              "summary": "Limits the maximum time (in milliseconds) that is allowed for sending requests to a humanity-keyd provider for signing"
+            }
+          ]
+        },
+        {
+          "id": "plugin:signature_provider_ssm_plugin",
+          "name": "signature_provider_ssm_plugin",
+          "kind": "plugin",
+          "path": "plugins/signature_provider_ssm_plugin",
+          "summary": "Provides the SSM:<param-ref> signature-provider scheme: the private key is fetched once from AWS SSM Parameter Store (a KMS-encrypted SecureString) while this plugin initializes, and signing is local thereafter -- KEY: semantics without the key material ever appearing in config files, so it suits every signing path inc",
+          "contains": [
+            {
+              "id": "plugin:signature_provider_manager_plugin",
+              "kind": "plugin",
+              "name": "signature_provider_manager_plugin",
+              "summary": "Plugin responsible for managing signature providers."
+            }
+          ]
+        },
+        {
+          "id": "plugin:state_history_plugin",
+          "name": "state_history_plugin",
+          "kind": "plugin",
+          "path": "plugins/state_history_plugin",
+          "summary": "The state_history_plugin is useful for capturing historical data about the blockchain state.",
+          "contains": [
+            {
+              "id": "plugin:chain_plugin",
+              "kind": "plugin",
+              "name": "chain_plugin",
+              "summary": "The chain_plugin is a core plugin required to process and aggregate chain data on an Antelope node."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "chain-state-history",
+              "summary": "enable chain state history"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "delete-state-history",
+              "summary": "clear state history files"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "finality-data-history",
+              "summary": "enable finality data history"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "max-retained-history-files",
+              "summary": "the maximum number of history file groups to retain so that the blocks in those files can be queried."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "state-history",
+              "summary": "the location of the state-history directory (absolute path or relative to application data dir)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "state-history-archive-dir",
+              "summary": "the location of the state history archive directory (absolute path or relative to state-history dir)."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "state-history-endpoint",
+              "summary": "the endpoint upon which to listen for incoming connections."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "state-history-log-retain-blocks",
+              "summary": "if set, periodically prune the state history files to store only configured number of most recent blocks"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "state-history-retained-dir",
+              "summary": "the location of the state history retained directory (absolute path or relative to state-history dir)."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "state-history-stride",
+              "summary": "split the state history log files when the block number is the multiple of the stride"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "state-history-unix-socket-path",
+              "summary": "the path (relative to data-dir) to create a unix socket upon which to listen for incoming connections."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "trace-history",
+              "summary": "enable trace history"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "trace-history-debug-mode",
+              "summary": "enable debug mode for trace history"
+            }
+          ]
+        },
+        {
+          "id": "plugin:template_plugin",
+          "name": "template_plugin",
+          "kind": "plugin",
+          "path": "plugins/template_plugin",
+          "summary": "This is a template plugin, intended to serve as a starting point for making new plugins",
+          "contains": [
+            {
+              "id": "",
+              "kind": "file",
+              "name": "template_plugin.cpp",
+              "summary": "template_plugin.cpp"
+            },
+            {
+              "id": "",
+              "kind": "file",
+              "name": "template_plugin.hpp",
+              "summary": "include/eosio/template_plugin/template_plugin.hpp"
+            }
+          ]
+        },
+        {
+          "id": "plugin:test_control_api_plugin",
+          "name": "test_control_api_plugin",
+          "kind": "plugin",
+          "path": "plugins/test_control_api_plugin",
+          "summary": "The test_control_api_plugin allows to send a control message to the test_control_plugin telling the plugin to shut down the humanityd instance when reaching a particular block.",
+          "contains": [
+            {
+              "id": "plugin:chain_plugin",
+              "kind": "plugin",
+              "name": "chain_plugin",
+              "summary": "The chain_plugin is a core plugin required to process and aggregate chain data on an Antelope node."
+            },
+            {
+              "id": "plugin:http_plugin",
+              "kind": "plugin",
+              "name": "http_plugin",
+              "summary": "The http_plugin is a core plugin supported by both humanityd and humanity-keyd."
+            },
+            {
+              "id": "plugin:test_control_plugin",
+              "kind": "plugin",
+              "name": "test_control_plugin",
+              "summary": "The test_control_plugin is designed to cause a graceful shutdown when reaching a particular block in a sequence of blocks produced by a specific block producer."
+            }
+          ]
+        },
+        {
+          "id": "plugin:test_control_plugin",
+          "name": "test_control_plugin",
+          "kind": "plugin",
+          "path": "plugins/test_control_plugin",
+          "summary": "The test_control_plugin is designed to cause a graceful shutdown when reaching a particular block in a sequence of blocks produced by a specific block producer.",
+          "contains": [
+            {
+              "id": "plugin:chain_plugin",
+              "kind": "plugin",
+              "name": "chain_plugin",
+              "summary": "The chain_plugin is a core plugin required to process and aggregate chain data on an Antelope node."
+            },
+            {
+              "id": "plugin:net_plugin",
+              "kind": "plugin",
+              "name": "net_plugin",
+              "summary": "The net_plugin provides an authenticated p2p protocol to persistently synchronize nodes."
+            }
+          ]
+        },
+        {
+          "id": "plugin:trace_api_plugin",
+          "name": "trace_api_plugin",
+          "kind": "plugin",
+          "path": "plugins/trace_api_plugin",
+          "summary": "The trace_api_plugin provides a consumer-focused long-term API for retrieving retired actions and related metadata from a specified block.",
+          "contains": [
+            {
+              "id": "plugin:chain_plugin",
+              "kind": "plugin",
+              "name": "chain_plugin",
+              "summary": "The chain_plugin is a core plugin required to process and aggregate chain data on an Antelope node."
+            },
+            {
+              "id": "plugin:http_plugin",
+              "kind": "plugin",
+              "name": "http_plugin",
+              "summary": "The http_plugin is a core plugin supported by both humanityd and humanity-keyd."
+            },
+            {
+              "id": "plugin:trace_api_rpc_plugin",
+              "kind": "plugin",
+              "name": "trace_api_rpc_plugin",
+              "summary": "Plugin that only runs the RPC"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "input-path",
+              "summary": "does not exist or cannot be read"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "output-path",
+              "summary": "Output file parent directory:"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "seek-point-stride",
+              "summary": "the number of bytes between seek points in a compressed trace."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "trace-dir",
+              "summary": "the location of the trace directory (absolute path or relative to application data dir)"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "trace-minimum-irreversible-history-blocks",
+              "summary": "Number of blocks to ensure are kept past LIB for retrieval before \"slice\" files can be automatically removed."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "trace-minimum-uncompressed-irreversible-history-blocks",
+              "summary": "Number of blocks to ensure are uncompressed past LIB."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "trace-mx",
+              "summary": "Waking up to handle lib:"
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "trace-no-abis",
+              "summary": "Use to indicate that the RPC responses will not use ABIs."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "trace-rpc-abi",
+              "summary": "ABIs used when decoding trace RPC responses."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "trace-slice-stride",
+              "summary": "the number of blocks each \"slice\" of trace data will contain on the filesystem"
+            }
+          ]
+        },
+        {
+          "id": "plugin:trace_api_rpc_plugin",
+          "name": "trace_api_rpc_plugin",
+          "kind": "plugin",
+          "path": "plugins/trace_api_plugin",
+          "summary": "Plugin that only runs the RPC",
+          "contains": [
+            {
+              "id": "plugin:http_plugin",
+              "kind": "plugin",
+              "name": "http_plugin",
+              "summary": "The http_plugin is a core plugin supported by both humanityd and humanity-keyd."
+            }
+          ]
+        },
+        {
+          "id": "plugin:wallet_api_plugin",
+          "name": "wallet_api_plugin",
+          "kind": "plugin",
+          "path": "plugins/wallet_api_plugin",
+          "summary": "The wallet_api_plugin exposes functionality from the wallet_plugin to the RPC API interface managed by the http_plugin.",
+          "contains": [
+            {
+              "id": "plugin:http_plugin",
+              "kind": "plugin",
+              "name": "http_plugin",
+              "summary": "The http_plugin is a core plugin supported by both humanityd and humanity-keyd."
+            },
+            {
+              "id": "plugin:wallet_plugin",
+              "kind": "plugin",
+              "name": "wallet_plugin",
+              "summary": "The wallet_plugin adds access to wallet functionality from a node."
+            }
+          ]
+        },
+        {
+          "id": "plugin:wallet_plugin",
+          "name": "wallet_plugin",
+          "kind": "plugin",
+          "path": "plugins/wallet_plugin",
+          "summary": "The wallet_plugin adds access to wallet functionality from a node.",
+          "contains": [
+            {
+              "id": "",
+              "kind": "option",
+              "name": "unlock-timeout",
+              "summary": "Timeout for unlocked wallet in seconds (default 900 (15 minutes))."
+            },
+            {
+              "id": "",
+              "kind": "option",
+              "name": "wallet-dir",
+              "summary": "The path of the wallet files (absolute path or relative to application data dir)"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

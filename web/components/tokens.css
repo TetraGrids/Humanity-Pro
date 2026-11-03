@@ -1,0 +1,77 @@
+/* Tetra.Earth design tokens. Import first in every Vite UI and PDF build. */
+:root {
+  /* Surfaces */
+  --tetra-void: #050705;
+  --tetra-void-lift: #0b0f0b;
+  --tetra-void-panel: #101610;
+  --tetra-ink: #f4f7f4;
+  --tetra-ink-dim: #a8b2a8;
+  --tetra-ink-mute: #6b756b;
+
+  /* Triad */
+  --tetra-green: #22c55e;
+  --tetra-violet: #8b5cf6;
+  --tetra-orange: #f97316;
+  --tetra-gold: #f0d34a;
+  --tetra-gold-line: #ffe566;
+
+  /* Glass — chrome only */
+  --tetra-glass: rgba(5, 7, 5, 0.52);
+  --tetra-glass-border: rgba(244, 247, 244, 0.14);
+  --tetra-glass-highlight: rgba(244, 247, 244, 0.06);
+  --tetra-glass-blur: 18px;
+
+  /* Glows */
+  --tetra-glow-green: 0 0 24px rgba(34, 197, 94, 0.45);
+  --tetra-glow-violet: 0 0 36px rgba(139, 92, 246, 0.35);
+  --tetra-glow-orange: 0 0 36px rgba(249, 115, 22, 0.3);
+  --tetra-glow-triad:
+    0 0 28px rgba(34, 197, 94, 0.28),
+    0 0 56px rgba(139, 92, 246, 0.16),
+    0 0 80px rgba(249, 115, 22, 0.1);
+
+  /* Type */
+  --tetra-font: "Jost", "Avenir Next", "Segoe UI", sans-serif;
+  --tetra-tracking-display: 0.14em;
+  --tetra-tracking-ui: 0.08em;
+
+  /* Measure — 4-count, radius never leaves 0 */
+  --tetra-space: 8px;
+  --tetra-radius: 0;
+  --tetra-bar-h: 56px;
+  --tetra-tri: 120px;
+  --tetra-dock: 88px;
+  --tetra-footer-pad: 148px;
+  --tetra-line: 1px;
+  --tetra-max: 1120px;
+
+  /* Motion */
+  --tetra-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --tetra-ease-shimmer: cubic-bezier(0.7, 0, 0.3, 1);
+  --tetra-dur: 0.55s;
+  --tetra-smoke: 0.72s;
+
+  color-scheme: dark;
+  font-family: var(--tetra-font);
+  background: var(--tetra-void);
+  color: var(--tetra-ink);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-radius: var(--tetra-radius);
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--tetra-void);
+  color: var(--tetra-ink);
+}
+
+::selection {
+  background: var(--tetra-green);
+  color: var(--tetra-void);
+}

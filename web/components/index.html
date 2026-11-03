@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Humanity Pro Components</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="bar">
+    <div class="mark">Humanity Pro</div>
+    <div class="title">Components</div>
+    <div class="legend" aria-hidden="true">
+      <span class="programs"><i></i>Programs</span>
+      <span class="contracts"><i></i>Contracts</span>
+      <span class="plugins"><i></i>Plugins</span>
+    </div>
+    <div class="meta" id="meta"></div>
+    <code class="cmd">python3 web/components/update.py</code>
+  </header>
+  <div class="app">
+    <aside class="rail" id="rail"></aside>
+    <main class="stage">
+      <canvas id="view"></canvas>
+      <p class="hint">Drag to orbit. Click a component.</p>
+    </main>
+    <aside class="panel" id="panel"></aside>
+  </div>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three.module.js"
+      }
+    }
+  </script>
+  <script type="module" src="scene.js"></script>
+</body>
+</html>
